@@ -1,6 +1,6 @@
 CMakeFiles/acc_lib_static.dir/src/crtl_keyboard.c.o: \
- /work/workspace/crtl/src/crtl_keyboard.c /usr/include/stdc-predef.h \
- /work/workspace/crtl/./crtl/crtl_keyboard.h /usr/include/stdio.h \
+ /mnt/hgfs/G/crtl/src/crtl_keyboard.c /usr/include/stdc-predef.h \
+ /mnt/hgfs/G/crtl/./crtl/crtl_keyboard.h /usr/include/stdio.h \
  /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h \
@@ -25,16 +25,15 @@ CMakeFiles/acc_lib_static.dir/src/crtl_keyboard.c.o: \
  /usr/include/bits/inf.h /usr/include/bits/nan.h \
  /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
  /usr/include/termios.h /usr/include/bits/termios.h \
- /usr/include/sys/ttydefaults.h \
- /work/workspace/crtl/./crtl/easy/attribute.h \
- /work/workspace/crtl/./crtl/easy/extern.h \
- /work/workspace/crtl/./crtl/crtl_assert.h /usr/include/errno.h \
+ /usr/include/sys/ttydefaults.h /mnt/hgfs/G/crtl/./crtl/easy/attribute.h \
+ /mnt/hgfs/G/crtl/./crtl/easy/extern.h \
+ /mnt/hgfs/G/crtl/./crtl/crtl_assert.h /usr/include/errno.h \
  /usr/include/bits/errno.h /usr/include/linux/errno.h \
  /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
  /usr/include/asm-generic/errno-base.h \
- /work/workspace/crtl/./crtl/bits/crtl_assert_backtrace.h \
+ /mnt/hgfs/G/crtl/./crtl/bits/crtl_assert_backtrace.h \
  /usr/include/assert.h /usr/include/execinfo.h \
- /work/workspace/crtl/./crtl/easy/macro.h \
+ /mnt/hgfs/G/crtl/./crtl/easy/macro.h \
  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/wchar.h \
- /work/workspace/crtl/./crtl/crtl_log.h
+ /mnt/hgfs/G/crtl/./crtl/crtl_log.h

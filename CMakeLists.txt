@@ -36,7 +36,7 @@ set_target_properties(acc_lib_static PROPERTIES OUTPUT_NAME "crtl")
 set(LIBRARY_OUTPUT_PATH ../lib) 
 
 #设置动态库版本 
-set_target_properties(acc_lib_shared PROPERTIES VERSION 1.0 SOVERSION 1) 
+#set_target_properties(acc_lib_shared PROPERTIES VERSION 1.0 SOVERSION 1) 
 
 
 #安装库文件

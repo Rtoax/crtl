@@ -6,6 +6,8 @@
 #include <pthread.h>
 
 #include "crtl/bits/crtl_lock_semaphore.h"
+#include "crtl/bits/crtl_lock_mutex.h"
+
 
 
 typedef pthread_mutex_t     crtl_lock_mutex_t;

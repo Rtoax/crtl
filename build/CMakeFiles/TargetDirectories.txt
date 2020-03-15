@@ -1,2 +1,2 @@
-/work/workspace/crtl/build/CMakeFiles/acc_lib_shared.dir
-/work/workspace/crtl/build/CMakeFiles/acc_lib_static.dir
+/mnt/hgfs/G/crtl/build/CMakeFiles/acc_lib_shared.dir
+/mnt/hgfs/G/crtl/build/CMakeFiles/acc_lib_static.dir

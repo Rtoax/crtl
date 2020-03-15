@@ -1,6 +1,6 @@
 CMakeFiles/acc_lib_static.dir/src/crtl_terminal.c.o: \
- /work/workspace/crtl/src/crtl_terminal.c /usr/include/stdc-predef.h \
- /work/workspace/crtl/./crtl/crtl_terminal.h /usr/include/stdio.h \
+ /mnt/hgfs/G/crtl/src/crtl_terminal.c /usr/include/stdc-predef.h \
+ /mnt/hgfs/G/crtl/./crtl/crtl_terminal.h /usr/include/stdio.h \
  /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h \
@@ -29,6 +29,5 @@ CMakeFiles/acc_lib_static.dir/src/crtl_terminal.c.o: \
  /usr/include/bits/ioctls.h /usr/include/asm/ioctls.h \
  /usr/include/asm-generic/ioctls.h /usr/include/linux/ioctl.h \
  /usr/include/asm/ioctl.h /usr/include/asm-generic/ioctl.h \
- /usr/include/bits/ioctl-types.h \
- /work/workspace/crtl/./crtl/easy/attribute.h \
- /work/workspace/crtl/./crtl/easy/extern.h
+ /usr/include/bits/ioctl-types.h /mnt/hgfs/G/crtl/./crtl/easy/attribute.h \
+ /mnt/hgfs/G/crtl/./crtl/easy/extern.h

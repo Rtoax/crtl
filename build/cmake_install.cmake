@@ -1,4 +1,4 @@
-# Install script for directory: /work/workspace/crtl
+# Install script for directory: /mnt/hgfs/G/crtl
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -33,48 +33,32 @@ IF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 ENDIF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  FOREACH(file
-      "$ENV{DESTDIR}/usr/lib64/libcrtl.so.1.0"
-      "$ENV{DESTDIR}/usr/lib64/libcrtl.so.1"
-      "$ENV{DESTDIR}/usr/lib64/libcrtl.so"
-      )
-    IF(EXISTS "${file}" AND
-       NOT IS_SYMLINK "${file}")
-      FILE(RPATH_CHECK
-           FILE "${file}"
-           RPATH "")
-    ENDIF()
-  ENDFOREACH()
+  IF(EXISTS "$ENV{DESTDIR}/usr/lib64/libcrtl.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/usr/lib64/libcrtl.so")
+    FILE(RPATH_CHECK
+         FILE "$ENV{DESTDIR}/usr/lib64/libcrtl.so"
+         RPATH "")
+  ENDIF()
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/usr/lib64/libcrtl.so.1.0;/usr/lib64/libcrtl.so.1;/usr/lib64/libcrtl.so")
+   "/usr/lib64/libcrtl.so")
   IF (CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   ENDIF (CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
   IF (CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   ENDIF (CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
-FILE(INSTALL DESTINATION "/usr/lib64" TYPE SHARED_LIBRARY PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE FILES
-    "/work/workspace/crtl/lib/libcrtl.so.1.0"
-    "/work/workspace/crtl/lib/libcrtl.so.1"
-    "/work/workspace/crtl/lib/libcrtl.so"
-    )
-  FOREACH(file
-      "$ENV{DESTDIR}/usr/lib64/libcrtl.so.1.0"
-      "$ENV{DESTDIR}/usr/lib64/libcrtl.so.1"
-      "$ENV{DESTDIR}/usr/lib64/libcrtl.so"
-      )
-    IF(EXISTS "${file}" AND
-       NOT IS_SYMLINK "${file}")
-      IF(CMAKE_INSTALL_DO_STRIP)
-        EXECUTE_PROCESS(COMMAND "/usr/bin/strip" "${file}")
-      ENDIF(CMAKE_INSTALL_DO_STRIP)
-    ENDIF()
-  ENDFOREACH()
+FILE(INSTALL DESTINATION "/usr/lib64" TYPE SHARED_LIBRARY PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE FILES "/mnt/hgfs/G/crtl/lib/libcrtl.so")
+  IF(EXISTS "$ENV{DESTDIR}/usr/lib64/libcrtl.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/usr/lib64/libcrtl.so")
+    IF(CMAKE_INSTALL_DO_STRIP)
+      EXECUTE_PROCESS(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}/usr/lib64/libcrtl.so")
+    ENDIF(CMAKE_INSTALL_DO_STRIP)
+  ENDIF()
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/usr/local/include/crtl/crtl_assert.h;/usr/local/include/crtl/crtl_tree.h;/usr/local/include/crtl/crtl_file.h;/usr/local/include/crtl/crtl_types.h;/usr/local/include/crtl/crtl_list.h;/usr/local/include/crtl/crtl_random.h;/usr/local/include/crtl/crtl_mask.h;/usr/local/include/crtl/crtl_terminal.h;/usr/local/include/crtl/crtl_alloc.h;/usr/local/include/crtl/crtl_log.h;/usr/local/include/crtl/crtl_time.h;/usr/local/include/crtl/crtl_iterator.h;/usr/local/include/crtl/crtl_keyboard.h;/usr/local/include/crtl/crtl_lock.h")
+   "/usr/local/include/crtl/crtl_alloc.h;/usr/local/include/crtl/crtl_assert.h;/usr/local/include/crtl/crtl_file.h;/usr/local/include/crtl/crtl_iterator.h;/usr/local/include/crtl/crtl_keyboard.h;/usr/local/include/crtl/crtl_list.h;/usr/local/include/crtl/crtl_lock.h;/usr/local/include/crtl/crtl_log.h;/usr/local/include/crtl/crtl_mask.h;/usr/local/include/crtl/crtl_random.h;/usr/local/include/crtl/crtl_terminal.h;/usr/local/include/crtl/crtl_time.h;/usr/local/include/crtl/crtl_tree.h;/usr/local/include/crtl/crtl_types.h")
   IF (CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   ENDIF (CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
@@ -82,26 +66,26 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   ENDIF (CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
 FILE(INSTALL DESTINATION "/usr/local/include/crtl" TYPE FILE FILES
-    "/work/workspace/crtl/./crtl/crtl_assert.h"
-    "/work/workspace/crtl/./crtl/crtl_tree.h"
-    "/work/workspace/crtl/./crtl/crtl_file.h"
-    "/work/workspace/crtl/./crtl/crtl_types.h"
-    "/work/workspace/crtl/./crtl/crtl_list.h"
-    "/work/workspace/crtl/./crtl/crtl_random.h"
-    "/work/workspace/crtl/./crtl/crtl_mask.h"
-    "/work/workspace/crtl/./crtl/crtl_terminal.h"
-    "/work/workspace/crtl/./crtl/crtl_alloc.h"
-    "/work/workspace/crtl/./crtl/crtl_log.h"
-    "/work/workspace/crtl/./crtl/crtl_time.h"
-    "/work/workspace/crtl/./crtl/crtl_iterator.h"
-    "/work/workspace/crtl/./crtl/crtl_keyboard.h"
-    "/work/workspace/crtl/./crtl/crtl_lock.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_alloc.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_assert.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_file.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_iterator.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_keyboard.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_list.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_lock.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_log.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_mask.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_random.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_terminal.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_time.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_tree.h"
+    "/mnt/hgfs/G/crtl/./crtl/crtl_types.h"
     )
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/usr/local/include/crtl/easy/operator.h;/usr/local/include/crtl/easy/attribute.h;/usr/local/include/crtl/easy/byteswap.h;/usr/local/include/crtl/easy/endian.h;/usr/local/include/crtl/easy/macro.h;/usr/local/include/crtl/easy/extern.h")
+   "/usr/local/include/crtl/easy/attribute.h;/usr/local/include/crtl/easy/byteswap.h;/usr/local/include/crtl/easy/endian.h;/usr/local/include/crtl/easy/extern.h;/usr/local/include/crtl/easy/macro.h;/usr/local/include/crtl/easy/operator.h")
   IF (CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   ENDIF (CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
@@ -109,18 +93,18 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   ENDIF (CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
 FILE(INSTALL DESTINATION "/usr/local/include/crtl/easy" TYPE FILE FILES
-    "/work/workspace/crtl/./crtl/easy/operator.h"
-    "/work/workspace/crtl/./crtl/easy/attribute.h"
-    "/work/workspace/crtl/./crtl/easy/byteswap.h"
-    "/work/workspace/crtl/./crtl/easy/endian.h"
-    "/work/workspace/crtl/./crtl/easy/macro.h"
-    "/work/workspace/crtl/./crtl/easy/extern.h"
+    "/mnt/hgfs/G/crtl/./crtl/easy/attribute.h"
+    "/mnt/hgfs/G/crtl/./crtl/easy/byteswap.h"
+    "/mnt/hgfs/G/crtl/./crtl/easy/endian.h"
+    "/mnt/hgfs/G/crtl/./crtl/easy/extern.h"
+    "/mnt/hgfs/G/crtl/./crtl/easy/macro.h"
+    "/mnt/hgfs/G/crtl/./crtl/easy/operator.h"
     )
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/usr/local/include/crtl/bits/crtl_tree_rbtree.h;/usr/local/include/crtl/bits/crtl_list.h;/usr/local/include/crtl/bits/crtl_mask.h;/usr/local/include/crtl/bits/crtl_lock_semaphore.h;/usr/local/include/crtl/bits/crtl_types_ctype.h;/usr/local/include/crtl/bits/crtl_assert_backtrace.h;/usr/local/include/crtl/bits/crtl_time_def.h;/usr/local/include/crtl/bits/crtl_types_bits_set.h")
+   "/usr/local/include/crtl/bits/crtl_assert_backtrace.h;/usr/local/include/crtl/bits/crtl_list.h;/usr/local/include/crtl/bits/crtl_lock_mutex.h;/usr/local/include/crtl/bits/crtl_lock_semaphore.h;/usr/local/include/crtl/bits/crtl_mask.h;/usr/local/include/crtl/bits/crtl_time_def.h;/usr/local/include/crtl/bits/crtl_tree_rbtree.h;/usr/local/include/crtl/bits/crtl_types_bits_set.h;/usr/local/include/crtl/bits/crtl_types_ctype.h")
   IF (CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   ENDIF (CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
@@ -128,14 +112,15 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   ENDIF (CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
 FILE(INSTALL DESTINATION "/usr/local/include/crtl/bits" TYPE FILE FILES
-    "/work/workspace/crtl/./crtl/bits/crtl_tree_rbtree.h"
-    "/work/workspace/crtl/./crtl/bits/crtl_list.h"
-    "/work/workspace/crtl/./crtl/bits/crtl_mask.h"
-    "/work/workspace/crtl/./crtl/bits/crtl_lock_semaphore.h"
-    "/work/workspace/crtl/./crtl/bits/crtl_types_ctype.h"
-    "/work/workspace/crtl/./crtl/bits/crtl_assert_backtrace.h"
-    "/work/workspace/crtl/./crtl/bits/crtl_time_def.h"
-    "/work/workspace/crtl/./crtl/bits/crtl_types_bits_set.h"
+    "/mnt/hgfs/G/crtl/./crtl/bits/crtl_assert_backtrace.h"
+    "/mnt/hgfs/G/crtl/./crtl/bits/crtl_list.h"
+    "/mnt/hgfs/G/crtl/./crtl/bits/crtl_lock_mutex.h"
+    "/mnt/hgfs/G/crtl/./crtl/bits/crtl_lock_semaphore.h"
+    "/mnt/hgfs/G/crtl/./crtl/bits/crtl_mask.h"
+    "/mnt/hgfs/G/crtl/./crtl/bits/crtl_time_def.h"
+    "/mnt/hgfs/G/crtl/./crtl/bits/crtl_tree_rbtree.h"
+    "/mnt/hgfs/G/crtl/./crtl/bits/crtl_types_bits_set.h"
+    "/mnt/hgfs/G/crtl/./crtl/bits/crtl_types_ctype.h"
     )
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
@@ -148,7 +133,7 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   IF (CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   ENDIF (CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
-FILE(INSTALL DESTINATION "/usr/local/include/crtl/network" TYPE FILE FILES "/work/workspace/crtl/./crtl/network/byteorder.h")
+FILE(INSTALL DESTINATION "/usr/local/include/crtl/network" TYPE FILE FILES "/mnt/hgfs/G/crtl/./crtl/network/byteorder.h")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(CMAKE_INSTALL_COMPONENT)
@@ -157,7 +142,7 @@ ELSE(CMAKE_INSTALL_COMPONENT)
   SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 ENDIF(CMAKE_INSTALL_COMPONENT)
 
-FILE(WRITE "/work/workspace/crtl/build/${CMAKE_INSTALL_MANIFEST}" "")
+FILE(WRITE "/mnt/hgfs/G/crtl/build/${CMAKE_INSTALL_MANIFEST}" "")
 FOREACH(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  FILE(APPEND "/work/workspace/crtl/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  FILE(APPEND "/mnt/hgfs/G/crtl/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 ENDFOREACH(file)

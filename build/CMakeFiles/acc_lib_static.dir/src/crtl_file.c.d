@@ -1,5 +1,5 @@
 CMakeFiles/acc_lib_static.dir/src/crtl_file.c.o: \
- /work/workspace/crtl/src/crtl_file.c /usr/include/stdc-predef.h \
+ /mnt/hgfs/G/crtl/src/crtl_file.c /usr/include/stdc-predef.h \
  /usr/include/malloc.h /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h \
@@ -9,7 +9,7 @@ CMakeFiles/acc_lib_static.dir/src/crtl_file.c.o: \
  /usr/include/_G_config.h /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /work/workspace/crtl/./crtl/crtl_file.h /usr/include/dirent.h \
+ /mnt/hgfs/G/crtl/./crtl/crtl_file.h /usr/include/dirent.h \
  /usr/include/bits/dirent.h /usr/include/bits/posix1_lim.h \
  /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
  /usr/include/string.h /usr/include/xlocale.h /usr/include/unistd.h \
@@ -24,6 +24,6 @@ CMakeFiles/acc_lib_static.dir/src/crtl_file.c.o: \
  /usr/include/bits/sigset.h /usr/include/bits/time.h \
  /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
  /usr/include/alloca.h /usr/include/bits/stdlib-float.h \
- /work/workspace/crtl/./crtl/crtl_log.h \
- /work/workspace/crtl/./crtl/easy/attribute.h \
- /work/workspace/crtl/./crtl/easy/extern.h
+ /mnt/hgfs/G/crtl/./crtl/crtl_log.h \
+ /mnt/hgfs/G/crtl/./crtl/easy/attribute.h \
+ /mnt/hgfs/G/crtl/./crtl/easy/extern.h

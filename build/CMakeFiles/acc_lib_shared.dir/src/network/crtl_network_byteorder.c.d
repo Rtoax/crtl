@@ -1,6 +1,6 @@
 CMakeFiles/acc_lib_shared.dir/src/network/crtl_network_byteorder.c.o: \
- /work/workspace/crtl/src/network/crtl_network_byteorder.c \
- /usr/include/stdc-predef.h /work/workspace/crtl/./crtl/crtl_log.h \
+ /mnt/hgfs/G/crtl/src/network/crtl_network_byteorder.c \
+ /usr/include/stdc-predef.h /mnt/hgfs/G/crtl/./crtl/crtl_log.h \
  /usr/include/stdio.h /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h \
@@ -9,10 +9,10 @@ CMakeFiles/acc_lib_shared.dir/src/network/crtl_network_byteorder.c.o: \
  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /work/workspace/crtl/./crtl/easy/attribute.h \
- /work/workspace/crtl/./crtl/easy/extern.h \
- /work/workspace/crtl/./crtl/network/byteorder.h \
- /work/workspace/crtl/./crtl/easy/endian.h /usr/include/endian.h \
+ /mnt/hgfs/G/crtl/./crtl/easy/attribute.h \
+ /mnt/hgfs/G/crtl/./crtl/easy/extern.h \
+ /mnt/hgfs/G/crtl/./crtl/network/byteorder.h \
+ /mnt/hgfs/G/crtl/./crtl/easy/endian.h /usr/include/endian.h \
  /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
  /usr/include/bits/byteswap-16.h \
  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdint.h \
@@ -26,4 +26,4 @@ CMakeFiles/acc_lib_shared.dir/src/network/crtl_network_byteorder.c.o: \
  /usr/include/bits/socket_type.h /usr/include/bits/sockaddr.h \
  /usr/include/asm/socket.h /usr/include/asm-generic/socket.h \
  /usr/include/asm/sockios.h /usr/include/asm-generic/sockios.h \
- /usr/include/bits/in.h /work/workspace/crtl/./crtl/easy/byteswap.h
+ /usr/include/bits/in.h /mnt/hgfs/G/crtl/./crtl/easy/byteswap.h
