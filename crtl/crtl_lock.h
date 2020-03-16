@@ -1,5 +1,5 @@
-#ifndef __CRTL_SYNC_H
-#define __CRTL_SYNC_H 1
+#ifndef __CRTL_LOCK_H
+#define __CRTL_LOCK_H 1
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -7,12 +7,11 @@
 
 #include "crtl/bits/crtl_lock_semaphore.h"
 #include "crtl/bits/crtl_lock_mutex.h"
+#include "crtl/bits/crtl_lock_spin.h"
+#include "crtl/bits/crtl_lock_rwlock.h"
+#include "crtl/bits/crtl_lock_cond.h"
+#include "crtl/bits/crtl_lock_barrier.h"
 
-
-
-typedef pthread_mutex_t     crtl_lock_mutex_t;
-typedef pthread_spinlock_t  crtl_lock_spin_t;
-typedef pthread_rwlock_t    crtl_lock_rw_t;
 
 
 
@@ -41,5 +40,5 @@ pid_t crtl_lock_test(int fd, int type, off_t offset, int whence, off_t len);
 
 
 
-#endif /*<__CRTL_SYNC_H>*/
+#endif /*<__CRTL_LOCK_H>*/
 

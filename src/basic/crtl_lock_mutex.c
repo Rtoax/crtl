@@ -18,8 +18,8 @@ int crtl_mutex_init(crtl_lock_mutex_t *mutex, const crtl_lock_mutexattr_t *attr)
 
 int crtl_mutex_destroy(crtl_lock_mutex_t *mutex)
 {
-    if(0 != crtl_mutex_destroy(mutex)) {
-        crtl_print_err("crtl_mutex_destroy error. %s\n", CRTL_SYS_ERROR);
+    if(0 != pthread_mutex_destroy(mutex)) {
+        crtl_print_err("pthread_mutex_destroy error. %s\n", CRTL_SYS_ERROR);
         return CRTL_ERROR;
     }
     return CRTL_SUCCESS;

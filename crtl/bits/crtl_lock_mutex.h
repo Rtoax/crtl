@@ -10,6 +10,7 @@
 typedef pthread_mutex_t     crtl_lock_mutex_t;
 typedef pthread_mutexattr_t crtl_lock_mutexattr_t;
 
+
 #define CRTL_LOCK_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER;
 
 
@@ -18,6 +19,8 @@ int crtl_mutex_init(crtl_lock_mutex_t *mutex, const crtl_lock_mutexattr_t *attr)
 int crtl_mutex_destroy(crtl_lock_mutex_t *mutex);
 int crtl_mutex_lock(crtl_lock_mutex_t *__mutex, int trywait, int timedwait, int seconds, long nanoseconds);
 int crtl_mutex_unlock(crtl_lock_mutex_t *__mutex);
+
+
 
 
 int crtl_mutexattr_init(crtl_lock_mutexattr_t *__attr);
@@ -84,6 +87,19 @@ extern int pthread_mutex_getprioceiling (const pthread_mutex_t *__mutex, int *__
 extern int pthread_mutex_setprioceiling (pthread_mutex_t *__mutex, int __prioceiling, int *__old_ceiling);
 
 
+//对thread的mutex，可以通过方法 pthread_mutexattr_setrobust()来设置健壮性属性
+//
+//属性为：PTHREAD_MUTEX_ROBUST
+//
+//通过设置锁的上面D 属性，我们就改变了默认的行为。
+//
+//当一个锁的owner死掉后，其它线程再去lock这个锁的时候，不会被阻塞，而是通过返回值EOWNERDEAD来报告错误。
+//
+//那么你可以根据这个错误来进行处理：首先是应该调用pthread_mutex_consistent函数来恢复该锁的一致性，
+//
+//然后调用解锁pthread_mutex_unlock，
+//
+//接下来在调用加锁，这样该锁的行为就恢复正常了。
 #ifdef __USE_XOPEN2K8
 /* Declare the state protected by MUTEX as consistent.  */
 extern int pthread_mutex_consistent (pthread_mutex_t *__mutex);
