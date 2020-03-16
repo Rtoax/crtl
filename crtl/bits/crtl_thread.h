@@ -92,6 +92,13 @@ int crtl_thread_create(crtl_thread_t * __newthread, int __detachstate, size_t __
                          crtl_thread_start_routine_fn __start_routine, void *__start_arg,
                          crtl_thread_cleanup_routine_fn __cleanup_routine, void *__clean_arg);
 
+crtl_thread_t crtl_thread_self();
+void crtl_thread_exit(int *retval);
+int crtl_thread_join(crtl_thread_t __th, void **__thread_return, int tryjoin, int timedjoin, int seconds, long nanoseconds);
+int crtl_thread_getattr(crtl_thread_t thread, crtl_threadattr_t *attr);
+
+int crtl_thread_equal(crtl_thread_t thread1, crtl_thread_t thread2);
+
 
 
 
@@ -106,7 +113,14 @@ extern int pthread_create(pthread_t *__restrict __newthread,
 
 extern void pthread_exit(void *__retval);
 
+//当调用 pthread_join() 时，当前线程会处于阻塞状态，直到被调用的线程结束后，当前线程才会重新开始执行。
+//当 pthread_join() 函数返回后，被调用线程才算真正意义上的结束，它的内存空间也会被释放（如果被调用线程是非分离的）。
+//这里有三点需要注意：
+//    被释放的内存空间仅仅是系统空间，你必须手动清除程序分配的空间，比如 malloc() 分配的空间。
+//    一个线程只能被一个线程所连接。
+//    被连接的线程必须是非分离的，否则连接会出错。
 extern int pthread_join(pthread_t __th, void **__thread_return);
+
 #ifdef __USE_GNU
 /* Check whether thread TH has terminated.  If yes return the status of
    the thread in *THREAD_RETURN, if THREAD_RETURN is not NULL.  */
@@ -146,12 +160,12 @@ extern int pthread_setschedparam(pthread_t __target_thread, int __policy,
 				  const struct sched_param *__param);
 
 /* Return in *POLICY and *PARAM the scheduling parameters for TARGET_THREAD. */
-extern int pthread_getschedparam (pthread_t __target_thread,
+extern int pthread_getschedparam(pthread_t __target_thread,
 				  int *__restrict __policy,
 				  struct sched_param *__restrict __param);
 
 /* Set the scheduling priority for TARGET_THREAD.  */
-extern int pthread_setschedprio (pthread_t __target_thread, int __prio);
+extern int pthread_setschedprio(pthread_t __target_thread, int __prio);
 
 
 #ifdef __USE_GNU

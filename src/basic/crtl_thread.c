@@ -37,6 +37,68 @@ int crtl_thread_create(crtl_thread_t * __newthread, int __detachstate, size_t __
     return CRTL_SUCCESS;
 }
 
+crtl_thread_t crtl_thread_self()
+{
+    pthread_t threadid = 0;
+    if(!(threadid = pthread_self())) {
+        crtl_print_err("pthread_self error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+    return threadid;
+}
+
+void crtl_thread_exit(int *retval)
+{
+    pthread_exit(retval);
+}
+
+
+int crtl_thread_join(crtl_thread_t __th, void **__thread_return, int tryjoin, int timedjoin, int seconds, long nanoseconds)
+{
+#ifdef __USE_GNU
+    if(tryjoin) {
+        if(0 != pthread_tryjoin_np(__th, __thread_return)) {
+            crtl_print_err("pthread_tryjoin_np error. %s\n", CRTL_SYS_ERROR);
+            return CRTL_ERROR;
+        }
+    } else if (timedjoin) {
+        //struct timespec {
+        //    time_t tv_sec;      /* Seconds */
+        //    long   tv_nsec;     /* Nanoseconds [0 .. 999999999] */
+        //};
+        struct timespec timespec = {seconds, nanoseconds};
+        if(0 != pthread_timedjoin_np(__th, __thread_return, &timespec)) {
+            crtl_print_err("pthread_timedjoin_np error. %s\n", CRTL_SYS_ERROR);
+            return CRTL_ERROR;
+        }    
+    } else 
+#endif //  __USE_GNU  
+    {
+        if(0 != pthread_join(__th, __thread_return)) {
+            crtl_print_err("pthread_join error. %s\n", CRTL_SYS_ERROR);
+            return CRTL_ERROR;
+        }
+    }
+    return CRTL_SUCCESS;
+}
+
+int crtl_thread_getattr(crtl_thread_t thread, crtl_threadattr_t *attr)
+{
+    if(0 != pthread_getattr_np(thread, attr)) {
+        crtl_print_err("pthread_getattr_np error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+    return CRTL_SUCCESS;
+}
+int crtl_thread_equal(crtl_thread_t thread1, crtl_thread_t thread2)
+{
+    if(0 != pthread_equal(thread1, thread2)) {
+        crtl_print_err("pthread_equal error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+    return CRTL_SUCCESS;
+}
+
 
 
 int crtl_threadattr_init(crtl_threadattr_t *attr)
