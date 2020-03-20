@@ -110,6 +110,7 @@
 #endif
 
 
+
 /*
  * Check at compile time that something is of a particular type.
  * Always evaluates to 1 so you may use it easily in comparisons.
@@ -142,11 +143,11 @@
 
 
 #ifndef likely
-#define likely(exp) __builtin_expect(!!exp, 1)
+#define likely(exp) __builtin_expect(!!(exp), 1)
 #endif 
 
 #ifndef unlikely
-#define unlikely(exp) __builtin_expect(!!exp, 0)
+#define unlikely(exp) __builtin_expect(!!(exp), 0)
 #endif
 
 /* put addr to the Cache before use */
@@ -282,6 +283,10 @@
 #define _bool_compare_and_swap(ptr, oldval, newold) __sync_bool_compare_and_swap(ptr, oldval, newold)
 #define _val_compare_and_swap(ptr, oldval, newold) __sync_val_compare_and_swap(ptr, oldval, newold)
 #define CAS(loc, old_value, new_value) __sync_bool_compare_and_swap((void **)loc, old_value, new_value)
+
+
+
+
 
 
 #endif //__CRTL_EASY_MACRO_H

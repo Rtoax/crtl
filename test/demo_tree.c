@@ -148,6 +148,24 @@ void demo_crtl_rbtree()
         struct structA *a1 = CRTL_RBTREE_DATA(node);
         rbt->display(a1);
     }
+
+    
+    crtl_print_debug("Use crtl_rbtree_iterator_t\n");
+    
+    struct structA *a1 = NULL;
+    crtl_rbtree_iterator_t iter = crtl_rbtree_iterator(rbt);
+    for(a1 = iter->first(iter); a1; a1 = iter->next(iter))
+    {
+        rbt->display(a1);
+    }
+    for(a1 = iter->prev(iter); a1; a1 = iter->prev(iter))
+    {
+        rbt->display(a1);
+    }
+    for(a1 = iter->next(iter); a1; a1 = iter->next(iter))
+    {
+        rbt->display(a1);
+    }
     
     crtl_rbtree_destroy(rbt);
 }

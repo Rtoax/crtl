@@ -26,6 +26,14 @@ typedef enum {
 #define crtl_print_debug(fmt...)    crtl_printfp(stdout, CRTL_LOG_DEBUG, 1, 1, __FILE__, __func__, __LINE__, fmt)
 
 
+#define CRTL_DEBUG 1
+
+#if CRTL_DEBUG
+ #define __crtl_dbg(fmt...) crtl_print_debug(fmt)
+#else
+ #define __crtl_dbg(fmt...)
+#endif
+
 
 
 

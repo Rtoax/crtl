@@ -60,6 +60,7 @@ int crtl_rwlock_wrlock(crtl_lock_rw_t *rwlock, int trywait, int timedwait, int s
     if(trywait) {
         if(0 != pthread_rwlock_trywrlock(rwlock)) {
             crtl_print_err("pthread_rwlock_trywrlock error. %s\n", CRTL_SYS_ERROR);
+            crtl_assert_fp(stderr, 0);
             return CRTL_ERROR;
         }
 #ifdef __USE_XOPEN2K
@@ -71,12 +72,14 @@ int crtl_rwlock_wrlock(crtl_lock_rw_t *rwlock, int trywait, int timedwait, int s
         struct timespec timespec = {seconds, nanoseconds};
         if(0 != pthread_rwlock_timedwrlock(rwlock, &timespec)) {
             crtl_print_err("pthread_rwlock_timedwrlock error. %s\n", CRTL_SYS_ERROR);
+            crtl_assert_fp(stderr, 0);
             return CRTL_ERROR;
         }
 #endif //  __USE_XOPEN2K      
     } else {
         if(0 != pthread_rwlock_wrlock(rwlock)) {
             crtl_print_err("pthread_rwlock_wrlock error. %s\n", CRTL_SYS_ERROR);
+            crtl_assert_fp(stderr, 0);
             return CRTL_ERROR;
         }
     }

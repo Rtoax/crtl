@@ -40,6 +40,8 @@ typedef unsigned char   crtl_byte;
 typedef __crtl_bits_set crtl_bits_set;
 
 
+
+
 #define CRTL_BITS_SETSIZE                    __CRTL_BITS_SETSIZE
 #define CRTL_BITS_SET(bit, p_bits_set)       __CRTL_BITS_SET(bit, p_bits_set)
 #define CRTL_BITS_CLR(bit, p_bits_set)       __CRTL_BITS_CLR(bit, p_bits_set)

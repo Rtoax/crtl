@@ -92,12 +92,205 @@ int crtl_thread_getattr(crtl_thread_t thread, crtl_threadattr_t *attr)
 }
 int crtl_thread_equal(crtl_thread_t thread1, crtl_thread_t thread2)
 {
-    if(0 != pthread_equal(thread1, thread2)) {
+    if(0 == pthread_equal(thread1, thread2)) {
         crtl_print_err("pthread_equal error. %s\n", CRTL_SYS_ERROR);
         return CRTL_ERROR;
     }
     return CRTL_SUCCESS;
 }
+
+
+
+int crtl_thread_getschedparam(crtl_thread_t thread, int *__sched_priority, int *__sched_policy)
+{
+    struct sched_param sched;
+    
+    if(0 != pthread_getschedparam(thread, __sched_policy, &sched)) {
+        crtl_print_err("pthread_getschedparam error. %s\n", CRTL_SYS_ERROR);
+        *__sched_priority = -1;
+        return CRTL_ERROR;
+    }
+    
+    *__sched_priority = sched.sched_priority;
+    return CRTL_SUCCESS;
+}
+
+int crtl_thread_setschedparam(crtl_thread_t thread, int __sched_priority/*1-99*/, int __sched_policy)
+{
+    struct sched_param sched;
+    sched.sched_priority = __sched_priority;
+    
+    if(0 != pthread_setschedparam(thread, __sched_policy, &sched)) {
+        crtl_print_err("pthread_setschedparam error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+    
+    return CRTL_SUCCESS;
+}
+
+int crtl_thread_setschedparam_fifo(crtl_thread_t thread, int __sched_priority/*1-99*/)
+{//SCHED_FIFO, SCHED_RR, and SCHED_OTHER
+    return crtl_thread_setschedparam(thread, __sched_priority, SCHED_FIFO);
+}
+int crtl_thread_setschedparam_rr(crtl_thread_t thread, int __sched_priority/*1-99*/)
+{//SCHED_FIFO, SCHED_RR, and SCHED_OTHER
+    return crtl_thread_setschedparam(thread, __sched_priority, SCHED_RR);//轮询
+}
+
+int crtl_thread_setschedparam_other(crtl_thread_t thread)
+{//SCHED_FIFO, SCHED_RR, and SCHED_OTHER
+    return crtl_thread_setschedparam(thread, 0, SCHED_OTHER);
+}
+
+int crtl_thread_setschedprio(crtl_thread_t thread, int __sched_priority/*1-99*/)
+{
+    if(0 != pthread_setschedprio(thread, __sched_priority)) {
+        crtl_print_err("pthread_setschedprio error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+    return CRTL_SUCCESS;
+}
+
+
+int crtl_thread_getname(crtl_thread_t thread, char *__buf, int buf_len)
+{
+#ifdef __USE_GNU
+    if(0 != pthread_getname_np(thread, __buf, buf_len)) {
+        crtl_print_err("pthread_getname_np error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+#else
+    strcpy(__buf, "unknown");
+#endif
+    return CRTL_SUCCESS;
+}
+int crtl_thread_setname(crtl_thread_t thread, const char *__name)
+{
+#ifdef __USE_GNU
+    if(0 != pthread_setname_np(thread, __name)) {
+        crtl_print_err("pthread_setname_np error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+#else
+    crtl_print_err("pthread_setname_np undefine __USE_GNU error. \n");
+#endif
+    return CRTL_SUCCESS;
+}
+
+int crtl_thread_getconcurrency(void)
+{
+#ifdef __USE_UNIX98
+    return pthread_getconcurrency();
+#else
+    crtl_print_err("pthread_getconcurrency not support error.\n");
+    return 0;
+#endif
+}
+int crtl_thread_setconcurrency(int __level)
+{
+#ifdef __USE_UNIX98
+    if(0 != pthread_setconcurrency(__level)) {
+        crtl_print_err("pthread_setconcurrency error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+#else
+    crtl_print_err("pthread_setconcurrency not support error.\n");
+    return CRTL_ERROR;
+#endif
+    return CRTL_SUCCESS;
+}
+
+
+int crtl_thread_yield(void)
+{
+#ifdef __USE_GNU
+    if(0 != pthread_yield()) {
+        crtl_print_err("pthread_yield error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+#endif    
+    return CRTL_SUCCESS;
+}
+
+
+
+int crtl_thread_getaffinity(const crtl_thread_t thread, cpu_set_t *__cpuset)
+{
+#ifdef __USE_GNU
+    if(0 != pthread_getaffinity_np(thread, sizeof(cpu_set_t), __cpuset)) {
+        crtl_print_err("pthread_getaffinity_np error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+#endif //__USE_GNU
+    return CRTL_SUCCESS;
+}
+
+int crtl_thread_setaffinity(crtl_thread_t thread, const cpu_set_t *__cpuset)
+{
+#ifdef __USE_GNU
+    if(0 != pthread_setaffinity_np(thread, sizeof(cpu_set_t), __cpuset)) {
+        crtl_print_err("pthread_setaffinity_np error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+#endif //__USE_GNU
+    return CRTL_SUCCESS;
+}
+
+
+int crtl_thread_once(crtl_thread_once_t *__once_control, void (*__init_routine) (void))
+{
+    if(0 != pthread_once(__once_control, __init_routine)) {
+        crtl_print_err("pthread_once error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+    return CRTL_SUCCESS;
+}
+
+int crtl_thread_setcancelstate(int __state, int *__oldstate)
+{//PTHREAD_CANCEL_ENABLE（缺省）和PTHREAD_CANCEL_DISABLE
+    if(0 != pthread_setcancelstate(__state, __oldstate)) {
+        crtl_print_err("pthread_setcancelstate error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+    return CRTL_SUCCESS;
+}
+
+int crtl_thread_setcancelstate_enable(int *__oldstate)
+{
+    return crtl_thread_setcancelstate(PTHREAD_CANCEL_ENABLE, __oldstate);
+}
+int crtl_thread_setcancelstate_disable(int *__oldstate)
+{
+    return crtl_thread_setcancelstate(PTHREAD_CANCEL_DISABLE, __oldstate);
+}
+
+int crtl_thread_setcanceltype(int __type, int *__oldtype)
+{//PTHREAD_CANCEL_DEFERRED和PTHREAD_CANCEL_ASYNCHRONOUS
+    if(0 != pthread_setcanceltype(__type, __oldtype)) {
+        crtl_print_err("pthread_setcanceltype error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+    return CRTL_SUCCESS;
+}
+int crtl_thread_setcanceltype_deferred(int *__oldtype)
+{
+    return crtl_thread_setcanceltype(PTHREAD_CANCEL_DEFERRED, __oldtype);
+}
+int crtl_thread_setcanceltype_asynchronous(int *__oldtype)
+{
+    return crtl_thread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, __oldtype);
+}
+
+int crtl_thread_cancel(crtl_thread_t thread)
+{
+    if(0 != pthread_cancel(thread)) {
+        crtl_print_err("pthread_cancel error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+    return CRTL_SUCCESS;
+}
+
+void crtl_thread_testcancel(void){pthread_testcancel();}
 
 
 
@@ -344,6 +537,44 @@ int crtl_threadattr_setaffinity(crtl_threadattr_t *__attr, const cpu_set_t *__cp
         return CRTL_ERROR;
     }
 #endif //__USE_GNU
+    return CRTL_SUCCESS;
+}
+
+
+
+int crtl_thread_key_create(crtl_thread_key_t *key, void (*destructor_fn)(void *))
+{
+    if(0 != pthread_key_create(key, destructor_fn)) {
+        crtl_print_err("pthread_key_create error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+    return CRTL_SUCCESS;
+}
+int crtl_thread_key_delete(crtl_thread_key_t key)
+{
+    if(0 != pthread_key_delete(key)) {
+        crtl_print_err("pthread_key_delete error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+    return CRTL_SUCCESS;
+}
+
+void* crtl_thread_key_getspecific(crtl_thread_key_t key)
+{
+    void *ret = NULL;
+    if(NULL == (ret = pthread_getspecific(key))) {
+        crtl_print_err("pthread_getspecific error. %s\n", CRTL_SYS_ERROR);
+        return NULL;
+    }
+    return ret;
+}
+
+int crtl_thread_key_setspecific(crtl_thread_key_t key, const void *ptr)
+{
+    if(0 != pthread_setspecific(key, ptr)) {
+        crtl_print_err("pthread_setspecific error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
     return CRTL_SUCCESS;
 }
 

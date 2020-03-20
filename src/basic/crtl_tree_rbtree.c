@@ -473,20 +473,35 @@ EXPORT_SYMBOL(rb_replace_node);
 
 
 
+inline static void _unused* crtl_rbtree_iterator_first(struct crtl_rbtree_iterator_struct *iter);
+inline static void _unused* crtl_rbtree_iterator_next(struct crtl_rbtree_iterator_struct *iter);
+inline static void _unused* crtl_rbtree_iterator_prev(struct crtl_rbtree_iterator_struct *iter);
+inline static void _unused* crtl_rbtree_iterator_last(struct crtl_rbtree_iterator_struct *iter);
+
 struct crtl_rbtree_struct* crtl_rbtree_init(int (*cmp)(void *, void *), int (*display)(void *))
 {
     struct crtl_rbtree_struct* rbtree = malloc(sizeof(struct crtl_rbtree_struct));
     if(!rbtree)
     {
         crtl_print_err("null pointer error.\n");
+        crtl_assert_fp(stderr, rbtree);
         return NULL;
     }
     
     rbtree->root.rb_node = NULL;
 
-    rbtree->nnode = 1;
+    rbtree->nnode = 0;
     rbtree->cmp = cmp;
     rbtree->display = display;
+
+    /* 初始化迭代器 */
+    rbtree->iter.rbtree = rbtree;
+    rbtree->iter.curr_node = NULL;
+    
+    rbtree->iter.first = crtl_rbtree_iterator_first;
+    rbtree->iter.next = crtl_rbtree_iterator_next;
+    rbtree->iter.prev = crtl_rbtree_iterator_prev;
+    rbtree->iter.last = crtl_rbtree_iterator_last;
     
     return rbtree;
 }
@@ -495,11 +510,12 @@ struct crtl_rbtree_struct* crtl_rbtree_init(int (*cmp)(void *, void *), int (*di
 /* insert */
 int crtl_rbtree_insert(struct crtl_rbtree_struct* rbtree, void *data, unsigned int data_size)
 {
+    crtl_assert_fp(stderr, rbtree);
     if(!data || data_size<=0)
     {
         crtl_print_err("null pointer or out of range error.\n");
         crtl_assert_fp(stderr, 0);
-        return -1;
+        return CRTL_ERROR;
     }
     
     struct rb_node **tmp = &(rbtree->root.rb_node), *parent= NULL;
@@ -521,7 +537,7 @@ int crtl_rbtree_insert(struct crtl_rbtree_struct* rbtree, void *data, unsigned i
         } else {
             crtl_print_err("This RBnode already exist.\n");
             crtl_assert_fp(stderr, 0);
-            return -1;
+            return CRTL_ERROR;
         }
     }
     rb_link_node(&newnode->node, parent, tmp);
@@ -529,16 +545,18 @@ int crtl_rbtree_insert(struct crtl_rbtree_struct* rbtree, void *data, unsigned i
 
     rbtree->nnode += 1;
     
-    return 0;
+    return CRTL_SUCCESS;
 }
 
 
 /* search */
 struct crtl_rbtree_node_struct *crtl_rbtree_search(struct crtl_rbtree_struct* rbtree, void *data)
 {
+    crtl_assert_fp(stderr, rbtree);
     if(!data)
     {
         crtl_print_err("null pointer error.\n");
+        crtl_assert_fp(stderr, data);
         return NULL;
     }
     
@@ -567,30 +585,34 @@ struct crtl_rbtree_node_struct *crtl_rbtree_search(struct crtl_rbtree_struct* rb
 /* delete */
 int crtl_rbtree_delete(struct crtl_rbtree_struct* rbtree, void *data)
 {
+    crtl_assert_fp(stderr, rbtree);
     if(!data)
     {
         crtl_print_err("null pointer error.\n");
-        return -1;
+        crtl_assert_fp(stderr, data);
+        return CRTL_ERROR;
     }
     
     struct crtl_rbtree_node_struct *node_data = crtl_rbtree_search(rbtree, data);
     if(!node_data)
     {
         crtl_print_err("Not found rbtree node.\n");
-        return -1;
+        return CRTL_ERROR;
     }
     rb_erase(&node_data->node, &rbtree->root);
     free(node_data);
 
     rbtree->nnode -= 1;
     
-    return 0;
+    return CRTL_SUCCESS;
 }
 
 
 /* getfirst */
 struct crtl_rbtree_node_struct* crtl_rbtree_getfirst(struct crtl_rbtree_struct* rbtree)
 {
+    crtl_assert_fp(stderr, rbtree);
+    
     struct rb_node *first_rb_node = rb_first(&rbtree->root);
     struct crtl_rbtree_node_struct  *first_rt_rbtree_node = rb_entry(first_rb_node, struct crtl_rbtree_node_struct, node);
     
@@ -602,6 +624,8 @@ struct crtl_rbtree_node_struct* crtl_rbtree_getfirst(struct crtl_rbtree_struct* 
 /* getfirst */
 struct crtl_rbtree_node_struct* crtl_rbtree_getlast(struct crtl_rbtree_struct* rbtree)
 {
+    crtl_assert_fp(stderr, rbtree);
+    
     struct rb_node *first_rb_node = rb_last(&rbtree->root);
     struct crtl_rbtree_node_struct  *first_rt_rbtree_node = rb_entry(first_rb_node, struct crtl_rbtree_node_struct, node);
     
@@ -614,6 +638,8 @@ struct crtl_rbtree_node_struct* crtl_rbtree_getlast(struct crtl_rbtree_struct* r
 /* getnext */
 struct crtl_rbtree_node_struct* crtl_rbtree_getnext(struct crtl_rbtree_node_struct* node)
 {   
+    crtl_assert_fp(stderr, node);
+    
     struct rb_node *next_rb_node = rb_next(&node->node);
     struct crtl_rbtree_node_struct  *next_rt_rbtree_node = rb_entry(next_rb_node, struct crtl_rbtree_node_struct, node);
     
@@ -623,8 +649,10 @@ struct crtl_rbtree_node_struct* crtl_rbtree_getnext(struct crtl_rbtree_node_stru
     return NULL;
 }
 /* getnext */
-struct crtl_rbtree_node_struct* rt_rbtree_getprev(struct crtl_rbtree_node_struct* node)
+struct crtl_rbtree_node_struct* crtl_rbtree_getprev(struct crtl_rbtree_node_struct* node)
 {   
+    crtl_assert_fp(stderr, node);
+    
     struct rb_node *next_rb_node = rb_prev(&node->node);
     struct crtl_rbtree_node_struct  *next_rt_rbtree_node = rb_entry(next_rb_node, struct crtl_rbtree_node_struct, node);
     
@@ -637,6 +665,8 @@ struct crtl_rbtree_node_struct* rt_rbtree_getprev(struct crtl_rbtree_node_struct
 /* destroy */
 int crtl_rbtree_destroy(struct crtl_rbtree_struct* rbtree)
 {
+    crtl_assert_fp(stderr, rbtree);
+    
     struct crtl_rbtree_node_struct *find_node = NULL;
 
     for(find_node=crtl_rbtree_getfirst(rbtree); find_node; find_node=crtl_rbtree_getfirst(rbtree))
@@ -647,11 +677,62 @@ int crtl_rbtree_destroy(struct crtl_rbtree_struct* rbtree)
     free(rbtree);
     rbtree = NULL;
     
-    return 0;
+    return CRTL_SUCCESS;
+}
+
+struct crtl_rbtree_iterator_struct* crtl_rbtree_iterator(struct crtl_rbtree_struct* rbtree)
+{
+    crtl_assert_fp(stderr, rbtree);
+    return &(rbtree->iter);
+}
+
+inline static void _unused* crtl_rbtree_iterator_first(struct crtl_rbtree_iterator_struct *iter)
+{
+    crtl_assert_fp(stderr, iter);
+//    container_of(ptr, type, member)
+    iter->curr_node = crtl_rbtree_getfirst(iter->rbtree);
+    return iter->curr_node?(void*)iter->curr_node->data:NULL;
+}
+inline static void _unused* crtl_rbtree_iterator_next(struct crtl_rbtree_iterator_struct *iter)
+{
+    crtl_assert_fp(stderr, iter);
+    
+    struct crtl_rbtree_node_struct _unused *tmp_node = iter->curr_node;
+    
+    iter->curr_node = crtl_rbtree_getnext(iter->curr_node);
+    
+    if(iter->curr_node == NULL) {//如果想获取最后一个的下一个，currentnode指向最后一个节点，返回NULL
+        iter->curr_node = tmp_node;
+        return NULL;
+    } else {
+        return (void*)iter->curr_node->data;
+    }
+}
+inline static void _unused* crtl_rbtree_iterator_prev(struct crtl_rbtree_iterator_struct *iter)
+{
+    crtl_assert_fp(stderr, iter);
+    struct crtl_rbtree_node_struct _unused *tmp_node = iter->curr_node;
+    
+    iter->curr_node = crtl_rbtree_getprev(iter->curr_node);
+    
+    if(iter->curr_node == NULL) { //如果想获取第一个的上一个，currentnode指向第一个节点，返回NULL
+        iter->curr_node = tmp_node;
+        return NULL;
+    } else {
+        return (void*)iter->curr_node->data;
+    }
+}
+inline static void _unused* crtl_rbtree_iterator_last(struct crtl_rbtree_iterator_struct *iter)
+{
+    crtl_assert_fp(stderr, iter);
+    iter->curr_node = crtl_rbtree_getlast(iter->rbtree);
+    return iter->curr_node?(void*)iter->curr_node->data:NULL;
 }
 
 
-#ifdef _______________________adsfadf
+
+
+#ifdef ______cPP___iterator_demo______rongtao
 
 
 #include <iostream>

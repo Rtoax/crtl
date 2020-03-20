@@ -179,6 +179,23 @@ static inline void rb_link_node(struct rb_node * node, struct rb_node * parent,
 #endif	/* _LINUX_RBTREE_H */
 
 
+struct crtl_rbtree_struct;
+struct crtl_rbtree_node_struct;
+
+
+/* 红黑树迭代器 */
+struct crtl_rbtree_iterator_struct {
+    struct crtl_rbtree_struct *rbtree;
+    struct crtl_rbtree_node_struct *curr_node;
+    void* (*first)(struct crtl_rbtree_iterator_struct *);
+    void* (*next)(struct crtl_rbtree_iterator_struct *); 
+    void* (*prev)(struct crtl_rbtree_iterator_struct *);
+    void* (*last)(struct crtl_rbtree_iterator_struct *);
+};
+
+
+
+
 
 struct crtl_rbtree_struct {
     struct rb_root root;
@@ -187,7 +204,8 @@ struct crtl_rbtree_struct {
 
     int (*cmp)(void *data1, void*data2);
     int (*display)(void *data);
-    
+
+    struct crtl_rbtree_iterator_struct iter;
 };
 
 
@@ -197,6 +215,9 @@ struct crtl_rbtree_node_struct {
     void            *data;
     unsigned int    data_size;
 };
+
+
+
 
 
 #endif /*<__CRTL_BITS_TREE_RBTREE_H>*/

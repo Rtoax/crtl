@@ -1,6 +1,14 @@
 #ifndef __CRTL_BITS_TIME_DEF_H
 #define __CRTL_BITS_TIME_DEF_H 1
 
+
+
+#include <time.h>
+#include <sys/time.h>
+#include <sys/times.h>
+#include <sys/timex.h>
+
+
 #define T_CLOCKS_PER_SEC    CLOCKS_PER_SEC
 #define T_CLK_TCK           CLK_TCK
 

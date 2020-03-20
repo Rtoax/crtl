@@ -25,17 +25,20 @@
 
 
 
-#define crtl_thread_normal(p_threadID, fn, arg, cleanup_fn, cleanup_arg) \
+#define crtl_thread_normal(p_threadID, fn, arg) \
     crtl_thread_create(p_threadID, PTHREAD_CREATE_DETACHED, 0, \
                         CRTL_THREAD_SCHED_PRIO_NORMAL, SCHED_FIFO, PTHREAD_SCOPE_SYSTEM,\
-                        NULL, 0, 0, fn, arg, cleanup_fn, cleanup_arg)
-
-
-
+                        NULL, 0, 0, fn, arg, NULL, NULL)
 
 
 typedef pthread_t       crtl_thread_t;
 typedef pthread_attr_t  crtl_threadattr_t;
+typedef pthread_once_t  crtl_thread_once_t;
+typedef pthread_key_t   crtl_thread_key_t;
+
+
+
+#define CRTL_THREAD_ONCE_INIT   PTHREAD_ONCE_INIT
 
 
 typedef void *(*crtl_thread_start_routine_fn)(void *);
@@ -99,8 +102,49 @@ int crtl_thread_getattr(crtl_thread_t thread, crtl_threadattr_t *attr);
 
 int crtl_thread_equal(crtl_thread_t thread1, crtl_thread_t thread2);
 
+int crtl_thread_getschedparam(crtl_thread_t thread, int *__sched_priority, int *__sched_policy);
+int crtl_thread_setschedparam(crtl_thread_t thread, int __sched_priority/*1-99*/, int __sched_policy);
+int crtl_thread_setschedparam_fifo(crtl_thread_t thread, int __sched_priority/*1-99*/);
+int crtl_thread_setschedparam_rr(crtl_thread_t thread, int __sched_priority/*1-99*/);
+int crtl_thread_setschedparam_other(crtl_thread_t thread);
+int crtl_thread_setschedprio(crtl_thread_t thread, int __sched_priority/*1-99*/);
+
+int crtl_thread_getname(crtl_thread_t thread, char *__buf, int buf_len);
+int crtl_thread_setname(crtl_thread_t thread, const char *__name);
+
+int crtl_thread_getconcurrency(void);
+int crtl_thread_setconcurrency(int __level);
+
+int crtl_thread_yield(void);
 
 
+int crtl_thread_getaffinity(const crtl_thread_t thread, cpu_set_t *__cpuset);
+int crtl_thread_setaffinity(crtl_thread_t thread, const cpu_set_t *__cpuset);
+
+int crtl_thread_once(crtl_thread_once_t *__once_control, void (*__init_routine) (void));
+
+
+int crtl_thread_setcancelstate(int __state, int *__oldstate);
+int crtl_thread_setcancelstate_enable(int *__oldstate);
+int crtl_thread_setcancelstate_disable(int *__oldstate);
+
+int crtl_thread_setcanceltype(int __type, int *__oldtype);
+int crtl_thread_setcanceltype_deferred(int *__oldtype);
+int crtl_thread_setcanceltype_asynchronous(int *__oldtype);
+
+int crtl_thread_cancel(crtl_thread_t thread);
+void crtl_thread_testcancel(void);
+
+int crtl_thread_key_create(crtl_thread_key_t *key, void (*destructor_fn)(void *));
+int crtl_thread_key_delete(crtl_thread_key_t key);
+void* crtl_thread_key_getspecific(crtl_thread_key_t key);
+int crtl_thread_key_setspecific(crtl_thread_key_t key, const void *ptr);
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 #ifndef _PTHREAD_H
@@ -191,7 +235,7 @@ extern int pthread_setconcurrency (int __level);
    This function is similar to the POSIX `sched_yield' function but
    might be differently implemented in the case of a m-on-n thread
    implementation.  */
-extern int pthread_yield (void);
+extern int pthread_yield (void);//线程让出CPU
 
 
 /* Limit specified thread TH to run only on the processors represented
@@ -226,21 +270,107 @@ extern int pthread_once (pthread_once_t *__once_control,
 
 /* Set cancelability state of current thread to STATE, returning old
    state in *OLDSTATE if OLDSTATE is not NULL.  */
+//设置本线程对Cancel信号的反应，state有两种值：PTHREAD_CANCEL_ENABLE（缺省）和PTHREAD_CANCEL_DISABLE，
+//分别表示收到信号后设为CANCLED状态和忽略CANCEL信号继续运行；old_state如果不为NULL则存入原来的Cancel状态以便恢复。
 extern int pthread_setcancelstate (int __state, int *__oldstate);
 
 /* Set cancellation state of current thread to TYPE, returning the old
    type in *OLDTYPE if OLDTYPE is not NULL.  */
+//设置本线程取消动作的执行时机，type由两种取值：PTHREAD_CANCEL_DEFFERED和PTHREAD_CANCEL_ASYCHRONOUS，
+//仅当Cancel状态为Enable时有效，分别表示收到信号后继续运行至下一个取消点再退出和立即执行取消动作（退出）；
+//oldtype如果不为NULL则存入运来的取消动作类型值。
 extern int pthread_setcanceltype (int __type, int *__oldtype);
 
 /* Cancel THREAD immediately or at the next possibility.  */
+//发送终止信号给thread线程，如果成功则返回0，否则为非0值。发送成功并不意味着thread会终止
 extern int pthread_cancel (pthread_t __th);
 
 /* Test for pending cancellation for the current thread and terminate
    the thread as per pthread_exit(PTHREAD_CANCELED) if it has been
    cancelled.  */
+//是说pthread_testcancel在不包含取消点，但是又需要取消点的地方创建一个取消点，
+//以便在一个没有包含取消点的执行代码线程中响应取消请求.
+//线程取消功能处于启用状态且取消状态设置为延迟状态时，pthread_testcancel()函数有效。
+//如果在取消功能处处于禁用状态下调用pthread_testcancel()，则该函数不起作用。
+//请务必仅在线程取消线程操作安全的序列中插入pthread_testcancel()。
+//除通过pthread_testcancel()调用以编程方式建立的取消点意外，pthread标准还指定了几个取消点。
+//测试退出点,就是测试cancel信号.
 extern void pthread_testcancel (void);
 
+#ifdef ____TEST_pthread_cancel_wocainimeidingyiba
 
+#include<stdio.h>  
+#include<stdlib.h>  
+#include <pthread.h>  
+void *thread_fun(void *arg)  
+{  
+    int i=1;  
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+    /*同步取消，等到下一个取消点再取消*/
+    pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);   
+
+    printf("thread start \n");  
+    while(1)  
+    {  
+        i++;  
+        /*手动建立一个取消点, 防止线程中无取消点，导致线程不取消。*/
+        pthread_testcancel();  
+    }  
+    return (void *)0;  
+}  
+int main()  
+{  
+    void *ret=NULL;  
+    int iret=0;  
+    pthread_t tid;  
+    pthread_create(&tid,NULL,thread_fun,NULL);  
+    sleep(1);  
+
+    pthread_cancel(tid);//取消线程  
+    pthread_join(tid, &ret);  
+    printf("thread 3 exit code %d\n", (int)ret);  
+
+    return 0;  
+
+}  
+/////////////////////////////////////////////
+#include<stdio.h>  
+#include<stdlib.h>  
+#include <pthread.h>  
+void *thread_fun(void *arg)  
+{  
+    int i=1;  
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+    /*同步取消，等到下一个取消点再取消*/
+//      pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
+    /*异步取消， 线程接到取消信号后，立即退出*/
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+
+    printf("thread start \n");  
+
+    while(1)  
+    {  
+        i++;  
+    }  
+    return (void *)0;  
+}  
+int main()  
+{  
+    void *ret=NULL;  
+    int iret=0;  
+    pthread_t tid;  
+    pthread_create(&tid,NULL,thread_fun,NULL);  
+    sleep(1);  
+
+    pthread_cancel(tid);//取消线程  
+    pthread_join(tid, &ret);  
+    printf("thread 3 exit code %d\n", (int)ret);  
+
+    return 0;  
+
+}  
+
+#endif//____TEST_pthread_cancel_wocainimeidingyiba
 
 
 /* Thread attribute handling.  */
@@ -378,6 +508,143 @@ extern int pthread_attr_getaffinity_np(const pthread_attr_t *__attr,
 					size_t __cpusetsize,
 					cpu_set_t *__cpuset);
 #endif //__USE_GNU
+
+
+
+/* Functions for handling thread-specific data.  */
+//在多线程的环境下，进程内的所有线程共享进程的数据空间。因此全局变量为所有线程共享。
+//在程序设计中有时需要保存线程自己的全局变量，这种特殊的变量仅在线程内部有效。
+//
+//如常见的errno，它返回标准的错误码。errno不应该是一个局部变量。几乎每个函数都应该可以访问他，
+//但他又不能作为是一个全局变量。否则在一个线程里输出的很可能是另一个线程的
+//
+//出错信息，这个问题可以通过创建线程的私有数据（TSD  thread specific data）来解决。
+//在线程内部，私有数据可以被各个函数访问。但他对其他线程是屏蔽的。
+//
+//线程私有数据采用了一键多值的技术，即一个键对应多个值。访问数据时都是通过键值来访问，
+//好像是对一个变量进行访问，其实是在访问不同的数据。
+//
+// 
+//
+//int pthread_key_create(pthread_key_t *key, void (*destructor)(void*));
+//第一个参数为指向一个键值的指针，第二个参数指明了一个destructor函数，
+//
+//如果这个参数不为空，那么当每个线程结束时，系统将调用这个函数来释放绑定在这个键上的内存块。
+//
+//key一旦被创建，所有线程都可以访问它，但各线程可根据自己的需要往key中填入不同的值，
+//这就相当于提供了一个同名而不同值的全局变量，一键多值。
+//
+//一键多值靠的是一个关键数据结构数组即TSD池，创建一个TSD就相当于将结构数组中的某一项设置为“in_use”，
+//并将其索引返回给*key，然后设置清理函数。
+//
+// 
+//1、创建一个键
+//2、为一个键设置线程私有数据
+//3、从一个键读取线程私有数据void *pthread_getspecific(pthread_key_t key);
+//4、线程退出（退出时，会调用destructor释放分配的缓存，参数是key所关联的数据）
+//5、删除一个键
+/* Create a key value identifying a location in the thread-specific
+   data area.  Each thread maintains a distinct thread-specific data
+   area.  DESTR_FUNCTION, if non-NULL, is called with the value
+   associated to that key when the key is destroyed.
+   DESTR_FUNCTION is not called if the value associated is NULL when
+   the key is destroyed.  */
+//第一个参数为指向一个键值的指针，
+//第二个参数指明了一个destructor函数，如果这个参数不为空，那么当每个线程结束时，系统将调用这个函数来释放绑定在这个键上的内存块。
+extern int pthread_key_create(pthread_key_t *__key, void (*__destr_function) (void *));
+
+/* Destroy KEY.  */
+extern int pthread_key_delete(pthread_key_t __key);
+
+/* Return current value of the thread-specific data slot identified by KEY.  */
+extern void *pthread_getspecific(pthread_key_t __key);
+
+/* Store POINTER in the thread-specific data slot identified by KEY. */
+extern int pthread_setspecific(pthread_key_t __key, const void *__pointer);
+
+#ifdef _____PTHREAD_key_test_rongtao
+
+#include <pthread.h>
+#include <stdio.h>
+
+pthread_key_t key;
+pthread_t thid1;
+pthread_t thid2;
+
+void* thread2(void* arg)
+{
+    printf("thread:%lu is running\n", pthread_self());
+    
+    int key_va = 3 ;
+
+    pthread_setspecific(key, (void*)key_va);
+    
+    printf("thread:%lu return %d\n", pthread_self(), (int)pthread_getspecific(key));
+}
+
+
+void* thread1(void* arg)
+{
+    printf("thread:%lu is running\n", pthread_self());
+    
+    int key_va = 5;
+    
+    pthread_setspecific(key, (void*)key_va);
+
+    pthread_create(&thid2, NULL, thread2, NULL);
+
+    printf("thread:%lu return %d\n", pthread_self(), (int)pthread_getspecific(key));
+}
+
+
+int main()
+{
+    printf("main thread:%lu is running\n", pthread_self());
+
+    pthread_key_create(&key, NULL);
+
+    pthread_create(&thid1, NULL, thread1, NULL);
+    
+    pthread_join(thid1, NULL);
+    pthread_join(thid2, NULL);
+
+    int key_va = 1;
+    pthread_setspecific(key, (void*)key_va);
+    
+    printf("thread:%lu return %d\n", pthread_self(), (int)pthread_getspecific(key));
+
+    pthread_key_delete(key);
+        
+    printf("main thread exit\n");
+    return 0;
+}
+
+#endif
+
+
+
+
+#ifdef __USE_XOPEN2K
+/* Get ID of CPU-time clock for thread THREAD_ID.  */
+extern int pthread_getcpuclockid (pthread_t __thread_id, __clockid_t *__clock_id);
+#endif
+
+
+/* Install handlers to be called when a new process is created with FORK.
+   The PREPARE handler is called in the parent process just before performing
+   FORK. The PARENT handler is called in the parent process just after FORK.
+   The CHILD handler is called in the child process.  Each of the three
+   handlers can be NULL, meaning that no handler needs to be called at that
+   point.
+   PTHREAD_ATFORK can be called several times, in which case the PREPARE
+   handlers are called in LIFO order (last added with PTHREAD_ATFORK,
+   first called before FORK), and the PARENT and CHILD handlers are called
+   in FIFO (first added, first called).  */
+
+extern int pthread_atfork (void (*__prepare) (void),
+			   void (*__parent) (void),
+			   void (*__child) (void));
+
 
 #endif//_PTHREAD_H
 
