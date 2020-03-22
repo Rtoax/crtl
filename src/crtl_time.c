@@ -1,8 +1,11 @@
 #include <errno.h>
+#include <stdlib.h>
 #include <sys/time.h>
 #include <sys/resource.h>
 
-#include "crtl_time.h"
+#include "crtl/crtl_time.h"
+#include "crtl/crtl_types.h"
+
 
 
 /* double second sleep */
@@ -51,6 +54,17 @@ inline int crtl_timeval_subtract(struct timeval *result, struct timeval *x, stru
 	
 	return x->tv_sec < y->tv_sec;
 }
+
+
+/* 两个timeval时间间隔 */
+inline long crtl_timeval_interval_usec(t_timeval *t1, t_timeval *t2)
+{
+    long _t1uSec = t1->tv_sec*1000000 + t1->tv_usec;
+    long _t2uSec = t2->tv_sec*1000000 + t2->tv_usec;
+    
+    return labs(_t1uSec-_t2uSec);
+}
+
 
 float crtl_cpusecond()
 /*****************************************************************************

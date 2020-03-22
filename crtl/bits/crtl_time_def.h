@@ -12,6 +12,42 @@
 #define T_CLOCKS_PER_SEC    CLOCKS_PER_SEC
 #define T_CLK_TCK           CLK_TCK
 
+#ifndef _BITS_TIME_H
+struct timeval
+{
+    __time_t tv_sec;		/* Seconds.  */
+    __suseconds_t tv_usec;	/* Microseconds.  */
+};
+#endif//_BITS_TIME_H
+
+#ifndef _SYS_TIME_H
+struct itimerval
+{
+    /* Value to put into `it_value' when the timer expires.  */
+    struct timeval it_interval;
+    /* Time to the next timer expiration.  */
+    struct timeval it_value;
+};
+#endif //_SYS_TIME_H
+
+#ifdef __itimerspec_defined_rongtao
+/* POSIX.1b structure for timer start values and intervals.  */
+struct itimerspec {
+   struct timespec it_interval;  /* Interval for periodic timer */
+   struct timespec it_value;     /* Initial expiration */
+};
+
+struct timespec {
+   time_t tv_sec;                /* Seconds */
+   long   tv_nsec;               /* Nanoseconds */
+};
+
+
+
+
+#endif//__itimerspec_defined_rongtao
+
+
 typedef struct timeval t_timeval; /* tv_sec, tv_usec */
 typedef struct timespec t_timespec; /* tv_sec, tv_usec */
 typedef struct tms t_tms; /* tms_utime,tms_stime, tms_cutime, tms_cstime */

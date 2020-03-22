@@ -2,7 +2,8 @@
 #define __CRTL_TIMER_H 1
 
 
-#include "crtl/bits/crtl_time_def.h"
+#include "crtl/bits/crtl_timer_def.h"
+#include "crtl/easy/macro.h"
 
 
 
