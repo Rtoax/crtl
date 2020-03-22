@@ -130,9 +130,18 @@ void demo_crtl_rbtree()
 {
     crtl_rbtree_t rbt = crtl_rbtree_init(&demo_crtl_rbtree_cmp, &demo_crtl_rbtree_display);
 
+    crtl_print_debug(">>nnode %d.\n", crtl_rbtree_nnode(rbt));
+    crtl_print_debug(">>nnode %d. is empty %s\n", 
+                                crtl_rbtree_nnode(rbt), crtl_rbtree_is_empty(rbt)==CRTL_SUCCESS?"YES":"NO");
+
     int i;
     for(i=0;i<sizeof(aaa)/sizeof(aaa[0]); i++)
         crtl_rbtree_insert(rbt, &aaa[i], sizeof(struct structA));
+
+    crtl_print_debug(">>nnode %d.\n", crtl_rbtree_nnode(rbt));
+    crtl_print_debug(">>nnode %d. is empty %s\n", 
+                                crtl_rbtree_nnode(rbt), crtl_rbtree_is_empty(rbt)==CRTL_SUCCESS?"YES":"NO");
+
 
     crtl_rbtree_node_t *node = NULL;
     for(node=crtl_rbtree_getfirst(rbt); node; node = crtl_rbtree_getnext(node))
@@ -140,14 +149,23 @@ void demo_crtl_rbtree()
         struct structA *a1 = (struct structA *)(node->data);
         rbt->display(a1);
     }
+    crtl_print_debug(">>nnode %d.\n", crtl_rbtree_nnode(rbt));
+    crtl_print_debug(">>nnode %d. is empty %s\n", 
+                                crtl_rbtree_nnode(rbt), crtl_rbtree_is_empty(rbt)==CRTL_SUCCESS?"YES":"NO");
     crtl_rbtree_delete(rbt, &aaa[3]);
+    crtl_print_debug(">>nnode %d.\n", crtl_rbtree_nnode(rbt));
     crtl_rbtree_delete(rbt, &aaa[2]);
+    crtl_print_debug(">>nnode %d.\n", crtl_rbtree_nnode(rbt));
+    crtl_print_debug(">>nnode %d. is empty %s\n", 
+                                crtl_rbtree_nnode(rbt), crtl_rbtree_is_empty(rbt)==CRTL_SUCCESS?"YES":"NO");
+    
     node = NULL;
     for(node=crtl_rbtree_getfirst(rbt); node; node = crtl_rbtree_getnext(node))
     {
         struct structA *a1 = CRTL_RBTREE_DATA(node);
         rbt->display(a1);
     }
+    crtl_print_debug(">>nnode %d.\n", crtl_rbtree_nnode(rbt));
 
     
     crtl_print_debug("Use crtl_rbtree_iterator_t\n");

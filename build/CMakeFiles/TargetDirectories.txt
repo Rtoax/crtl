@@ -1,2 +1,0 @@
-/mnt/hgfs/G/crtl/build/CMakeFiles/acc_lib_shared.dir
-/mnt/hgfs/G/crtl/build/CMakeFiles/acc_lib_static.dir

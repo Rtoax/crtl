@@ -5,6 +5,7 @@
 #include "crtl_log.h"
 #include "crtl_lock.h"
 #include "crtl_types.h"
+#include "crtl/crtl_assert.h"
 
 
 const static struct {
@@ -37,7 +38,7 @@ crtl_printfp(FILE *fp, crtl_log_level_t level, int prefix, int _unused colorful,
     va_list arg;
     va_start(arg, fmt);
     
-	crtl_fd_lock(fileno(fp));
+//	crtl_fd_lock(fileno(fp));
     
     if(prefix)
         nchar += fprintf(fp, "%s:%d %s: %s%s%s: ", basename(_file), _line, _func, 
@@ -45,9 +46,13 @@ crtl_printfp(FILE *fp, crtl_log_level_t level, int prefix, int _unused colorful,
                          crtl_log_level_to_string[level].level_string, 
                          colorful?crtl_log_level_to_string[level].color_end:"");
     
-    nchar += vfprintf(fp, fmt, arg);
-    
-	crtl_fd_unlock(fileno(fp));
+    int vf_ret = vfprintf(fp, fmt, arg);
+    if(vf_ret < 0) {
+        printf("vfprintf error. %s\n", CRTL_SYS_ERROR);
+        crtl_assert_fp(stderr, 0);
+    }
+    nchar += vf_ret;
+//	crtl_fd_unlock(fileno(fp));
     
 	va_end(arg);
 

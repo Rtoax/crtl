@@ -12,18 +12,30 @@ void demo_mkdir_rmdir()
 
     crtl_print_info("1/2 -> %d\n", crtl_is_directory("1/2"));
     crtl_print_info("toa -> %d\n", crtl_is_regular_file("toa"));
+    crtl_print_info("/home/rongtao -> %d\n", crtl_is_directory("/home/rongtao"));
 }
 
 void demo_tempfile()
 {
     char tempfile[256] = {0};
-    crtl_print_info("tmpname: %s\n", crtl_mktempfile(tempfile, ".", "core."));
+    crtl_print_info("tmpname: %s\n", crtl_mktemp_string(tempfile, ".", "core."));
+    crtl_print_info("tmpname: %s\n", crtl_mktemp_string(tempfile, "", "core."));
+    crtl_print_info("tmpname: %s\n", crtl_mktemp_string(tempfile, NULL, "core."));
 }
+void demo_file_fd()
+{
+//    if(CRTL_FD_Available(1)) {
+//        crtl_print_info("1 is Available %d\n", CRTL_FD_Available(1));
+//    }
+//    crtl_print_info("1 is Available %d\n", CRTL_FD_Available(1));
+}
+
 
 int main()
 {
     demo_mkdir_rmdir();
     demo_tempfile();
+    demo_file_fd();
     
     return 0;
 }

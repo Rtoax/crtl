@@ -18,20 +18,26 @@
 #include "crtl/bits/crtl_thread.h"
 
 
-struct crtl_module_struct;
+
+
+#define CRTL_MODULE_NAME_LEN    CRTL_STR_LEN32
+
+
+typedef     crtl_str32_t    crtl_module_name_t;
+typedef     crtl_str32_t    crtl_app_name_t;
 
 
 
 
-typedef unsigned long crtl_module_id_t;
-typedef unsigned long crtl_module_msg_type;
+typedef void*           crtl_module_id_t;
+typedef unsigned long   crtl_module_msg_type;
 
 /**
  *  模块间消息头
  */
 struct crtl_module_msghdr_struct {
     crtl_module_msg_type    msg_type;
-
+    
     
     crtl_boolean            is_sync_msg;    //是否为同步消息
     crtl_boolean            is_timer_msg;   //是否为定时消息
@@ -54,40 +60,45 @@ struct crtl_module_msg_sturct {
  *  模块结构体
  */
 struct crtl_module_struct{    
-#define CRTL_MODULE_NAME_LEN    32
-    char module_name[CRTL_MODULE_NAME_LEN];//模块名
+    crtl_module_name_t module_name;//模块名
+    crtl_msgq_name_t module_msgq_name;
 
-    char module_msgq_name[CRTL_MODULE_NAME_LEN*4];
-
-    crtl_lock_rw_t  module_rw_lock; //读写锁
-    crtl_thread_t   main_task; //main task of this module
     
+    crtl_lock_rw_t  module_rw_lock; //读写锁
+    
+    crtl_thread_t   main_task; //main task of this module
     crtl_thread_start_routine_fn main_task_fn;
     void *main_task_fn_arg;
-    
     crtl_mqd_t  main_msgqd;//消息队列
-
     crtl_boolean module_already_in_app;
+
+    
+#define __CRTL_MODULE_RWLOCK_INIT(p_module)   CRTL_LOCK_RWLOCK_SHARE_INIT(&p_module->module_rw_lock)
+#define __CRTL_MODULE_RWLOCK_RDLOCK(p_module) CRTL_LOCK_RWLOCK_RDLOCK(&p_module->module_rw_lock)
+#define __CRTL_MODULE_RWLOCK_WRLOCK(p_module) CRTL_LOCK_RWLOCK_WRLOCK(&p_module->module_rw_lock)
+#define __CRTL_MODULE_RWLOCK_UNLOCK(p_module) CRTL_LOCK_RWLOCK_UNLOCK(&p_module->module_rw_lock)
+#define __CRTL_MODULE_RWLOCK_DESTROY(p_module) CRTL_LOCK_RWLOCK_DESTROY(&p_module->module_rw_lock)
+
     
     struct list_head list; //模块组
 };
 
 
-struct __crtl_application_modules_lock {
-    struct crtl_module_struct *module;
-    crtl_lock_rw_t  module_rwlock; //读写锁
-};
 
 /* 应用程序结构体 */
 struct crtl_application_struct {
-    
-    char app_name[CRTL_MODULE_NAME_LEN];//应用名
+    crtl_app_name_t app_name;//应用名
 
-    crtl_lock_rw_t  app_rw_lock; //读写锁
-    
+    /* 模块信息 */
     volatile long modules_rbtree_init_flag;
-    crtl_rbtree_t modules_rbtree; //struct __crtl_application_modules_lock
-    
+    crtl_lock_rw_t  modules_rbtree_rwlock; //读写锁
+    crtl_rbtree_t modules_rbtree; //struct crtl_module_struct
+#define __CRTL_APP_MODULES_RWLOCK_INIT(p_app)   CRTL_LOCK_RWLOCK_SHARE_INIT(&p_app->modules_rbtree_rwlock)
+#define __CRTL_APP_MODULES_RWLOCK_RDLOCK(p_app) CRTL_LOCK_RWLOCK_RDLOCK(&p_app->modules_rbtree_rwlock)
+#define __CRTL_APP_MODULES_RWLOCK_WRLOCK(p_app) CRTL_LOCK_RWLOCK_WRLOCK(&p_app->modules_rbtree_rwlock)
+#define __CRTL_APP_MODULES_RWLOCK_UNLOCK(p_app) CRTL_LOCK_RWLOCK_UNLOCK(&p_app->modules_rbtree_rwlock)
+#define __CRTL_APP_MODULES_RWLOCK_DESTROY(p_app) CRTL_LOCK_RWLOCK_DESTROY(&p_app->modules_rbtree_rwlock)
+
 };
 
 

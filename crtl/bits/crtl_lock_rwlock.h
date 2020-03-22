@@ -12,6 +12,19 @@ typedef pthread_rwlockattr_t    crtl_lock_rwattr_t;
 
 #define CRTL_LOCK_RWLOCK_INITIALIZER PTHREAD_RWLOCK_INITIALIZER
 
+#define CRTL_LOCK_RWLOCK_SHARE_INIT(p_rw_lock) ({\
+        crtl_lock_rwattr_t rwlock_attr; crtl_rwlockattr_init(&rwlock_attr);\
+        crtl_rwlockattr_setpshared_shared(&rwlock_attr);\
+        crtl_rwlock_init((p_rw_lock), &rwlock_attr);\
+    })
+
+#define CRTL_LOCK_RWLOCK_RDLOCK(p_rw_lock) ({crtl_rwlock_rdlock((p_rw_lock), 0,0,0,0);})
+#define CRTL_LOCK_RWLOCK_WRLOCK(p_rw_lock) ({crtl_rwlock_wrlock((p_rw_lock), 0,0,0,0);})
+#define CRTL_LOCK_RWLOCK_UNLOCK(p_rw_lock) ({crtl_rwlock_unlock((p_rw_lock));})
+#define CRTL_LOCK_RWLOCK_DESTROY(p_rw_lock) ({crtl_rwlock_destroy((p_rw_lock));})
+
+
+
 int crtl_rwlock_init(crtl_lock_rw_t *rwlock, const crtl_lock_rwattr_t *attr);
 int crtl_rwlock_destroy(crtl_lock_rw_t *rwlock);
 int crtl_rwlock_rdlock(crtl_lock_rw_t *rwlock, int trywait, int timedwait, int seconds, long nanoseconds);

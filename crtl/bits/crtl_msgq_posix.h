@@ -13,21 +13,30 @@
 
 #include "crtl/crtl_file.h"
 
+#include "crtl/crtl_types.h"
+
 
 typedef mqd_t crtl_mqd_t;
+    
+typedef     crtl_str128_t    crtl_msgq_name_t;
 
 
-#define CRTL_MSGQ_PRIO_MAX  MQ_PRIO_MAX
+#define __CRTL_MSGQ_PRIO_MAX  MQ_PRIO_MAX
+
+#define __CRTL_MSGQ_MSGS_MAX        256
+#define __CRTL_MSGQ_MSG_MAX_SIZE    1024
 
 
-#define CRTL_MSGQ_NAME_GEN(str) ({\
-    char __mqname[1024] = {0};\
-    sprintf(__mqname, "/crtl_mq_%s", str);\
+#define __CRTL_MSGQ_NAME_GEN(str1, str2) ({\
+    char __mqname[1024] = {0};char tempfile[256] = {0};\
+    sprintf(__mqname, "/crtl_mq_%s_%s_%s", str1, str2, crtl_mktemp_string(tempfile, "", ""));\
     __mqname;\
 })
 
+
 crtl_mqd_t crtl_mq_open(const char *name, int oflag, mode_t mode, long mq_flags, long mq_maxmsg, long mq_msgsize);
-crtl_mqd_t crtl_mq_open2(const char *name, long mq_maxmsg, long mq_msgsize);
+crtl_mqd_t crtl_mq_open_blk(const char *name, long mq_maxmsg, long mq_msgsize);
+crtl_mqd_t crtl_mq_open_nonblk(const char *name, long mq_maxmsg, long mq_msgsize);
 
 
 int crtl_mq_close(crtl_mqd_t mqd);

@@ -8,6 +8,7 @@
 
 #include "crtl/bits/crtl_types_bits_set.h"
 #include "crtl/bits/crtl_types_ctype.h"
+#include "crtl/bits/crtl_types_string.h"
 
 
 
@@ -38,7 +39,6 @@ enum {
 typedef void *          crtl_data_t;
 typedef unsigned char   crtl_byte;
 typedef __crtl_bits_set crtl_bits_set;
-
 
 
 

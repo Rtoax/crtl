@@ -17,13 +17,16 @@ typedef struct crtl_rbtree_iterator_struct* crtl_rbtree_iterator_t;
 
 
 
-crtl_rbtree_t crtl_rbtree_init(int (*cmp)(void *, void *), int (*display)(void *));
+crtl_rbtree_t crtl_rbtree_init(int (*cmp)(const void *, const void *), int (*display)(const void *));
 
 int crtl_rbtree_insert(crtl_rbtree_t rbtree, void *data, unsigned int data_size);
 
-crtl_rbtree_node_t *crtl_rbtree_search(crtl_rbtree_t rbtree, void *data);
+crtl_rbtree_node_t *crtl_rbtree_search(crtl_rbtree_t rbtree, const void *data);
 
-int crtl_rbtree_delete(crtl_rbtree_t rbtree, void *data);
+int crtl_rbtree_delete(crtl_rbtree_t rbtree, const void *data);
+
+int crtl_rbtree_nnode(const crtl_rbtree_t rbtree);
+int crtl_rbtree_is_empty(const crtl_rbtree_t rbtree);
 
 crtl_rbtree_iterator_t crtl_rbtree_iterator(crtl_rbtree_t rbtree);
 

@@ -478,7 +478,7 @@ inline static void _unused* crtl_rbtree_iterator_next(struct crtl_rbtree_iterato
 inline static void _unused* crtl_rbtree_iterator_prev(struct crtl_rbtree_iterator_struct *iter);
 inline static void _unused* crtl_rbtree_iterator_last(struct crtl_rbtree_iterator_struct *iter);
 
-struct crtl_rbtree_struct* crtl_rbtree_init(int (*cmp)(void *, void *), int (*display)(void *))
+struct crtl_rbtree_struct* crtl_rbtree_init(int (*cmp)(const void *, const void *), int (*display)(const void *))
 {
     struct crtl_rbtree_struct* rbtree = malloc(sizeof(struct crtl_rbtree_struct));
     if(!rbtree)
@@ -550,7 +550,7 @@ int crtl_rbtree_insert(struct crtl_rbtree_struct* rbtree, void *data, unsigned i
 
 
 /* search */
-struct crtl_rbtree_node_struct *crtl_rbtree_search(struct crtl_rbtree_struct* rbtree, void *data)
+struct crtl_rbtree_node_struct *crtl_rbtree_search(struct crtl_rbtree_struct* rbtree, const void *data)
 {
     crtl_assert_fp(stderr, rbtree);
     if(!data)
@@ -583,10 +583,9 @@ struct crtl_rbtree_node_struct *crtl_rbtree_search(struct crtl_rbtree_struct* rb
 
 
 /* delete */
-int crtl_rbtree_delete(struct crtl_rbtree_struct* rbtree, void *data)
+int crtl_rbtree_delete(struct crtl_rbtree_struct* rbtree, const void *data)
 {
-    crtl_assert_fp(stderr, rbtree);
-    if(!data)
+    if(unlikely(!data) || unlikely(!rbtree))
     {
         crtl_print_err("null pointer error.\n");
         crtl_assert_fp(stderr, data);
@@ -605,6 +604,24 @@ int crtl_rbtree_delete(struct crtl_rbtree_struct* rbtree, void *data)
     rbtree->nnode -= 1;
     
     return CRTL_SUCCESS;
+}
+
+
+int crtl_rbtree_nnode(const struct crtl_rbtree_struct* rbtree)
+{
+    if(unlikely(!rbtree))
+    {
+        crtl_print_err("null pointer error.\n");
+        crtl_assert_fp(stderr, rbtree);
+        return CRTL_ERROR;
+    }
+    
+    return rbtree->nnode;
+}
+
+int crtl_rbtree_is_empty(const struct crtl_rbtree_struct* rbtree)
+{
+    return crtl_rbtree_nnode(rbtree)==0?CRTL_SUCCESS:CRTL_ERROR;
 }
 
 

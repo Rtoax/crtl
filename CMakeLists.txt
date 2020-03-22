@@ -6,6 +6,7 @@ aux_source_directory(./src  DIR_SRCS)
 aux_source_directory(./src/basic  DIR_SRCS)
 aux_source_directory(./src/mm  DIR_SRCS)
 aux_source_directory(./src/module  DIR_SRCS)
+aux_source_directory(./src/mqueue  DIR_SRCS)
 aux_source_directory(./src/network  DIR_SRCS)
 
 #设置编译参数 

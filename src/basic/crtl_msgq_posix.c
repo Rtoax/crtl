@@ -2,7 +2,7 @@
 #include "crtl/crtl_log.h"
 #include "crtl/crtl_assert.h"
 #include "crtl/crtl_types.h"
-
+#include "crtl/crtl_time.h"
 #include "crtl/easy/macro.h"
 
 
@@ -29,9 +29,14 @@ crtl_mqd_t crtl_mq_open(const char *name, int oflag, mode_t mode, long mq_flags,
 }
 
 
-crtl_mqd_t crtl_mq_open2(const char *name, long mq_maxmsg, long mq_msgsize)
+crtl_mqd_t crtl_mq_open_blk(const char *name, long mq_maxmsg, long mq_msgsize)
 {
     return crtl_mq_open(name, CRTL_O_MSGQ, CRTL_MSGQ_MODE, 0/* BLOCK */, mq_maxmsg, mq_msgsize);
+}
+
+crtl_mqd_t crtl_mq_open_nonblk(const char *name, long mq_maxmsg, long mq_msgsize)
+{
+    return crtl_mq_open(name, CRTL_O_MSGQ, CRTL_MSGQ_MODE, O_NONBLOCK /* O_NONBLOCK  */, mq_maxmsg, mq_msgsize);
 }
 
 int crtl_mq_close(crtl_mqd_t mqd)
@@ -99,14 +104,14 @@ int crtl_mq_setattr_nonblk(crtl_mqd_t mqd, long mq_maxmsg, long mq_msgsize)
     struct mq_attr attr;
     
     if(CRTL_SUCCESS != crtl_mq_getattr(mqd, &attr.mq_flags, &attr.mq_maxmsg, &attr.mq_msgsize, &attr.mq_curmsgs)) {
-        crtl_print_err("crtl_mq_getattr error. \n"); 
+        crtl_print_err("crtl_mq_getattr error. %s\n", CRTL_SYS_ERROR);  
     }
     
     attr.mq_maxmsg = mq_maxmsg;
     attr.mq_msgsize = mq_msgsize;
     
     if(CRTL_SUCCESS != crtl_mq_setattr(mqd, O_NONBLOCK, attr.mq_maxmsg, attr.mq_msgsize)) {
-        crtl_print_err("crtl_mq_setattr error. \n"); 
+        crtl_print_err("crtl_mq_setattr error. %s\n", CRTL_SYS_ERROR);  
     }
     return CRTL_SUCCESS;
 }
@@ -153,22 +158,33 @@ ssize_t crtl_mq_receive(crtl_mqd_t mqd, char *m_ptr, size_t m_len, unsigned int 
 {
     ssize_t m_recv_size = 0;
     
+    __crtl_dbg("RECV: mqd %d, O_NONBLOCK %d\n", mqd, O_NONBLOCK);
+    
 #ifdef __USE_XOPEN2K
     if (timedrecv) {
+        __crtl_dbg("TIMED RECV: mqd %d\n", mqd);
         //struct timespec {
         //    time_t tv_sec;      /* Seconds */
         //    long   tv_nsec;     /* Nanoseconds [0 .. 999999999] */
         //};
+        #if 1
+        struct timeval tv;
+        gettimeofday(&tv,NULL);
+        struct timespec timespec = {0,0};
+		timespec.tv_sec = tv.tv_sec + seconds;
+		timespec.tv_nsec = 1000 * (tv.tv_usec) + nanoseconds;
+        #else
         struct timespec timespec = {seconds, nanoseconds};
+        #endif
         if(-1 == (m_recv_size = mq_timedreceive(mqd,m_ptr,m_len,m_prio, &timespec))) {
-            crtl_print_err("mq_timedreceive error. %s\n", CRTL_SYS_ERROR);
+            crtl_print_err("mq_timedreceive error. mqd %d, error %s, ETIMEDOUT %d(%d)\n", mqd, CRTL_SYS_ERROR, ETIMEDOUT, m_recv_size);
             return CRTL_ERROR;
         }
     } else 
 #endif //  __USE_XOPEN2K  
     {
         if(-1 == (m_recv_size = mq_receive(mqd,m_ptr,m_len,m_prio))) {
-            crtl_print_err("mq_receive error. %s\n", CRTL_SYS_ERROR);
+            crtl_print_err("mq_receive error. mqd %d %s, E(%d)\n", mqd, CRTL_SYS_ERROR, m_recv_size);
             return CRTL_ERROR;
         }
     }
@@ -179,6 +195,8 @@ ssize_t crtl_mq_receive(crtl_mqd_t mqd, char *m_ptr, size_t m_len, unsigned int 
 ssize_t crtl_mq_send(crtl_mqd_t mqd, const char *m_ptr, size_t m_len, unsigned int m_prio, int timedsend, int seconds, long nanoseconds)
 {
     ssize_t m_send_size = 0;
+
+    __crtl_dbg("SEND: mqd %d, \n", mqd);
     
 #ifdef __USE_XOPEN2K
     if (timedsend) {
@@ -187,17 +205,19 @@ ssize_t crtl_mq_send(crtl_mqd_t mqd, const char *m_ptr, size_t m_len, unsigned i
         //    long   tv_nsec;     /* Nanoseconds [0 .. 999999999] */
         //};
         struct timespec timespec = {seconds, nanoseconds};
-        if(-1 == (m_send_size = mq_timedsend(mqd,m_ptr,m_len,m_prio, &timespec))) {
-            crtl_print_err("mq_timedsend error. %s\n", CRTL_SYS_ERROR);
+        if((0 != mq_timedsend(mqd,m_ptr,m_len,m_prio, &timespec))) {
+            crtl_print_err("mq_timedsend error mqd %d. %s\n", mqd, CRTL_SYS_ERROR);
             return CRTL_ERROR;
         }
     } else 
 #endif //  __USE_XOPEN2K  
     {
-        if(-1 == (m_send_size = mq_send(mqd,m_ptr,m_len,m_prio))) {
-            crtl_print_err("mq_send error. %s\n", CRTL_SYS_ERROR);
+        if((0 != mq_send(mqd,m_ptr,m_len,m_prio))) {
+            crtl_print_err("mq_send error mqd %d, send size %d. %s\n", mqd, m_send_size, CRTL_SYS_ERROR);
             return CRTL_ERROR;
         }
     }
+    m_send_size = m_len;
+
     return m_send_size;
 }

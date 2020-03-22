@@ -202,8 +202,8 @@ struct crtl_rbtree_struct {
 
     unsigned int nnode;
 
-    int (*cmp)(void *data1, void*data2);
-    int (*display)(void *data);
+    int (*cmp)(const void *data1, const void*data2);
+    int (*display)(const void *data);
 
     struct crtl_rbtree_iterator_struct iter;
 };
