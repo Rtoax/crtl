@@ -381,16 +381,19 @@ int demo_list_7_splice()//粘贴
 int demo_list_8_for_each_and_entry()
 {
     struct list_head lhead;
+    int __a = 13;
     
     struct list_test lt1 = LIST_TEST_INITIALIZER(1);
     struct list_test lt2 = LIST_TEST_INITIALIZER(2);
     struct list_test lt3 = LIST_TEST_INITIALIZER(3);
     struct list_test lt4 = LIST_TEST_INITIALIZER(4);
     struct list_test lt5 = LIST_TEST_INITIALIZER(5);
+    struct list_test lt6 = LIST_TEST_INITIALIZER(6);
     
     struct list_test *iter;
     
     INIT_LIST_HEAD(&lhead);
+    
     
     list_add_tail(&lt1.list, &lhead);
     list_add_tail(&lt2.list, &lhead);
@@ -425,16 +428,19 @@ int demo_list_8_for_each_and_entry()
 		printf("%p - ", lh_iter);
 	}printf("\n");
     
+    printf("list_for_each_prev\n");
     list_for_each_prev(lh_iter, &lhead){
 		printf("%p - ", lh_iter);
 	}printf("\n");
 
     struct list_head *lh_n;
     
+    printf("list_for_each_safe\n");
     list_for_each_safe(lh_iter, lh_n, &lhead){
 		printf("%p - ", lh_iter);
 	}printf("\n");
     
+    printf("list_for_each_prev_safe\n");
     list_for_each_prev_safe(lh_iter, lh_n, &lhead){
 		printf("%p - ", lh_iter);
 	}printf("\n");
@@ -461,36 +467,62 @@ int demo_list_8_for_each_and_entry()
 	}printf("\n");
 
     iter = &lt3;
+    printf("list_for_each_entry_from\n");
     list_for_each_entry_from(iter, &lhead, list) {
 		printf("%d - ", iter->a);
 	}printf("\n");
 
     iter = &lt3;
+    printf("list_for_each_entry_from_reverse\n");
     list_for_each_entry_from_reverse(iter, &lhead, list) {
 		printf("%d - ", iter->a);
 	}printf("\n");
 
     
     struct list_test *iter_next;
+    printf("list_for_each_entry_safe\n");
     list_for_each_entry_safe(iter,iter_next, &lhead, list) {
-		printf("%d - ", iter->a);
+        if(list_is_last(&iter->list, &lhead))
+            printf("%d - \n", iter->a);
+		else printf("%d - %d\n", iter->a, iter_next->a);
 	}printf("\n");
-
+    
+    printf("list_for_each_entry_safe\n");
+    list_for_each_entry_safe(iter,iter_next, &lhead, list) {
+        list_safe_reset_next(iter, iter_next, list);
+		printf("%d - %d\n", iter->a, iter_next->a);
+        list_safe_reset_next(iter, iter_next, list);
+	}printf("\n");
+    
+    
+    list_add(&lt6.list, &lt3.list);
+    printf("list_for_each_entry_safe\n");
     list_for_each_entry_safe(iter,iter_next, &lhead, list) {
 		printf("%d - ", iter->a);
         list_safe_reset_next(iter, iter_next, list);
 	}printf("\n");
+    
+    list_del(&lt6.list);
+    printf("list_for_each_entry_safe\n");
+    list_for_each_entry_safe(iter,iter_next, &lhead, list) {
+		printf("%d - ", iter->a);
+        list_safe_reset_next(iter, iter_next, list);
+	}printf("\n");
+    
 
     iter = &lt3;
+    printf("list_for_each_entry_safe_continue\n");
     list_for_each_entry_safe_continue(iter, iter_next, &lhead, list) {
 		printf("%d - ", iter->a);
 	}printf("\n");
 
     iter = &lt3;
+    printf("list_for_each_entry_safe_from\n");
     list_for_each_entry_safe_from(iter, iter_next, &lhead, list) {
 		printf("%d - ", iter->a);
 	}printf("\n");
     
+    printf("list_for_each_entry_safe_reverse\n");
     list_for_each_entry_safe_reverse(iter, iter_next, &lhead, list) {
 		printf("%d - ", iter->a);
 	}printf("\n");

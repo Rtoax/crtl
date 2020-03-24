@@ -6,12 +6,13 @@
 #include "crtl/crtl_list.h"
 
 
+#define __CRTL_TIMER_IS_NanoSEC 0
 
 
 /* contants */
 typedef enum {
     CRTL_TIMER_LOOP = 1,
-    CRTL_TIMER_NOLOOP,    
+    CRTL_TIMER_NONLOOP,    
 }__crtl_timer_loop_t;
 
 
@@ -29,8 +30,7 @@ typedef struct __rt_timer_cb_type {
 
 
 /* update frequency */
-#define __CRTL_TIMER_REFRESH_FREQUENCY_USEC     10000 /* usec */
-
+#define __CRTL_TIMER_REFRESH_FREQUENCY_NanoSEC     10000000 /* nanosec */
 
 /* 定时器结构体 */
 struct crtl_timer_struct {
@@ -71,8 +71,9 @@ struct crtl_timer_struct {
      *  
      *  
      */
-    
-    struct list_head timer_list;
+    __crtl_timer_cb_fn_t timer_sche_callback;
+    void *timer_sche_arg;
+    struct list_head list;
 };
 
 
