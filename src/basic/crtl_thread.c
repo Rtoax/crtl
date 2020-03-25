@@ -52,6 +52,19 @@ void crtl_thread_exit(int *retval)
     pthread_exit(retval);
 }
 
+int crtl_thread_kill(crtl_thread_t thread, int sig)
+{
+    if(0 == pthread_kill(thread, sig)) {
+        crtl_print_err("pthread_kill error. %s\n", CRTL_SYS_ERROR);
+        return CRTL_ERROR;
+    }
+    return CRTL_SUCCESS;
+}
+
+int crtl_thread_kill_self(int sig)
+{
+    return crtl_thread_kill(crtl_thread_self(), sig);
+}
 
 int crtl_thread_join(crtl_thread_t __th, void **__thread_return, int tryjoin, int timedjoin, int seconds, long nanoseconds)
 {

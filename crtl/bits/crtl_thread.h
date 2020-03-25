@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <signal.h>
 #include <sched.h>
 
 #include "crtl/crtl_lock.h"
@@ -97,6 +98,9 @@ int crtl_thread_create(crtl_thread_t * __newthread, int __detachstate, size_t __
 
 crtl_thread_t crtl_thread_self();
 void crtl_thread_exit(int *retval);
+int crtl_thread_kill(crtl_thread_t thread, int sig);
+int crtl_thread_kill_self(int sig);
+
 int crtl_thread_join(crtl_thread_t __th, void **__thread_return, int tryjoin, int timedjoin, int seconds, long nanoseconds);
 int crtl_thread_getattr(crtl_thread_t thread, crtl_threadattr_t *attr);
 
@@ -181,6 +185,8 @@ extern int pthread_timedjoin_np(pthread_t __th, void **__thread_return,
 #endif
 /* Obtain the identifier of the current thread.  */
 extern pthread_t pthread_self(void);
+
+int pthread_kill(pthread_t thread, int sig);
 
 /* Compare two thread identifiers.  */
 extern int pthread_equal(pthread_t __thread1, pthread_t __thread2);

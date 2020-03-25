@@ -9,19 +9,19 @@
 typedef __crtl_timer_id_t crtl_timer_id_t;
 
 
-/* ´´½¨¶¨Ê±Æ÷ */
+/* åˆ›å»ºå®šæ—¶å™¨ */
 _api crtl_timer_id_t crtl_timer_create(int is_loop, void (*callback)(void *arg), void *arg, long sec, long nanosec);
 
-/* »ñÈ¡¶¨Ê±Æ÷Ê±¼ä */
+/* è·å–å®šæ—¶å™¨æ—¶é—´ */
 _api int crtl_timer_gettime_interval(crtl_timer_id_t timerid, long *sec, long *nanosec);
 
-/* ¸üĞÂ¶¨Ê±Æ÷Ê±¼ä */
+/* æ›´æ–°å®šæ—¶å™¨æ—¶é—´ */
 _api int crtl_timer_settime_interval(crtl_timer_id_t timerid, long sec, long nanosec);
 
-/* ¸üĞÂ¶¨Ê±Æ÷ */
+/* æ›´æ–°å®šæ—¶å™¨ */
 _api int crtl_timer_nonloop(crtl_timer_id_t timerid);
 
-/* É¾³ı¶¨Ê±Æ÷ */
+/* åˆ é™¤å®šæ—¶å™¨ */
 _api int crtl_timer_delete(crtl_timer_id_t timerid);
 
 
