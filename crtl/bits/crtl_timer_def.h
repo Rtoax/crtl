@@ -1,6 +1,7 @@
 #ifndef __CRTL_BITS_TIMER_DEF_H
 #define __CRTL_BITS_TIMER_DEF_H 1
 
+#include <signal.h>
 
 #include "crtl/bits/crtl_time_def.h"
 #include "crtl/crtl_list.h"
@@ -28,6 +29,7 @@ typedef struct __rt_timer_cb_type {
     void *arg;
 }__rt_timer_cb_t;
 
+typedef  long __crtl_timer_id_t;
 
 /* update frequency */
 #define __CRTL_TIMER_REFRESH_FREQUENCY_NanoSEC     10000000 /* nanosec */
@@ -35,8 +37,9 @@ typedef struct __rt_timer_cb_type {
 /* 定时器结构体 */
 struct crtl_timer_struct {
     union {
-        long timer_id;
+        __crtl_timer_id_t timer_id;
         int timer_fd; /* for #include <sys/timerfd.h> */
+        timer_t timerid; //POSIX api
     };
 
     __crtl_timer_loop_t timer_loop;

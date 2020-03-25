@@ -8,6 +8,8 @@
 
 #include "crtl/bits/crtl_lock_rwlock.h"
 
+#include "crtl/easy/byteswap.h"
+
 /* 定时器列表的读写锁 */
 static crtl_lock_rw_t _unused __crtl_timers_list_rwlock = CRTL_LOCK_RWLOCK_INITIALIZER;
 #define __crtl_timers_list_rdlock crtl_rwlock_rdlock(&__crtl_timers_list_rwlock, 0,0,0,0)
@@ -23,9 +25,42 @@ static volatile long _unused __crtl_timers_list_poll_task_init_flag = 0; /* 已�
 static crtl_thread_t _unused __crtl_timer_schedule_threadID;
 
 
+/* 查找一个定时器-线程不安全 */
+inline static struct crtl_timer_struct * __crtl_timer_getbyid(__crtl_timer_id_t timeid)
+{
+    /* 入参有误 */
+    if(unlikely((__crtl_timer_id_t)0==(__crtl_timer_id_t)timeid)) {
+        crtl_print_err("wrong params error. timeid=%ld\n", timeid);
+        crtl_assert_fp(stderr, 0);
+        return NULL;
+    }
+
+    struct crtl_timer_struct *__list_ite_timer = NULL;
+    struct crtl_timer_struct *_unused __list_ite_next_timer = NULL;
+    
+    /* 轮询定时器链表 */
+    list_for_each_entry_safe(__list_ite_timer,__list_ite_next_timer, &__crtl_timers_list_head, list) {
+//        __crtl_dbg(">>> %lx, %lx\n", __list_ite_timer->timer_id, timeid);
+        if( __list_ite_timer->timer_id == timeid ) {
+            return __list_ite_timer;
+        }
+        if(list_is_last(&__list_ite_timer->list, &__crtl_timers_list_head)) {
+//            __crtl_dbg("Last NOde no OK.\n");
+            return NULL;
+        } 
+        if( __list_ite_next_timer->timer_id == timeid ) {
+            return __list_ite_next_timer;
+        } else {
+            __list_ite_timer = __list_ite_next_timer;
+        }
+    }
+    __crtl_dbg("Not exist.\n");
+    return NULL;
+}
+
 
 /* 添加定时器到定时器链表 */
-static int _unused __crtl_timer_add_to_list(struct crtl_timer_struct *__insert_timer)
+inline static int _unused __crtl_timer_add_to_list(struct crtl_timer_struct *__insert_timer)
 {
     struct crtl_timer_struct *__list_ite_timer = NULL;
     struct crtl_timer_struct *_unused __list_ite_next_timer = NULL;
@@ -33,8 +68,7 @@ static int _unused __crtl_timer_add_to_list(struct crtl_timer_struct *__insert_t
     struct crtl_timer_struct *_unused __big_timer = NULL;
 
     struct timespec time_interval = {0, 0};
-//    __crtl_dbg("Insert: sec %ld, nanosec %ld\n", __insert_timer->itimerspec_value.it_value.tv_sec, 
-//                                                       __insert_timer->itimerspec_value.it_value.tv_nsec);
+    
     /**
      *  1.Find the location of insert timer
      *
@@ -44,7 +78,6 @@ static int _unused __crtl_timer_add_to_list(struct crtl_timer_struct *__insert_t
      *      __small_timer  __insert_timer  __big_timer
      */
     
-    
     /* 如果为空,直接添加 */
     if(list_empty(&__crtl_timers_list_head)) {
         list_add_tail(&__insert_timer->list, &__crtl_timers_list_head);
@@ -53,8 +86,7 @@ static int _unused __crtl_timer_add_to_list(struct crtl_timer_struct *__insert_t
     } else {
         /* 轮询定时器链表 */
         list_for_each_entry_safe(__list_ite_timer,__list_ite_next_timer, &__crtl_timers_list_head, list) {
-//            __crtl_dbg("Iter: sec %ld, nanosec %ld\n", __list_ite_timer->itimerspec_value.it_value.tv_sec, 
-//                                                       __list_ite_timer->itimerspec_value.it_value.tv_nsec);
+            
             /* 比较两个定时器即将到时时间 */
             int cmp = crtl_timespec_subabs(&__list_ite_timer->itimerspec_value.it_value, 
                                            &__insert_timer->itimerspec_value.it_value, 
@@ -68,16 +100,17 @@ static int _unused __crtl_timer_add_to_list(struct crtl_timer_struct *__insert_t
             /* 当 cmp == CRTL_EQ || cmp == CRTL_LT */
             /* 如果是最后一个定时器（最后到时的定时器） */
             if(list_is_last(&__list_ite_timer->list, &__crtl_timers_list_head)) {
-//                __crtl_dbg("add to last.\n");
                 list_add(&__insert_timer->list, &__list_ite_timer->list);
                 break;
+            
             /* 如果不是最后一个定时器， 同时使用 __list_ite_next_timer */
             } else {
+            
                 /* 轮询的定时器等于即将插入的定时器，插入*/
                 if(cmp == CRTL_EQ) {
-//                    __crtl_dbg("add to last.\n");
                     list_add(&__insert_timer->list, &__list_ite_timer->list);
                     break;
+                
                 /* 轮询的定时器小于即将插入的定时器，比较下一个节点 */
                 } else if(cmp == CRTL_LT) {
                     int cmp_next = crtl_timespec_subabs(&__list_ite_next_timer->itimerspec_value.it_value, 
@@ -101,7 +134,7 @@ static int _unused __crtl_timer_add_to_list(struct crtl_timer_struct *__insert_t
 
 static void _unused *__crtl_timer_schedule_task_fn(void*arg)
 {
-    __crtl_dbg("Start Schdule Timer list. thread id %ld\n", crtl_thread_self());
+//    __crtl_dbg("Start Schdule Timer list. thread id %ld\n", crtl_thread_self());
 
     struct timespec currentTime = {0,0};
     struct crtl_timer_struct *__list_ite_timer = NULL;
@@ -114,9 +147,7 @@ static void _unused *__crtl_timer_schedule_task_fn(void*arg)
         
         /* 获取当前时间 */
         crtl_gettimeofday_timespec(&currentTime);
-        
-//        __crtl_dbg("CURRENT > %ld\n", currentTime.tv_sec*1000000000+currentTime.tv_nsec);
-        
+                
         __crtl_timers_list_wrlock;
         
         /* 轮询定时器链表 */
@@ -126,16 +157,13 @@ static void _unused *__crtl_timer_schedule_task_fn(void*arg)
             if(!list_is_last(&__list_ite_timer->list, &__crtl_timers_list_head)) {
                 __list_ite_timer = __list_ite_next_timer;
             }
-            
-//            __crtl_dbg("[%ld]: __list_ite_timer ID %ld\n",crtl_thread_self(), __list_ite_timer->timer_id);
-            
+                        
             /* 计算当前时间与定时器超时时间差 */
             crtl_timespec_subabs(&__this_timer->itimerspec_value.it_value, &currentTime,  &time_interval);
 
             /* 如果时间差在刷新间隔内，调度定时器 */
             if(__CRTL_TIMER_REFRESH_FREQUENCY_NanoSEC >= time_interval.tv_sec*1000000000+time_interval.tv_nsec) {
                 
-//                __crtl_dbg("[%ld]: __list_ite_timer ID %ld\n",crtl_thread_self(), __list_ite_timer->timer_id);
                 /* 调度 */
                 __this_timer->timer_sche_callback(__this_timer->timer_sche_arg);
 
@@ -177,13 +205,13 @@ static void _unused *__crtl_timer_schedule_task_fn(void*arg)
 
 
 /* 创建定时器 */
-long crtl_timer_create(crtl_boolean is_loop, void (*callback)(void *arg), void *arg, long sec, long nanosec)
+__crtl_timer_id_t crtl_timer_create(int is_loop, void (*callback)(void *arg), void *arg, long sec, long nanosec)
 {
     /* 入参有误 */
     if(unlikely(!callback) || (unlikely(!sec) && unlikely(!nanosec))) {
         crtl_print_err("wrong params error.\n");
         crtl_assert_fp(stderr, 0);
-        return CRTL_ERROR;
+        return 0;
     }
     
     /* 类型检测 */
@@ -194,7 +222,7 @@ long crtl_timer_create(crtl_boolean is_loop, void (*callback)(void *arg), void *
         /* 申请失败，退出 */
         crtl_print_err("null pointer error.\n");
         crtl_assert_fp(stderr, 0);
-        return CRTL_ERROR;
+        return 0;
     }
 
     if(is_loop) {
@@ -202,9 +230,10 @@ long crtl_timer_create(crtl_boolean is_loop, void (*callback)(void *arg), void *
     } else {
         __timer->timer_loop = CRTL_TIMER_NONLOOP;
     }
-#define __CRTL_TIMER_ID_GEN(ptr) ((long)ptr)
+#define GEN_TIMERID(paddr) ((__crtl_timer_id_t)paddr)
     
-    __timer->timer_id = __CRTL_TIMER_ID_GEN(__timer);
+    __timer->timer_id = GEN_TIMERID(__timer);
+    
     
     struct timespec currentTime = {0,0};
 
@@ -216,10 +245,6 @@ long crtl_timer_create(crtl_boolean is_loop, void (*callback)(void *arg), void *
     
     /* 获取到期时间:轮询表中将被与GetTimeofDay比较 */
     crtl_timespec_add(&currentTime, &__timer->itimerspec_value.it_interval, &__timer->itimerspec_value.it_value);
-
-//    __crtl_dbg("CURRENT  %ld\n", currentTime.tv_sec*1000000000+currentTime.tv_nsec);
-//    __crtl_dbg("INTERVAL %ld\n", __timer->itimerspec_value.it_interval.tv_sec*1000000000+__timer->itimerspec_value.it_interval.tv_nsec);
-//    __crtl_dbg("VALUE    %ld\n", __timer->itimerspec_value.it_value.tv_sec*1000000000+__timer->itimerspec_value.it_value.tv_nsec);
 
     /* 置NULL */
     __timer->list.next = __timer->list.prev = NULL;
@@ -236,24 +261,116 @@ long crtl_timer_create(crtl_boolean is_loop, void (*callback)(void *arg), void *
         __crtl_dbg("__crtl_timers_list_poll_task_init_flag = %ld.\n", __crtl_timers_list_poll_task_init_flag);
         
         /* 创建线程 */
-//        int ret = crtl_thread_create(&__crtl_timer_schedule_threadID, PTHREAD_CREATE_DETACHED, 0, 
-//                                      CRTL_THREAD_SCHED_PRIO_NORMAL, SCHED_RR, PTHREAD_SCOPE_SYSTEM,
-//                                      NULL, 0, 0, __crtl_timer_schedule_task_fn, arg, NULL, NULL);
-        int ret = crtl_thread_normal(&__crtl_timer_schedule_threadID, __crtl_timer_schedule_task_fn, arg);
+        int ret = crtl_thread_create(&__crtl_timer_schedule_threadID, PTHREAD_CREATE_DETACHED, 0, 
+                                      CRTL_THREAD_SCHED_PRIO_HIGHEST, SCHED_RR, PTHREAD_SCOPE_SYSTEM,
+                                      NULL, 0, 0, __crtl_timer_schedule_task_fn, arg, NULL, NULL);
+//        int ret = crtl_thread_normal(&__crtl_timer_schedule_threadID, __crtl_timer_schedule_task_fn, arg);
         if(ret != CRTL_SUCCESS) {/* 初始化失败 */
             crtl_print_err("crtl_thread_create error.\n");
             crtl_assert_fp(stderr, 0);
             __crtl_timers_list_unlock;
-            return CRTL_ERROR;
+            return 0;
         }
         __crtl_dbg("create timer schedule thread.\n");
     }
     __crtl_timers_list_unlock;
     
     /* 获取返回值 */
-    long timer_id = CRTL_ERROR;
-    timer_id = __CRTL_TIMER_ID_GEN(__timer);
-    return timer_id;
+//    __crtl_dbg("Create Timer ID: %lx(%lx)(%d)\n", __timer->timer_id, GEN_TIMERID(__timer), sizeof(__crtl_timer_id_t));
+//    crtl_memprint(stdout, &__timer->timer_id, 8);
+    return GEN_TIMERID(__timer);
 }
 
+/* 获取定时器时间 */
+_api int crtl_timer_gettime_interval(__crtl_timer_id_t timerid, long *sec, long *nanosec)
+{
+    /* 首先找到这个定时器 */
+    struct crtl_timer_struct *__this_timer = NULL;
+    __crtl_timers_list_rdlock;
+    __this_timer = __crtl_timer_getbyid(timerid);
+
+    if(unlikely(!__this_timer)) {
+        crtl_print_err("null pointer error.\n");
+        crtl_assert_fp(stderr, 0);
+        __crtl_timers_list_unlock;
+        return CRTL_ERROR;
+    }
+
+    /* 计算并保存间隔时间 */
+    *sec = __this_timer->itimerspec_value.it_interval.tv_sec;
+    *nanosec = __this_timer->itimerspec_value.it_interval.tv_nsec;
+    __crtl_timers_list_unlock;
+
+    return CRTL_SUCCESS;
+}
+
+
+/* 更新定时器时间 */
+_api int crtl_timer_settime_interval(__crtl_timer_id_t timerid, long sec, long nanosec)
+{
+    /* 首先找到这个定时器 */
+    struct crtl_timer_struct *__this_timer = NULL;
+    __crtl_timers_list_wrlock;
+    __this_timer = __crtl_timer_getbyid(timerid);
+
+    if(unlikely(!__this_timer)) {
+        crtl_print_err("null pointer error.\n");
+        crtl_assert_fp(stderr, 0);
+        __crtl_timers_list_unlock;
+        return CRTL_ERROR;
+    }
+    /* 计算并保存间隔时间 */
+    crtl_timespec_generate(&__this_timer->itimerspec_value.it_interval, sec, nanosec);
+    __crtl_timers_list_unlock;
+
+    return CRTL_SUCCESS;
+}
+
+/* 更新定时器 */
+_api int crtl_timer_nonloop(__crtl_timer_id_t timerid)
+{
+    /* 首先找到这个定时器 */
+    struct crtl_timer_struct *__this_timer = NULL;
+    __crtl_timers_list_wrlock;
+    __this_timer = __crtl_timer_getbyid(timerid);
+
+    if(unlikely(!__this_timer)) {
+        crtl_print_err("null pointer error.\n");
+        crtl_assert_fp(stderr, 0);
+        __crtl_timers_list_unlock;
+        return CRTL_ERROR;
+    }
+
+    __this_timer->timer_loop = CRTL_TIMER_NONLOOP;
+    
+    __crtl_timers_list_unlock;
+
+    return CRTL_SUCCESS;
+}
+
+
+/* 删除定时器 */
+_api int crtl_timer_delete(__crtl_timer_id_t timerid)
+{
+    struct crtl_timer_struct *__this_timer = NULL;
+
+    __crtl_timers_list_wrlock;
+    __this_timer = __crtl_timer_getbyid(timerid);
+
+    if(unlikely(!__this_timer)) {
+        crtl_print_err("null pointer error.\n");
+        crtl_assert_fp(stderr, 0);
+        __crtl_timers_list_unlock;
+        return CRTL_ERROR;
+    }
+
+    /* 从链表中删除这个定时器 */
+    list_del_init(&__this_timer->list);
+    __crtl_timers_list_unlock;
+    
+    crtl_mfree1(__this_timer);
+
+    return CRTL_SUCCESS;
+}
+//
 

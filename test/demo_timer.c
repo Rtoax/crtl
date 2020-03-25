@@ -6,8 +6,8 @@
 
 void timer_callback(void * arg)
 {
-    long *timerid = (long *)arg;
-    crtl_print_info("timeout timerid %ld\n", *timerid);
+    crtl_timer_id_t *timerid = (crtl_timer_id_t *)arg;
+    crtl_print_info("timeout callback timerid %ld\n", *timerid);
 }
 
 void init_routine()
@@ -18,35 +18,43 @@ void init_routine()
 void demo_timer_create_test()
 {
     int i;
-    long timerid[10];
+    crtl_timer_id_t timerid[10];
     for(i=0;i<sizeof(timerid)/sizeof(timerid[0]);i++) {
-        timerid[i] = crtl_timer_create(crtl_false, &timer_callback, &timerid[i], i+1, 0);
-        crtl_print_info("timerid = %ld\n", timerid[i]);
+        timerid[i] = crtl_timer_create(crtl_true, &timer_callback, &timerid[i], (i+1)%3+1, 0);
+        crtl_print_info("Create: timerid = %ld(%p)\n", timerid[i],(void*)timerid[i]);
     }
-
-    sleep(13);
-    for(i=0;i<sizeof(timerid)/sizeof(timerid[0]);i++) {
-        timerid[i] = crtl_timer_create(crtl_false, &timer_callback, &timerid[i], i+1, 0);
-        crtl_print_info("timerid = %ld\n", timerid[i]);
+    
+    sleep(3);
+    for(i=0;i<sizeof(timerid)/sizeof(timerid[0])-1;i++) {
+        sleep(1);
+        crtl_timer_delete(timerid[i]);
+        crtl_print_notice("Delete: timerid = %ld\n", timerid[i]);
     }
     
     while(1) {
         sleep(1);
-//        crtl_print_info(">>>>>>>>>>>>>>>\n");
     }
 }
+
 
 void *demo_timer_create_test_multi_thread_fn(void*arg)
 {
     crtl_print_debug("Rong. %ld\n", crtl_thread_self());
 
     int i;
-    long timerid[30];
+    crtl_timer_id_t timerid[5] = {0};
     for(i=0;i<sizeof(timerid)/sizeof(timerid[0]);i++) {
-        timerid[i] = crtl_timer_create(i%2, &timer_callback, &timerid[i], i+1, 0);
-        crtl_print_info("timerid = %ld\n", timerid[i]);
+        timerid[i] = crtl_timer_create(crtl_true, &timer_callback, &timerid[i], i+1, 0);
+        crtl_print_info("Create: timerid = %ld(%lx)(%d)\n", timerid[i], timerid[i],sizeof(crtl_timer_id_t));
     }
-
+    
+    sleep(3);
+    for(i=0;i<sizeof(timerid)/sizeof(timerid[0]);i++) {
+        sleep(1);
+        crtl_timer_delete(timerid[i]);
+        crtl_print_notice("Delete: timerid = %ld\n", timerid[i]);
+    }
+    
     while(1) {
         sleep(1);
     }
