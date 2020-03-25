@@ -68,6 +68,20 @@ void demo_timer_create_test_multi_thread()
     crtl_thread_normal(&thread2, demo_timer_create_test_multi_thread_fn, NULL);
     crtl_thread_normal(&thread3, demo_timer_create_test_multi_thread_fn, NULL);
 
+
+    sleep(13);
+    int i;
+    crtl_timer_id_t timerid[5] = {0};
+    for(i=0;i<sizeof(timerid)/sizeof(timerid[0]);i++) {
+        timerid[i] = crtl_timer_create(crtl_true, &timer_callback, &timerid[i], i+1, 0);
+        crtl_print_info("Create: timerid = %ld(%lx)(%d)\n", timerid[i], timerid[i],sizeof(crtl_timer_id_t));
+    }
+    sleep(13);
+    for(i=0;i<sizeof(timerid)/sizeof(timerid[0]);i++) {
+        sleep(1);
+        crtl_timer_delete(timerid[i]);
+        crtl_print_notice("Delete: timerid = %ld\n", timerid[i]);
+    }
     
 
     while(1) {

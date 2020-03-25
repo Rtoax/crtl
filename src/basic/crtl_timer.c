@@ -183,6 +183,8 @@ static void _unused *__crtl_timer_schedule_task_fn(void*arg)
                     crtl_mfree1(__this_timer);
                 }
                 
+            }else { /* 如果这个定时器没到时间，后面的定时器全部没有超时 */
+                break;
             }
         }
         /* 如果删除后定时器列表为空 */
