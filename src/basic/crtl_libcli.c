@@ -35,6 +35,8 @@ struct crtl_cli_filter_cmds {
     }             \
   } while (0)
 
+    
+const char cli_enable_password[] = {"rong "};
 
 
 // Forward defines of *INTERNAL* library function as static here
@@ -745,171 +747,180 @@ static int crtl_cli_parse_line(const char *line, char *words[], int max_words)
     return nwords;
 }
 
-static char *join_words(int argc, char **argv) {
-  char *p;
-  int len = 0;
-  int i;
+static char *join_words(int argc, char **argv) 
+{
+    char *p;
+    int len = 0;
+    int i;
 
-  for (i = 0; i < argc; i++) {
-    if (i) len += 1;
+    for (i = 0; i < argc; i++) {
+        if (i) len += 1;
+        len += strlen(argv[i]);
+    }
 
-    len += strlen(argv[i]);
-  }
+    p = malloc(len + 1);
+    p[0] = 0;
 
-  p = malloc(len + 1);
-  p[0] = 0;
+    for (i = 0; i < argc; i++) {
+        if (i) strcat(p, " ");
+        strcat(p, argv[i]);
+    }
 
-  for (i = 0; i < argc; i++) {
-    if (i) strcat(p, " ");
-
-    strcat(p, argv[i]);
-  }
-
-  return p;
+    return p;
 }
 
-int crtl_cli_run_command(struct crtl_cli_struct *cli, const char *command) {
-  int rc = CLI_ERROR;
-  struct crtl_cli_pipeline *pipeline;
+int crtl_cli_run_command(struct crtl_cli_struct *cli, const char *command) 
+{
+    int rc = CLI_ERROR;
+    struct crtl_cli_pipeline *pipeline;
 
-  // Split command into pipeline stages
-  pipeline = crtl_cli_int_generate_pipeline(cli, command);
+    // Split command into pipeline stages
+    pipeline = crtl_cli_int_generate_pipeline(cli, command);
 
-  // crtl_cli_int_validate_pipeline will deal with buildmode command setup, and return CLI_BUILDMODE_START if found.
-  if (pipeline) rc = crtl_cli_int_validate_pipeline(cli, pipeline);
+    // crtl_cli_int_validate_pipeline will deal with buildmode command setup, and return CLI_BUILDMODE_START if found.
+    if (pipeline) 
+        rc = crtl_cli_int_validate_pipeline(cli, pipeline);
 
-  if (rc == CLI_OK) {
-    rc = crtl_cli_int_execute_pipeline(cli, pipeline);
-  }
-  crtl_cli_int_free_pipeline(pipeline);
-  return rc;
+    if (rc == CLI_OK) {
+        rc = crtl_cli_int_execute_pipeline(cli, pipeline);
+    }
+    crtl_cli_int_free_pipeline(pipeline);
+    return rc;
 }
 
-void crtl_cli_get_completions(struct crtl_cli_struct *cli, const char *command, char lastchar, struct crtl_cli_comphelp *comphelp) {
-  struct crtl_cli_command *c = NULL;
-  struct crtl_cli_command *n = NULL;
+void crtl_cli_get_completions(struct crtl_cli_struct *cli, const char *command, char lastchar, struct crtl_cli_comphelp *comphelp) 
+{
+    struct crtl_cli_command *c = NULL;
+    struct crtl_cli_command *n = NULL;
 
-  int i;
-  int command_type;
-  struct crtl_cli_pipeline *pipeline = NULL;
-  struct crtl_cli_pipeline_stage *stage;
+    int i;
+    int command_type;
+    struct crtl_cli_pipeline *pipeline = NULL;
+    struct crtl_cli_pipeline_stage *stage;
 
-  if (!(pipeline = crtl_cli_int_generate_pipeline(cli, command))) goto out;
+    if (!(pipeline = crtl_cli_int_generate_pipeline(cli, command))) 
+        goto out;
 
-  stage = &pipeline->stage[pipeline->num_stages - 1];
+    stage = &pipeline->stage[pipeline->num_stages - 1];
 
-  // Check to see if either *no* input, or if the lastchar is a tab.
-  if ((!stage->words[0] || (command[strlen(command) - 1] == ' ')) && (stage->words[stage->num_words - 1]))
-    stage->num_words++;
+    // Check to see if either *no* input, or if the lastchar is a tab.
+    if ((!stage->words[0] || (command[strlen(command) - 1] == ' ')) && (stage->words[stage->num_words - 1]))
+        stage->num_words++;
 
-  if (cli->buildmode)
-    command_type = CLI_BUILDMODE_COMMAND;
-  else if (pipeline->num_stages == 1)
-    command_type = CLI_REGULAR_COMMAND;
-  else
-    command_type = CLI_FILTER_COMMAND;
+    if (cli->buildmode)
+        command_type = CLI_BUILDMODE_COMMAND;
+    else if (pipeline->num_stages == 1)
+        command_type = CLI_REGULAR_COMMAND;
+    else
+        command_type = CLI_FILTER_COMMAND;
 
-  for (c = cli->commands, i = 0; c && i < stage->num_words; c = n) {
-    char *strptr = NULL;
-    n = c->next;
+    for (c = cli->commands, i = 0; c && i < stage->num_words; c = n) {
+        char *strptr = NULL;
+        n = c->next;
 
-    if (c->command_type != command_type) continue;
-    if (cli->privilege < c->privilege) continue;
-    if (c->mode != cli->mode && c->mode != LIBCLI_MODE_ANY) continue;
-    if (stage->words[i] && strncasecmp(c->command, stage->words[i], strlen(stage->words[i]))) continue;
+        if (c->command_type != command_type) continue;
+        if (cli->privilege < c->privilege) continue;
+        if (c->mode != cli->mode && c->mode != LIBCLI_MODE_ANY) continue;
+        if (stage->words[i] && strncasecmp(c->command, stage->words[i], strlen(stage->words[i]))) continue;
 
-    // Special case for 'buildmode' - skip if the argument for this command was seen, unless MULTIPLE flag is set
-    if (cli->buildmode) {
-      struct crtl_cli_optarg *optarg;
-      for (optarg = cli->buildmode->command->optargs; optarg; optarg = optarg->next) {
-        if (!strcmp(optarg->name, c->command)) break;
-      }
-      if (optarg && crtl_cli_find_optarg_value(cli, optarg->name, NULL) && !(optarg->flags & (CLI_CMD_OPTION_MULTIPLE)))
-        continue;
+        // Special case for 'buildmode' - skip if the argument for this command was seen, unless MULTIPLE flag is set
+        if (cli->buildmode) {
+            struct crtl_cli_optarg *optarg;
+            for (optarg = cli->buildmode->command->optargs; optarg; optarg = optarg->next) {
+                if (!strcmp(optarg->name, c->command)) break;
+            }
+            if (optarg && crtl_cli_find_optarg_value(cli, optarg->name, NULL) && !(optarg->flags & (CLI_CMD_OPTION_MULTIPLE)))
+                continue;
+        }
+        if (i < stage->num_words - 1) {
+            if (stage->words[i] && (strlen(stage->words[i]) < c->unique_len) && strcmp(stage->words[i], c->command)) continue;
+
+            n = c->children;
+
+            // If we have no more children, we've matched the *command* - remember this
+            if (!c->children) break;
+
+            i++;
+            continue;
+        }
+
+        if (lastchar == '?') {
+            if (asprintf(&strptr, "  %-20s %s", c->command, (c->help) ? c->help : "") != -1) {
+                crtl_cli_add_comphelp_entry(comphelp, strptr);
+                free_z(strptr);
+            }
+        } else {
+            crtl_cli_add_comphelp_entry(comphelp, c->command);
+        }
     }
-    if (i < stage->num_words - 1) {
-      if (stage->words[i] && (strlen(stage->words[i]) < c->unique_len) && strcmp(stage->words[i], c->command)) continue;
-
-      n = c->children;
-
-      // If we have no more children, we've matched the *command* - remember this
-      if (!c->children) break;
-
-      i++;
-      continue;
-    }
-
-    if (lastchar == '?') {
-      if (asprintf(&strptr, "  %-20s %s", c->command, (c->help) ? c->help : "") != -1) {
-        crtl_cli_add_comphelp_entry(comphelp, strptr);
-        free_z(strptr);
-      }
-    } else {
-      crtl_cli_add_comphelp_entry(comphelp, c->command);
-    }
-  }
 
 out:
-  if (c) {
-    // Advance past first word of stage
-    i++;
-    stage->first_unmatched = i;
-    if (c->optargs) {
-      crtl_cli_int_parse_optargs(cli, stage, c, lastchar, comphelp);
-    } else if (lastchar == '?') {
-      // Special case for getting help with no defined optargs....
-      comphelp->num_entries = -1;
+    if (c) {
+        // Advance past first word of stage
+        i++;
+        stage->first_unmatched = i;
+        if (c->optargs) {
+            crtl_cli_int_parse_optargs(cli, stage, c, lastchar, comphelp);
+        } else if (lastchar == '?') {
+            // Special case for getting help with no defined optargs....
+            comphelp->num_entries = -1;
+        }
     }
-  }
 
-  crtl_cli_int_free_pipeline(pipeline);
+    crtl_cli_int_free_pipeline(pipeline);
 }
 
-static void crtl_cli_clear_line(int sockfd, char *cmd, int l, int cursor) {
-  // Use cmd as our buffer, and overwrite contents as needed.
-  // Backspace to beginning
-  memset((char *)cmd, '\b', cursor);
-  _write(sockfd, cmd, cursor);
+static void crtl_cli_clear_line(int sockfd, char *cmd, int l, int cursor) 
+{
+    // Use cmd as our buffer, and overwrite contents as needed.
+    // Backspace to beginning
+    memset((char *)cmd, '\b', cursor);
+    _write(sockfd, cmd, cursor);
 
-  // Overwrite existing cmd with spaces
-  memset((char *)cmd, ' ', l);
-  _write(sockfd, cmd, l);
+    // Overwrite existing cmd with spaces
+    memset((char *)cmd, ' ', l);
+    _write(sockfd, cmd, l);
 
-  // ..and backspace again to beginning
-  memset((char *)cmd, '\b', l);
-  _write(sockfd, cmd, l);
+    // ..and backspace again to beginning
+    memset((char *)cmd, '\b', l);
+    _write(sockfd, cmd, l);
 
-  // Null cmd buffer
-  memset((char *)cmd, 0, l);
+    // Null cmd buffer
+    memset((char *)cmd, 0, l);
 }
 
-void crtl_cli_reprompt(struct crtl_cli_struct *cli) {
-  if (!cli) return;
-  cli->showprompt = 1;
+/* 提示 */
+void crtl_cli_reprompt(struct crtl_cli_struct *cli) 
+{
+    if (!cli) return;
+    cli->showprompt = 1;
 }
 
-void crtl_cli_regular(struct crtl_cli_struct *cli, int (*callback)(struct crtl_cli_struct *cli)) {
-  if (!cli) return;
-  cli->regular_callback = callback;
+void crtl_cli_regular(struct crtl_cli_struct *cli, int (*callback)(struct crtl_cli_struct *cli)) 
+{
+    if (!cli) return;
+    cli->regular_callback = callback;
 }
 
-void crtl_cli_regular_interval(struct crtl_cli_struct *cli, int seconds) {
-  if (seconds < 1) seconds = 1;
-  cli->timeout_tm.tv_sec = seconds;
-  cli->timeout_tm.tv_usec = 0;
+void crtl_cli_regular_interval(struct crtl_cli_struct *cli, int seconds) 
+{
+    if (seconds < 1) seconds = 1;
+    cli->timeout_tm.tv_sec = seconds;
+    cli->timeout_tm.tv_usec = 0;
 }
 
-#define DES_PREFIX "{crypt}"  // To distinguish clear text from DES crypted
+#define DES_PREFIX "{crypt}"  // To distinguish clear text from DES crypted区分明文与DES加密
 #define MD5_PREFIX "$1$"
 
-static int pass_matches(const char *pass, const char *attempt) {
-  int des;
-  if ((des = !strncasecmp(pass, DES_PREFIX, sizeof(DES_PREFIX) - 1))) pass += sizeof(DES_PREFIX) - 1;
+static int pass_matches(const char *pass, const char *attempt) 
+{
+    int des;
+    if ((des = !strncasecmp(pass, DES_PREFIX, sizeof(DES_PREFIX) - 1))) pass += sizeof(DES_PREFIX) - 1;
 
-  // TODO(dparrish): Find a small crypt(3) function for use on windows
-  if (des || !strncmp(pass, MD5_PREFIX, sizeof(MD5_PREFIX) - 1)) attempt = crypt(attempt, pass);
+    // TODO(dparrish): Find a small crypt(3) function for use on windows
+    if (des || !strncmp(pass, MD5_PREFIX, sizeof(MD5_PREFIX) - 1)) attempt = crypt(attempt, pass);
 
-  return !strcmp(pass, attempt);
+    return !strcmp(pass, attempt);
 }
 
 #define CTRL(c) (c - '@')

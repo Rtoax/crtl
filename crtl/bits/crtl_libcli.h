@@ -80,7 +80,10 @@ extern "C" {
 #define CLI_MAX_LINE_WORDS      128
 
 
-#define CLI_ENABLE_PASSWORD "rong "
+#define CLI_ENABLE_PASSWORD cli_enable_password
+extern const char cli_enable_password[];
+
+
 
 
 /* cmd type */
