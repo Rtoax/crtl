@@ -19,12 +19,14 @@ include_directories( ./crtl ./ )
 find_library(RT rt /usr/lib64) 
 find_library(DL dl /usr/lib64) 
 find_library(MATH m /usr/lib64)
+find_library(CRYPT crypt /usr/lib64)
+find_library(PTHREAD pthread /usr/lib64)
 
 #link库 
-link_libraries(${DL} ${RT} ${MATH})
+link_libraries(${DL} ${RT} ${MATH} ${CRYPT} ${PTHREAD})
 
 #定义 
-add_definitions(-g3 -MD -Wall -DOS_LINUX=1 -pthread -lconfig)
+add_definitions(-g3 -MD -Wall)
 
 #生成动态库和静态库 
 add_library(acc_lib_shared  SHARED ${DIR_SRCS}) 
