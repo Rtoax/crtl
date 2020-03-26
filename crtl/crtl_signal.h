@@ -17,6 +17,8 @@ typedef __crtl_sigset_t crtl_sigset_t;
 #define CRTL_SIGSET_AND(pdstset, pset1, pset2) __CRTL_SIGSET_AND(pdstset, pset1, pset2)
 
 
+#define CRTL_SIGSUSPEND(pset) __CRTL_SIGSET_WAIT(pset) 
+
 
 
 

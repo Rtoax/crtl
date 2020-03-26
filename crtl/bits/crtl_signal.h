@@ -33,7 +33,7 @@ typedef sigset_t __crtl_sigset_t;
 #define __CRTL_SIGSET_AND(pdstset, pset1, pset2) 
 #endif//_GNU_SOURCE
 
-
+#define __CRTL_SIGSET_WAIT(pset) typecheck(__crtl_sigset_t*, pset);sigsuspend(pset)
 
 
 
@@ -77,7 +77,7 @@ typedef struct
   unsigned long int __val[_SIGSET_NWORDS];
 } __sigset_t;
 
-int sigsuspend(const sigset_t *mask);
+int sigsuspend(const sigset_t *mask); //等待一个信号
 typedef __sigset_t sigset_t;
 
 #endif //_POSIX_C_SOURCE >= 1 || _XOPEN_SOURCE || _POSIX_SOURCE
