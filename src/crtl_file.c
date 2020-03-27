@@ -257,3 +257,269 @@ struct stat {
 //    return ret;  
 //} 
 
+
+
+FILE *crtl_efopen(const char *file, const char *mode)
+{
+	FILE *stream;
+
+	if (NULL == (stream = fopen(file, mode)))
+		crtl_print_err("efopen: fopen failed\n");
+	
+	return stream;
+}
+
+
+FILE *crtl_efreopen(const char *file, const char *mode, FILE *stream1)
+{
+	FILE *stream2;
+
+	if (NULL == (stream2 = freopen(file, mode, stream1)))
+			crtl_print_err("efreopen: freopen failed\n");
+	
+	return stream2;
+}
+
+FILE *crtl_efdopen(int fd, const char *mode)
+{
+	FILE *stream;
+
+	if (NULL == (stream = (FILE *) fdopen(fd, mode)))
+		      crtl_print_err("efdopen: fdopen failed\n");
+	
+	return stream;
+}
+
+
+FILE *crtl_epopen(char *command, char *type)
+{
+	FILE *stream;
+
+	if (NULL == (stream = (FILE *) popen(command, type)))
+		      crtl_print_err("epopen: popen failed\n");
+	
+	return stream;
+}
+
+
+int crtl_efclose(FILE *stream)
+{
+	int status;
+
+	if (EOF == (status = fclose(stream)))
+		      crtl_print_err("efclose: fclose failed\n");
+
+	return status;
+}
+
+
+int crtl_epclose(FILE *stream)
+{
+	int status;
+
+	if (EOF == (status = pclose(stream)))
+		      crtl_print_err("epclose: pclose failed\n");
+
+	return status;
+}
+
+int crtl_efflush(FILE *stream)
+{
+	int status;
+
+	if (EOF == (status = fflush(stream)))
+		      crtl_print_err("efflush: fflush failed\n");
+
+	return status;
+}
+
+
+int crtl_eremove(const char *file)
+{
+	int status;
+
+	if ((status = remove(file)))
+		crtl_print_err("eremove: remove failed\n");
+
+	return status;
+}
+
+
+int crtl_erename(const char *oldfile, const char *newfile)
+{
+	int status;
+
+	if ((status = rename(oldfile, newfile)))
+		crtl_print_err("erename: rename failed\n");
+
+	return status;
+}
+
+
+int crtl_efseek(FILE *stream, off_t offset, int origin)
+{
+	if (fseek(stream, offset, origin))  /* non-zero => error */
+		      crtl_print_err("efseek: fseek failed\n");
+
+	return 0;
+}
+
+
+
+void crtl_erewind(FILE *stream)	/* dummy function */
+{
+	rewind(stream);
+	return;
+}
+
+
+long crtl_eftell(FILE *stream)
+{
+	long position;
+
+	if (-1L == (position = ftell(stream)))
+		crtl_print_err("eftell: ftell failed\n");
+
+	return position;
+}
+
+int crtl_efseeko(FILE *stream, off_t offset, int origin)
+{
+
+	/* non-zero => error */
+	if (fseeko(stream, (off_t) offset, (int) origin))
+		crtl_print_err("efseeko: fseeko failed\n");
+
+	return 0;
+}
+
+off_t crtl_eftello(FILE *streem)
+{
+	off_t eposition;
+	off_t test=-1;
+
+	eposition = ftello(streem);
+	if (test == eposition) {
+		fprintf(stderr,"sizeof(off_t)=%lu\n",
+				(unsigned long) sizeof(eposition));
+	}
+	
+
+	return eposition;
+}
+
+
+//FILE * crtl_etmpstream (char * prefix) 
+//{
+//   	FILE * stream;
+//
+//   	if (NULL == (stream = temporary_stream(prefix)))
+//		crtl_print_err("etmpstream: temporary_stream failed\n");
+//
+//   	return stream;
+//}
+
+FILE *crtl_etmpfile(void)
+{
+	FILE *stream;
+
+	if (NULL == (stream = tmpfile()))
+		      crtl_print_err("etmpfile: tmpfile failed\n");
+	
+	return stream;
+}
+
+
+void *crtl_emalloc(size_t size)
+{
+	void *memptr;
+
+	if (NULL == (memptr = malloc(size)))
+		crtl_print_err("emalloc: malloc failed\n");
+	
+	return memptr;
+}
+
+
+
+void *crtl_erealloc(void *memptr, size_t size)
+{
+	void *newptr;
+
+	if (NULL == (newptr = realloc(memptr, size)))
+		crtl_print_err("erealloc: realloc failed\n");
+	
+	return newptr;
+}
+
+
+void *crtl_ecalloc(size_t count, size_t size)
+{
+	void *memptr;
+
+	if (NULL == (memptr = calloc(count, size)))
+		crtl_print_err("ecalloc: calloc failed\n");
+	
+	return memptr;
+}
+
+/* fgetpos and fsetpos may not exist on some systems */
+/* if you get error messages about these then comment out the next two */
+/* subroutine definitions */
+/* beginning of fgetpos  and fsetpos block */
+
+
+int crtl_efgetpos(FILE *stream, fpos_t *position)
+{
+	int status;
+
+	if ((status = fgetpos(stream, position)))
+		crtl_print_err("efgetpos: fgetpos failed\n");
+
+	return status;
+}
+
+
+int crtl_efsetpos(FILE *stream, const fpos_t *position)
+{
+	int status;
+
+	if ((status = fsetpos(stream, position)))
+		crtl_print_err("efsetpos: fsetpos failed\n");
+
+	return status;
+}
+
+
+size_t crtl_efread(void *bufptr, size_t size, size_t count, FILE *stream)
+{
+	size_t nread;
+
+	if (!size) {
+        crtl_print_err("efread: fread given 0 item size\n");
+        return 0;
+    }
+
+	nread = fread(bufptr, size, count, stream);
+
+	if (nread != count && ferror(stream))
+		      crtl_print_err("efread: fread only %d items of %d\n",
+				nread, count);
+
+	return nread;
+}
+
+
+size_t crtl_efwrite(void *bufptr, size_t size, size_t count, FILE *stream)
+{
+	size_t nwrite;
+
+	nwrite = fwrite(bufptr, size, count, stream);
+
+	if (nwrite != count)
+		      crtl_print_err("efwrite: fwrite only %d items of %d\n",
+				nwrite, count);
+
+	return nwrite;
+}
+

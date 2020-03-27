@@ -234,7 +234,7 @@ struct crtl_cli_buildmode {
 };
 
 /* APIs */
-struct crtl_cli_struct *crtl_cli_init();
+struct crtl_cli_struct *crtl_cli_init(const char *banner, const char *hostname);
 int crtl_cli_done(struct crtl_cli_struct *cli);
 struct crtl_cli_command *crtl_cli_register_command(struct crtl_cli_struct *cli, struct crtl_cli_command *parent, const char *command,
                                          int (*callback)(struct crtl_cli_struct *, const char *, char **, int), int privilege,

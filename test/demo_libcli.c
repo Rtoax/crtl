@@ -323,9 +323,12 @@ void run_child(int acceptfd)
     myctx.value = 5;
     myctx.message = mymessage;
 
-    cli = crtl_cli_init();
-    crtl_cli_set_banner(cli, "# Welcome...\n");
-    crtl_cli_set_hostname(cli, "[telnet@rtoax]");
+#define CLI_BANNER  "# Welcome TO Crtl Telnet CLI \n"\
+                    "#  ls - show the list of cmd\n"
+#define CLI_HOSTNAME    "[telnet@crtl]"
+
+    cli = crtl_cli_init(CLI_BANNER, CLI_HOSTNAME);
+    
     crtl_cli_telnet_protocol(cli, 1);
     crtl_cli_regular(cli, regular_callback);
 
@@ -334,9 +337,11 @@ void run_child(int acceptfd)
     
     // set 60 second idle timeout
     crtl_cli_set_idle_timeout_callback(cli, 60, idle_timeout);
+    
     crtl_cli_register_command(cli, NULL, "test", cmd_test, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
     crtl_cli_register_command(cli, NULL, "simple", NULL, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
     crtl_cli_register_command(cli, NULL, "simon", NULL, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
+    
     crtl_cli_register_command(cli, NULL, "set", cmd_set, LIBCLI_PRIVILEGE_PRIVILEGED, LIBCLI_MODE_EXEC, NULL);
     
     c = crtl_cli_register_command(cli, NULL, "show", NULL, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
@@ -345,6 +350,7 @@ void run_child(int acceptfd)
     crtl_cli_register_command(cli, c, "counters", cmd_test, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
                             "Show the counters that the system uses");
     crtl_cli_register_command(cli, c, "junk", cmd_test, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
+    
     crtl_cli_register_command(cli, NULL, "interface", cmd_config_int, LIBCLI_PRIVILEGE_PRIVILEGED, LIBCLI_MODE_CONFIG,
                             "Configure an interface");
     crtl_cli_register_command(cli, NULL, "exit", cmd_config_int_exit, LIBCLI_PRIVILEGE_PRIVILEGED, MODE_CONFIG_INT,

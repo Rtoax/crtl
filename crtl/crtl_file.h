@@ -75,6 +75,33 @@ char *crtl_mktemp_string(char * const tempfile_out, const char *path, const char
 
 
 
+
+FILE *crtl_efopen(const char *file, const char *mode);
+FILE *crtl_efreopen(const char *file, const char *mode, FILE *stream1);
+FILE *crtl_efdopen(int fd, const char *mode);
+FILE *crtl_epopen(char *command, char *type);
+int crtl_efclose(FILE *stream);
+int crtl_epclose(FILE *stream);
+int crtl_efflush(FILE *stream);
+int crtl_eremove(const char *file);
+int crtl_erename(const char *oldfile, const char *newfile);
+int crtl_efseek(FILE *stream, off_t offset, int origin);
+void crtl_erewind(FILE *stream)	/* dummy function */;
+long crtl_eftell(FILE *stream);
+int crtl_efseeko(FILE *stream, off_t offset, int origin);
+off_t crtl_eftello(FILE *streem);
+//FILE *crtl_etmpstream(char * prefix);
+FILE *crtl_etmpfile(void);
+void *crtl_emalloc(size_t size);
+void *crtl_erealloc(void *memptr, size_t size);
+void *crtl_ecalloc(size_t count, size_t size);
+int crtl_efgetpos(FILE *stream, fpos_t *position);
+int crtl_efsetpos(FILE *stream, const fpos_t *position);
+size_t crtl_efwrite(void *bufptr, size_t size, size_t count, FILE *stream);
+size_t crtl_efread(void *bufptr, size_t size, size_t count, FILE *stream);
+
+
+
 #endif /*<__CRTL_FILE_H>*/
 
 

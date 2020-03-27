@@ -553,7 +553,7 @@ int crtl_cli_int_configure_terminal(struct crtl_cli_struct *cli, const char _unu
 }
 
 /* init cli  */
-struct crtl_cli_struct *crtl_cli_init() 
+struct crtl_cli_struct *crtl_cli_init(const char *banner, const char *hostname) 
 {
     struct crtl_cli_struct *cli;
     struct crtl_cli_command *c;
@@ -614,6 +614,11 @@ struct crtl_cli_struct *crtl_cli_init()
 
     // Set default idle timeout callback, but no timeout
     crtl_cli_set_idle_timeout_callback(cli, 0, crtl_cli_int_idle_timeout);
+
+    
+    crtl_cli_set_banner(cli, banner);
+    crtl_cli_set_hostname(cli, hostname);
+    
     return cli;
 }
 
@@ -889,7 +894,7 @@ static void crtl_cli_clear_line(int sockfd, char *cmd, int l, int cursor)
     memset((char *)cmd, 0, l);
 }
 
-/* 提示 */
+/* 鎻愮ず */
 void crtl_cli_reprompt(struct crtl_cli_struct *cli) 
 {
     if (!cli) return;
@@ -909,7 +914,7 @@ void crtl_cli_regular_interval(struct crtl_cli_struct *cli, int seconds)
     cli->timeout_tm.tv_usec = 0;
 }
 
-#define DES_PREFIX "{crypt}"  // To distinguish clear text from DES crypted区分明文与DES加密
+#define DES_PREFIX "{crypt}"  // To distinguish clear text from DES crypted鍖哄垎鏄庢枃涓嶥ES鍔犲瘑
 #define MD5_PREFIX "$1$"
 
 static int pass_matches(const char *pass, const char *attempt) 
@@ -1856,7 +1861,8 @@ int crtl_cli_match_filter_init(struct crtl_cli_struct *cli, int argc, char **arg
   return CLI_OK;
 }
 
-int crtl_cli_match_filter(struct crtl_cli_struct _unused *cli, const char *string, void *data) {
+int crtl_cli_match_filter(struct crtl_cli_struct _unused *cli, const char *string, void *data) 
+{
   struct crtl_cli_match_filter_state *state = data;
   int r = CLI_ERROR;
 
@@ -1887,9 +1893,9 @@ int crtl_cli_match_filter(struct crtl_cli_struct _unused *cli, const char *strin
 }
 
 struct crtl_cli_range_filter_state {
-  int matched;
-  char *from;
-  char *to;
+    int matched;
+    char *from;
+    char *to;
 };
 
 int crtl_cli_range_filter_init(struct crtl_cli_struct *cli, int argc, char **argv, struct crtl_cli_filter *filt) {
@@ -1911,7 +1917,8 @@ int crtl_cli_range_filter_init(struct crtl_cli_struct *cli, int argc, char **arg
   }
 }
 
-int crtl_cli_range_filter(struct crtl_cli_struct _unused *cli, const char *string, void *data) {
+int crtl_cli_range_filter(struct crtl_cli_struct _unused *cli, const char *string, void *data) 
+{
   struct crtl_cli_range_filter_state *state = data;
   int r = CLI_ERROR;
 
@@ -1932,7 +1939,8 @@ int crtl_cli_range_filter(struct crtl_cli_struct _unused *cli, const char *strin
   return r;
 }
 
-int crtl_cli_count_filter_init(struct crtl_cli_struct *cli, int argc, char _unused **argv, struct crtl_cli_filter *filt) {
+int crtl_cli_count_filter_init(struct crtl_cli_struct *cli, int argc, char _unused **argv, struct crtl_cli_filter *filt) 
+{
   if (argc > 1) {
     if (cli->client) fprintf(cli->client, "Count filter does not take arguments\r\n");
 
