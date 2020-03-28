@@ -3,38 +3,36 @@
 
 
 
-void demo_getpar_test(int argc, char *argv[])
+void demo_crtl_getpar__test(int argc, char *argv[])
 {
-    crtl_par_t argsid = getpar_init(argc, argv, '=', NULL);
+    crtl_getpar_t argsid = crtl_getpar_init(argc, argv, '=', NULL);
 
     int i, npar, ipar, nval;
     float f;
     double d;
     char *s;
     
-    getparint(argsid, "int", &i);
-    getparfloat(argsid, "float", &f);
-    getpardouble(argsid, "double", &d);
-    getparstring(argsid, "string", &s);
+    crtl_getpar_int(argsid, "int", &i);
+    crtl_getpar_float(argsid, "float", &f);
+    crtl_getpar_double(argsid, "double", &d);
+    crtl_getpar_string(argsid, "string", &s);
 
-    npar = countparname(argsid, "rt");
+    npar = crtl_getpar_countparname(argsid, "rt");
     for (ipar=1; ipar<=npar; ++ipar) {
-        nval = countnparval(argsid, ipar,"rt");
-		getnparint(argsid, ipar,"rt",&i);
+        nval = crtl_getpar_countnparval(argsid, ipar-1,"rt");
+		crtl_getnpar_int(argsid, ipar,"rt",&i);
 		crtl_print_debug("occurrence nval %d, ipar %d of i=%d\n",nval, ipar,i);
 	}
     
-    crtl_print_debug("getpar: int=%d,  float=%f, double=%lf, string=%s\n",   i,f,d,s);
+    crtl_print_debug("crtl_getpar_: int=%d,  float=%f, double=%lf, string=%s\n",   i,f,d,s);
 
-    getpar_free(argsid);
+    crtl_getpar_free(argsid);
 }
 
 
 int main(int argc, char *argv[])
 {
-    demo_getpar_test(argc, argv);
+    demo_crtl_getpar__test(argc, argv);
     
     return 0;
 }
-
-

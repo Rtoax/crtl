@@ -21,7 +21,6 @@ struct __crtl_getpar_struct {
     struct param_key_value *params_tab;
     int nargs;		/* number of args that parse	*/
     
-    int tabled;         /* true when parameters tabled  */
     size_t args_count;		/* total number of args		*/
     char **arg_per_string;		/* pointer to arg strings	*/
     char *args_string;		/* storage for command line	*/
@@ -39,47 +38,44 @@ struct param_key_value{
 
 
 #define PFNAME "par="
-#define GETPAR_XARGV_START_INDEX    1
+#define crtl_getpar__XARGV_START_INDEX    1
 #define PAR_NAMES_MAX 512
 
 
 
 /* functions declared and used internally */
-static int __getparindex(struct __crtl_getpar_struct *args_id, int n, char *name);
-static void __getparinit(struct __crtl_getpar_struct *args_id);
-static void __getpar_install_symbol_table(struct __crtl_getpar_struct *args_id);
-static char *__getpfname(struct __crtl_getpar_struct *args_id);
-static int __getnpar(struct __crtl_getpar_struct *args_id, int n, char *name, char *type, void *ptr);
+static int __crtl_getpar_index(const struct __crtl_getpar_struct *args_id, int n, char *name);
+static void __crtl_getpar_init(struct __crtl_getpar_struct *args_id);
+static void __crtl_getpar__install_symbol_table(struct __crtl_getpar_struct *args_id);
+static char *__crtl_getpar_fname(struct __crtl_getpar_struct *args_id);
+static int __crtl_getpar_npar(struct __crtl_getpar_struct *args_id, int n, char *name, char *type, void *ptr);
 
 
 /* make command line args available to subroutines -- re-entrant version */
-struct __crtl_getpar_struct * getpar_init(int argc, char **argv, char Delimiter, char *fromfilepar)
+struct __crtl_getpar_struct * crtl_getpar_init(int argc, char **argv, char Delimiter, char *fromfilepar)
 {
     struct __crtl_getpar_struct *args_id = crtl_malloc1(1, sizeof(struct __crtl_getpar_struct));
-
-    args_id->tabled = crtl_false;
-
+    
     args_id->xargc = argc; 
     args_id->xargv = argv;
 
     args_id->Delimiter = Delimiter;
     
-	if(args_id->tabled == crtl_true){
-		crtl_mfree1(args_id->args_string);
-		crtl_mfree1(args_id->arg_per_string);
-		crtl_mfree1(args_id->params_tab);
-	}
+    __crtl_getpar_init(args_id);
+
 	return args_id;
 }
 
 
-int getpar_free(struct __crtl_getpar_struct *args_id)
+int crtl_getpar_free(struct __crtl_getpar_struct *args_id)
 {
-    if(args_id->tabled == crtl_true){
-		crtl_mfree1(args_id->args_string);
-		crtl_mfree1(args_id->arg_per_string);
-		crtl_mfree1(args_id->params_tab);
-	}
+    __crtl_dbg("---\n");
+	crtl_mfree1(args_id->args_string);
+    __crtl_dbg("---\n");
+	crtl_mfree1(args_id->arg_per_string);
+    __crtl_dbg("---\n");
+	crtl_mfree1(args_id->params_tab);
+    __crtl_dbg("---\n");
     crtl_mfree1(args_id);
     
     return CRTL_SUCCESS;
@@ -87,107 +83,104 @@ int getpar_free(struct __crtl_getpar_struct *args_id)
 
 
 /* functions to get values for the last occurrence of a parameter name */
-int getparint(struct __crtl_getpar_struct *args_id, char *name, int *ptr)
+int crtl_getpar_int(struct __crtl_getpar_struct *args_id, char *name, int *ptr)
 {
-	return __getnpar(args_id, 0,name,"i",ptr);
+	return __crtl_getpar_npar(args_id, 0,name,"i",ptr);
 }
-int getparuint(struct __crtl_getpar_struct *args_id, char *name, unsigned int *ptr)
+int crtl_getpar_uint(struct __crtl_getpar_struct *args_id, char *name, unsigned int *ptr)
 {
-	return __getnpar(args_id, 0,name,"p",ptr);
+	return __crtl_getpar_npar(args_id, 0,name,"p",ptr);
 }
-int getparshort(struct __crtl_getpar_struct *args_id, char *name, short *ptr)
+int crtl_getpar_short(struct __crtl_getpar_struct *args_id, char *name, short *ptr)
 {
-	return __getnpar(args_id, 0,name,"h",ptr);
+	return __crtl_getpar_npar(args_id, 0,name,"h",ptr);
 }
-int getparushort(struct __crtl_getpar_struct *args_id, char *name, unsigned short *ptr)
+int crtl_getpar_ushort(struct __crtl_getpar_struct *args_id, char *name, unsigned short *ptr)
 {
-	return __getnpar(args_id, 0,name,"u",ptr);
+	return __crtl_getpar_npar(args_id, 0,name,"u",ptr);
 }
-int getparlong(struct __crtl_getpar_struct *args_id, char *name, long *ptr)
+int crtl_getpar_long(struct __crtl_getpar_struct *args_id, char *name, long *ptr)
 {
-	return __getnpar(args_id, 0,name,"l",ptr);
+	return __crtl_getpar_npar(args_id, 0,name,"l",ptr);
 }
-int getparulong(struct __crtl_getpar_struct *args_id, char *name, unsigned long *ptr)
+int crtl_getpar_ulong(struct __crtl_getpar_struct *args_id, char *name, unsigned long *ptr)
 {
-	return __getnpar(args_id, 0,name,"v",ptr);
+	return __crtl_getpar_npar(args_id, 0,name,"v",ptr);
 }
-int getparfloat(struct __crtl_getpar_struct *args_id, char *name, float *ptr)
+int crtl_getpar_float(struct __crtl_getpar_struct *args_id, char *name, float *ptr)
 {
-	return __getnpar(args_id, 0,name,"f",ptr);
+	return __crtl_getpar_npar(args_id, 0,name,"f",ptr);
 }
-int getpardouble(struct __crtl_getpar_struct *args_id, char *name, double *ptr)
+int crtl_getpar_double(struct __crtl_getpar_struct *args_id, char *name, double *ptr)
 {
-	return __getnpar(args_id, 0,name,"d",ptr);
+	return __crtl_getpar_npar(args_id, 0,name,"d",ptr);
 }
-int getparstring(struct __crtl_getpar_struct *args_id, char *name, char **ptr)
+int crtl_getpar_string(struct __crtl_getpar_struct *args_id, char *name, char **ptr)
 {
-	return __getnpar(args_id, 0,name,"s",ptr);
+	return __crtl_getpar_npar(args_id, 0,name,"s",ptr);
 }
-int getparstringarray(struct __crtl_getpar_struct *args_id, char *name, char **ptr)
+int crtl_getpar_stringarray(struct __crtl_getpar_struct *args_id, char *name, char **ptr)
 {
-	return __getnpar(args_id, 0,name,"a",ptr);
+	return __crtl_getpar_npar(args_id, 0,name,"a",ptr);
 }
 
 
 /* functions to get values for the n'th occurrence of a parameter name */
-int getnparint(struct __crtl_getpar_struct *args_id, int n, char *name, int *ptr)
+int crtl_getnpar_int(struct __crtl_getpar_struct *args_id, int n, char *name, int *ptr)
 {
-	return __getnpar(args_id, n,name,"i",ptr);
+	return __crtl_getpar_npar(args_id, n,name,"i",ptr);
 }
-int getnparuint(struct __crtl_getpar_struct *args_id, int n, char *name, unsigned int *ptr)
+int crtl_getnpar_uint(struct __crtl_getpar_struct *args_id, int n, char *name, unsigned int *ptr)
 {
-	return __getnpar(args_id, n,name,"p",ptr);
+	return __crtl_getpar_npar(args_id, n,name,"p",ptr);
 }
-int getnparshort(struct __crtl_getpar_struct *args_id, int n, char *name, short *ptr)
+int crtl_getnpar_short(struct __crtl_getpar_struct *args_id, int n, char *name, short *ptr)
 {
-	return __getnpar(args_id, n,name,"h",ptr);
+	return __crtl_getpar_npar(args_id, n,name,"h",ptr);
 }
-int getnparushort(struct __crtl_getpar_struct *args_id, int n, char *name, unsigned short *ptr)
+int crtl_getnpar_ushort(struct __crtl_getpar_struct *args_id, int n, char *name, unsigned short *ptr)
 {
-	return __getnpar(args_id, n,name,"u",ptr);
+	return __crtl_getpar_npar(args_id, n,name,"u",ptr);
 }
-int getnparlong(struct __crtl_getpar_struct *args_id, int n, char *name, long *ptr)
+int crtl_getnpar_long(struct __crtl_getpar_struct *args_id, int n, char *name, long *ptr)
 {
-	return __getnpar(args_id, n,name,"l",ptr);
+	return __crtl_getpar_npar(args_id, n,name,"l",ptr);
 }
-int getnparulong(struct __crtl_getpar_struct *args_id, int n, char *name, unsigned long *ptr)
+int crtl_getnpar_ulong(struct __crtl_getpar_struct *args_id, int n, char *name, unsigned long *ptr)
 {
-	return __getnpar(args_id, n,name,"v",ptr);
+	return __crtl_getpar_npar(args_id, n,name,"v",ptr);
 }
-int getnparfloat(struct __crtl_getpar_struct *args_id, int n, char *name, float *ptr)
+int crtl_getnpar_float(struct __crtl_getpar_struct *args_id, int n, char *name, float *ptr)
 {
-	return __getnpar(args_id, n,name,"f",ptr);
+	return __crtl_getpar_npar(args_id, n,name,"f",ptr);
 }
-int getnpardouble(struct __crtl_getpar_struct *args_id, int n, char *name, double *ptr)
+int crtl_getnpar_double(struct __crtl_getpar_struct *args_id, int n, char *name, double *ptr)
 {
-	return __getnpar(args_id, n,name,"d",ptr);
+	return __crtl_getpar_npar(args_id, n,name,"d",ptr);
 }
-int getnparstring(struct __crtl_getpar_struct *args_id, int n, char *name, char **ptr)
+int crtl_getnpar_string(struct __crtl_getpar_struct *args_id, int n, char *name, char **ptr)
 {
-	return __getnpar(args_id, n,name,"s",ptr);
+	return __crtl_getpar_npar(args_id, n,name,"s",ptr);
 }
-int getnparstringarray(struct __crtl_getpar_struct *args_id, int n, char *name, char **ptr)
+int crtl_getnpar_stringarray(struct __crtl_getpar_struct *args_id, int n, char *name, char **ptr)
 {
-	return __getnpar(args_id, n,name,"a",ptr);
+	return __crtl_getpar_npar(args_id, n,name,"a",ptr);
 }
-static int __getnpar(struct __crtl_getpar_struct *args_id, int n, char *name, char *type, void *ptr)
+static int __crtl_getpar_npar(struct __crtl_getpar_struct *args_id, int n, char *name, char *type, void *ptr)
 {
 	int i;			/* index of name in symbol table	*/
 	int nval;		/* number of parameter values found	*/
 	char *aval;		/* ascii field of symbol		*/
     
-	if (args_id->xargc == GETPAR_XARGV_START_INDEX) 
+	if (args_id->xargc == crtl_getpar__XARGV_START_INDEX) 
         return 0;
     
-	if (!args_id->tabled) 
-        __getparinit(args_id);/* Tabulate command line and parfile */
-    
-	i = __getparindex(args_id, n,name);/* Get parameter index */
+	i = __crtl_getpar_index(args_id, n,name);/* Get parameter index */
 	if (i < 0) 
         return 0;   /* Not there */
 
 	if (0 == ptr) {
-	   crtl_print_err("__getnpar called with 0 pointer, type = %s", type);
+	   crtl_print_err("__crtl_getpar_npar called with 0 pointer, type = %s", type);
 	}
     
 	/*
@@ -256,25 +249,23 @@ static int __getnpar(struct __crtl_getpar_struct *args_id, int n, char *name, ch
 
 
 /* return number of occurrences of parameter name */
-int countparname(struct __crtl_getpar_struct *args_id, char *name)
+int crtl_getpar_countparname(struct __crtl_getpar_struct *args_id, char *name)
 {
 	int i,nname;
 
-	if (args_id->xargc == GETPAR_XARGV_START_INDEX) return 0;
-	if (!args_id->tabled) __getparinit(args_id);
+	if (args_id->xargc == crtl_getpar__XARGV_START_INDEX) return 0;
 	for (i=0,nname=0; i<args_id->nargs; ++i)
 		if (!strcmp(name,args_id->params_tab[i].name)) ++nname;
 	return nname;
 }
 
 /* return number of values in n'th occurrence of parameter name */
-int countnparval(struct __crtl_getpar_struct *args_id, int n, char *name)
+int crtl_getpar_countnparval(const struct __crtl_getpar_struct *args_id, int n, char *name)
 {
 	int i;
 
-	if (args_id->xargc == GETPAR_XARGV_START_INDEX) return 0;
-	if (!args_id->tabled) __getparinit(args_id);
-	i = __getparindex(args_id, n,name);
+	if (args_id->xargc == crtl_getpar__XARGV_START_INDEX) return 0;
+	i = __crtl_getpar_index(args_id, n,name);
 	if (i>=0)
 		return crtl_strccount(',',args_id->params_tab[i].asciival) + 1;
 	else
@@ -282,9 +273,9 @@ int countnparval(struct __crtl_getpar_struct *args_id, int n, char *name)
 }
 
 /* return number of values in last occurrence of parameter name */
-int countparval(struct __crtl_getpar_struct *args_id, char *name)
+int crtl_getpar_countparval(const struct __crtl_getpar_struct *args_id, char *name)
 {
-	return countnparval(args_id, 0, name);
+	return crtl_getpar_countnparval(args_id, 0, name);
 }
 
 
@@ -294,7 +285,7 @@ int countparval(struct __crtl_getpar_struct *args_id, char *name)
  * except if n==0, return the index of the last occurrence.
  * Return -1 if the specified occurrence does not exist.
  */
-static int __getparindex(struct __crtl_getpar_struct *args_id, int n, char *name)
+static int __crtl_getpar_index(const struct __crtl_getpar_struct *args_id, int n, char *name)
 {
 	int i;
 	if (n==0) {
@@ -312,9 +303,8 @@ static int __getparindex(struct __crtl_getpar_struct *args_id, int n, char *name
 	}
 }
 
-/* Initialize getpar */
-
-static void __getparinit(struct __crtl_getpar_struct *args_id)
+/* Initialize crtl_getpar_ */
+static void __crtl_getpar_init(struct __crtl_getpar_struct *args_id)
 {
 	static char *pfname;	/* name of parameter file		*/
 	FILE *pffd=NULL;	/* file id of parameter file		*/
@@ -326,9 +316,7 @@ static void __getparinit(struct __crtl_getpar_struct *args_id)
 	int i, j;		/* counters				*/
 	int start = crtl_true;
 	int quote = crtl_false;
-    
-	args_id->tabled = crtl_true;		/* remember table is built		*/
-    
+        
 	/* Check if xargc was initiated */
 
 	if(!args_id->xargc)
@@ -336,13 +324,13 @@ static void __getparinit(struct __crtl_getpar_struct *args_id)
 
 	/* Space needed for command lines */
 
-	for (i = GETPAR_XARGV_START_INDEX, argstrlen = 0; i < args_id->xargc; i++) {
+	for (i = crtl_getpar__XARGV_START_INDEX, argstrlen = 0; i < args_id->xargc; i++) {
 		argstrlen += strlen(args_id->xargv[i]) + 1;
 	}
 
 	/* Get parfile name if there is one */
 
-	if ((pfname = __getpfname(args_id))) {
+	if ((pfname = __crtl_getpar_fname(args_id))) {
 		parfile = crtl_true;
 	} else {
 		parfile = crtl_false;
@@ -413,7 +401,7 @@ static void __getparinit(struct __crtl_getpar_struct *args_id)
 
 	/* Copy command line arguments */
 
-	for (j = GETPAR_XARGV_START_INDEX, pargstr = args_id->args_string + pflen + 1; j < args_id->xargc; j++) {
+	for (j = crtl_getpar__XARGV_START_INDEX, pargstr = args_id->args_string + pflen + 1; j < args_id->xargc; j++) {
 		strcpy(pargstr,args_id->xargv[j]);
 		args_id->arg_per_string[args_id->args_count++] = pargstr;
 		pargstr += strlen(args_id->xargv[j]) + 1;
@@ -423,20 +411,20 @@ static void __getparinit(struct __crtl_getpar_struct *args_id)
 	args_id->params_tab = (struct param_key_value*) crtl_malloc1(args_id->args_count, sizeof(struct param_key_value));
 
 	/* Tabulate arg_per_string */
-	__getpar_install_symbol_table(args_id);
+	__crtl_getpar__install_symbol_table(args_id);
 
 	return;
 }
 
 
 /* Get name of parameter file */
-static char *__getpfname (struct __crtl_getpar_struct *args_id)
+static char *__crtl_getpar_fname (struct __crtl_getpar_struct *args_id)
 {
 	int i;
 	size_t pfnamelen;
     
 	pfnamelen = strlen(PFNAME);
-	for (i = args_id->xargc-1 ; i >= GETPAR_XARGV_START_INDEX ; i--) {
+	for (i = args_id->xargc-1 ; i >= crtl_getpar__XARGV_START_INDEX ; i--) {
 		if(!strncmp(PFNAME, args_id->xargv[i], pfnamelen)
 		    && strlen(args_id->xargv[i]) != pfnamelen) {
 			return args_id->xargv[i] + pfnamelen;
@@ -448,7 +436,7 @@ static char *__getpfname (struct __crtl_getpar_struct *args_id)
 
 
 /* Install symbol table  args_id->args_count, args_id->arg_per_string*/
-static void __getpar_install_symbol_table(struct __crtl_getpar_struct *args_id)
+static void __crtl_getpar__install_symbol_table(struct __crtl_getpar_struct *args_id)
 {
 	int i;
 	char *eqptr;
@@ -483,72 +471,72 @@ main(int argc, char **argv)
 	float f, vf[N];
 	double d, vd[N];
 
-	getpar_init(argc, argv);
+	crtl_getpar_init(argc, argv);
 
 	/* int parameters */
-	npar = countparname("i");
+	npar = crtl_getpar_countparname("i");
 	printf("\nnumber of i pars = %d\n",npar);
 	for (ipar=1; ipar<=npar; ++ipar) {
-		getnparint(ipar,"i",&i);
+		crtl_getnpar_int(ipar,"i",&i);
 		printf("occurrence %d of i=%d\n",ipar,i);
 	}
-	if (getparint("i", &i))
+	if (crtl_getpar_int("i", &i))
 		printf("last occurrence of i=%d\n",i);
-	npar = countparname("vi");
+	npar = crtl_getpar_countparname("vi");
 	printf("number of vi pars = %d\n",npar);
 	for (ipar=1; ipar<=npar; ++ipar) {
-		nval = countnparval(ipar,"vi");
+		nval = crtl_getpar_countnparval(ipar,"vi");
 		printf("occurrence %d has %d values\n",ipar,nval);
-		nval = getnparint(ipar,"vi",vi);
+		nval = crtl_getnpar_int(ipar,"vi",vi);
 		printf("vi=");
 		for (i=0; i<nval; i++)
 			printf("%d%c",vi[i],i==nval-1?'\n':',');
 	}
 	if (npar>0) {
-		nval = countparval("vi");
+		nval = crtl_getpar_countparval("vi");
 		printf("last occurrence has %d values\n",nval);
-		getparint("vi",vi);
+		crtl_getpar_int("vi",vi);
 		printf("vi=");
 		for (i=0; i<nval; i++)
 			printf("%d%c",vi[i],i==nval-1?'\n':',');
 	}
 
 	/* float parameters */
-	npar = countparname("f");
+	npar = crtl_getpar_countparname("f");
 	printf("\nnumber of f pars = %d\n",npar);
 	for (ipar=1; ipar<=npar; ++ipar) {
-		getnparfloat(ipar,"f",&f);
+		crtl_getnpar_float(ipar,"f",&f);
 		printf("occurrence %d of f=%g\n",ipar,f);
 	}
-	if (getparfloat("f", &f))
+	if (crtl_getpar_float("f", &f))
 		printf("last occurrence of f=%g\n",f);
-	npar = countparname("vf");
+	npar = crtl_getpar_countparname("vf");
 	printf("number of vf pars = %d\n",npar);
 	for (ipar=1; ipar<=npar; ++ipar) {
-		nval = countnparval(ipar,"vf");
+		nval = crtl_getpar_countnparval(ipar,"vf");
 		printf("occurrence %d has %d values\n",ipar,nval);
-		nval = getnparfloat(ipar,"vf",vf);
+		nval = crtl_getnpar_float(ipar,"vf",vf);
 		printf("vf=");
 		for (i=0; i<nval; i++)
 			printf("%g%c",vf[i],i==nval-1?'\n':',');
 	}
 	if (npar>0) {
-		nval = countparval("vf");
+		nval = crtl_getpar_countparval("vf");
 		printf("last occurrence has %d values\n",nval);
-		getparfloat("vf",vf);
+		crtl_getpar_float("vf",vf);
 		printf("vf=");
 		for (i=0; i<nval; i++)
 			printf("%g%c",vf[i],i==nval-1?'\n':',');
 	}
 
 	/* string parameters */
-	npar = countparname("s");
+	npar = crtl_getpar_countparname("s");
 	printf("\nnumber of s pars = %d\n",npar);
 	for (ipar=1; ipar<=npar; ++ipar) {
-		getnparstring(ipar,"s",&s);
+		crtl_getnpar_string(ipar,"s",&s);
 		printf("occurrence %d of s=%s\n",ipar,s);
 	}
-	if (getparstring("s", &s))
+	if (crtl_getpar_string("s", &s))
 		printf("last occurrence of s=%s\n",s);
 
 	return EXIT_SUCCESS;

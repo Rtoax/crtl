@@ -191,6 +191,12 @@ struct crtl_rbtree_iterator_struct {
     void* (*next)(struct crtl_rbtree_iterator_struct *); 
     void* (*prev)(struct crtl_rbtree_iterator_struct *);
     void* (*last)(struct crtl_rbtree_iterator_struct *);
+    
+#define __CRTL_RBTREE_ITER_FIRST(p_iter)  p_iter->first(p_iter)
+#define __CRTL_RBTREE_ITER_NEXT(p_iter)  p_iter->next(p_iter)
+#define __CRTL_RBTREE_ITER_PREV(p_iter)  p_iter->prev(p_iter)
+#define __CRTL_RBTREE_ITER_LAST(p_iter)  p_iter->last(p_iter)
+    
 };
 
 

@@ -1,10 +1,15 @@
 /* Copyright (c) Colorado School of Mines, 2011.*/
 /* All rights reserved.                       */
 
-/* par.h - include file for getpar, selfdoc, and error handling functions */
+/**
+ *  This API is not safe, i'll develop another one further more. Users do not use this file&API
+ *  By the way, I Love Yuehua Xue.      rongtao@sylincom.com  2020.03.28 
+ */
 
-#ifndef __CRTL_BITS_GETPAR_H
-#define __CRTL_BITS_GETPAR_H 1
+/* par.h - include file for crtl_getpar_, selfdoc, and error handling functions */
+
+#ifndef __CRTL_BITS_crtl_getpar__H
+#define __CRTL_BITS_crtl_getpar__H 1
 
 
 /* INCLUDES */
@@ -31,35 +36,35 @@ extern "C" {
 
 struct __crtl_getpar_struct;
 
-typedef struct __crtl_getpar_struct * crtl_par_t;
+typedef struct __crtl_getpar_struct * crtl_getpar_t;
 
-/* getpar parameter parsing */
-struct __crtl_getpar_struct* getpar_init(int argc, char **argv, char Delimiter, char *fromfilepar);
-int getpar_free(struct __crtl_getpar_struct *args_id);
+/* crtl_getpar_ parameter parsing */
+struct __crtl_getpar_struct* crtl_getpar_init(int argc, char **argv, char Delimiter, char *fromfilepar);
+int crtl_getpar_free(struct __crtl_getpar_struct *args_id);
 
-int getparint(struct __crtl_getpar_struct *args_id, char *name, int *p);
-int getparuint(struct __crtl_getpar_struct *args_id, char *name, unsigned int *p);
-int getparshort(struct __crtl_getpar_struct *args_id, char *name, short *p);
-int getparushort(struct __crtl_getpar_struct *args_id, char *name, unsigned short *p);
-int getparlong(struct __crtl_getpar_struct *args_id, char *name, long *p);
-int getparulong(struct __crtl_getpar_struct *args_id, char *name, unsigned long *p);
-int getparfloat(struct __crtl_getpar_struct *args_id, char *name, float *p);
-int getpardouble(struct __crtl_getpar_struct *args_id, char *name, double *p);
-int getparstring(struct __crtl_getpar_struct *args_id, char *name, char **p);
-int getparstringarray(struct __crtl_getpar_struct *args_id, char *name, char **p);
-int getnparint(struct __crtl_getpar_struct *args_id, int n, char *name, int *p);
-int getnparuint(struct __crtl_getpar_struct *args_id, int n, char *name, unsigned int *p);
-int getnparshort(struct __crtl_getpar_struct *args_id, int n, char *name, short *p);
-int getnparushort(struct __crtl_getpar_struct *args_id, int n, char *name, unsigned short *p);
-int getnparlong(struct __crtl_getpar_struct *args_id, int n, char *name, long *p);
-int getnparulong(struct __crtl_getpar_struct *args_id, int n, char *name, unsigned long *p);
-int getnparfloat(struct __crtl_getpar_struct *args_id, int n, char *name, float *p);
-int getnpardouble(struct __crtl_getpar_struct *args_id, int n, char *name, double *p);
-int getnparstring(struct __crtl_getpar_struct *args_id, int n, char *name, char **p);
-int getnparstringarray(struct __crtl_getpar_struct *args_id, int n, char *name, char **p);
-int countparname(struct __crtl_getpar_struct *args_id, char *name);
-int countparval(struct __crtl_getpar_struct *args_id, char *name);
-int countnparval(struct __crtl_getpar_struct *args_id, int n, char *name);
+int crtl_getpar_int(struct __crtl_getpar_struct *args_id, char *name, int *p);
+int crtl_getpar_uint(struct __crtl_getpar_struct *args_id, char *name, unsigned int *p);
+int crtl_getpar_short(struct __crtl_getpar_struct *args_id, char *name, short *p);
+int crtl_getpar_ushort(struct __crtl_getpar_struct *args_id, char *name, unsigned short *p);
+int crtl_getpar_long(struct __crtl_getpar_struct *args_id, char *name, long *p);
+int crtl_getpar_ulong(struct __crtl_getpar_struct *args_id, char *name, unsigned long *p);
+int crtl_getpar_float(struct __crtl_getpar_struct *args_id, char *name, float *p);
+int crtl_getpar_double(struct __crtl_getpar_struct *args_id, char *name, double *p);
+int crtl_getpar_string(struct __crtl_getpar_struct *args_id, char *name, char **p);
+int crtl_getpar_stringarray(struct __crtl_getpar_struct *args_id, char *name, char **p);
+int crtl_getnpar_int(struct __crtl_getpar_struct *args_id, int n, char *name, int *p);
+int crtl_getnpar_uint(struct __crtl_getpar_struct *args_id, int n, char *name, unsigned int *p);
+int crtl_getnpar_short(struct __crtl_getpar_struct *args_id, int n, char *name, short *p);
+int crtl_getnpar_ushort(struct __crtl_getpar_struct *args_id, int n, char *name, unsigned short *p);
+int crtl_getnpar_long(struct __crtl_getpar_struct *args_id, int n, char *name, long *p);
+int crtl_getnpar_ulong(struct __crtl_getpar_struct *args_id, int n, char *name, unsigned long *p);
+int crtl_getnpar_float(struct __crtl_getpar_struct *args_id, int n, char *name, float *p);
+int crtl_getnpar_double(struct __crtl_getpar_struct *args_id, int n, char *name, double *p);
+int crtl_getnpar_string(struct __crtl_getpar_struct *args_id, int n, char *name, char **p);
+int crtl_getnpar_stringarray(struct __crtl_getpar_struct *args_id, int n, char *name, char **p);
+int crtl_getpar_countparname(struct __crtl_getpar_struct *args_id, char *name);
+int crtl_getpar_countparval(const struct __crtl_getpar_struct *args_id, char *name);
+int crtl_getpar_countnparval(const struct __crtl_getpar_struct *args_id, int n, char *name);
 
 
 
@@ -68,5 +73,5 @@ int countnparval(struct __crtl_getpar_struct *args_id, int n, char *name);
 }
 #endif
 
-#endif /* __CRTL_BITS_GETPAR_H */
+#endif /* __CRTL_BITS_crtl_getpar__H */
 

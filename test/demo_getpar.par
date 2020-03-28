@@ -2,4 +2,6 @@ int=1
 float=123.122002
 double=12.120000
 string=rongtao.txt
- rt=12 rt=23 rt=34
+rt=12 
+rt=23 
+rt=34,3,3,1
