@@ -11,6 +11,8 @@
 #include <errno.h>
 
 #include "crtl/crtl_log.h"
+#include "crtl/crtl_types.h"
+
 #include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"
 #include "crtl/bits/crtl_types_ctype.h"
@@ -32,6 +34,8 @@ _api float crtl_estrtof(char *s);
 _api double crtl_estrtod(char *s);
 _api char *crtl_strjoint(char *dst, const char *fmt, ...);
 _api int crtl_memshow(const void*in, int len);
+_api void crtl_memswap(crtl_byte *x, crtl_byte *y, size_t size);
+_api void crtl_memcopy(void *x, void *y, size_t size);
 
 
 /* string to numeric conversion with error checking */

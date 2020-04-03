@@ -4,6 +4,7 @@
 
 
 #include <time.h>
+#include <stdint.h>
 #include <sys/time.h>
 #include <sys/times.h>
 #include <sys/timex.h>

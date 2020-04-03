@@ -17,6 +17,11 @@ typedef pthread_rwlockattr_t    crtl_lock_rwattr_t;
         crtl_rwlockattr_setpshared_shared(&rwlock_attr);\
         crtl_rwlock_init((p_rw_lock), &rwlock_attr);\
     })
+#define CRTL_LOCK_RWLOCK_PRIVATE_INIT(p_rw_lock) ({\
+        crtl_lock_rwattr_t rwlock_attr; crtl_rwlockattr_init(&rwlock_attr);\
+        crtl_rwlockattr_setpshared_private(&rwlock_attr);\
+        crtl_rwlock_init((p_rw_lock), &rwlock_attr);\
+    })
 
 #define CRTL_LOCK_RWLOCK_RDLOCK(p_rw_lock) ({crtl_rwlock_rdlock((p_rw_lock), 0,0,0,0);})
 #define CRTL_LOCK_RWLOCK_WRLOCK(p_rw_lock) ({crtl_rwlock_wrlock((p_rw_lock), 0,0,0,0);})

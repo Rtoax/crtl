@@ -9,7 +9,12 @@
 #include "crtl/bits/crtl_types_bits_set.h"
 #include "crtl/bits/crtl_types_ctype.h"
 #include "crtl/bits/crtl_types_string.h"
-
+#include "crtl/bits/crtl_types_multiDim.h"
+#include "crtl/bits/crtl_types_complex.h"
+#include "crtl/bits/crtl_types_float.h"
+#include "crtl/bits/crtl_types_integer.h"
+#include "crtl/bits/crtl_types_syserrno.h"
+#include "crtl/bits/crtl_types_syssignum.h"
 
 
 typedef enum {

@@ -1,5 +1,7 @@
 #include <malloc.h>
 #include <errno.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include "crtl/crtl_file.h"
 #include "crtl/crtl_types.h"
@@ -114,6 +116,71 @@ int crtl_rmdir(const char *dir)
     return CRTL_SUCCESS;
 }
 
+
+
+
+
+/**
+ *	exist read write execute determine func
+ *	Author: Rong Tao
+ *	Time:	2018.12.16
+ */
+int crtl_is_exist(const char *dirname)
+{
+    if(dirname == NULL)
+    {
+        crtl_print_err("dirname is NULL\n");
+        return CRTL_ERROR;
+    }
+    return access(dirname, F_OK);
+}
+
+/**
+ *	exist read write execute determine func
+ *	Author: Rong Tao
+ *	Time:	2018.12.16
+ */
+int crtl_is_readable(const char *dirname)
+{
+    if(dirname == NULL)
+    {
+        crtl_print_err("dirname is NULL\n");
+        return CRTL_ERROR;
+    }
+    return access(dirname, R_OK);
+}
+
+/**
+ *	exist read write execute determine func
+ *	Author: Rong Tao
+ *	Time:	2018.12.16
+ */
+int crtl_is_writeable(const char *dirname)
+{
+    if(dirname == NULL)
+    {
+        crtl_print_err("dirname is NULL\n");
+        return CRTL_ERROR;
+    }
+    return access(dirname, W_OK);
+}
+
+/**
+ *	exist read write execute determine func
+ *	Author: Rong Tao
+ *	Time:	2018.12.16
+ */
+int crtl_is_executable(const char *dirname)
+{
+    if(dirname == NULL)
+    {
+        crtl_print_err("dirname is NULL\n");
+        return CRTL_ERROR;
+    }
+    return access(dirname, X_OK);
+}
+
+
 /* file is directory */
 int crtl_is_directory(const char *file)
 {
@@ -178,6 +245,148 @@ int crtl_is_regular_file(const char *file)
         return CRTL_SUCCESS;
     else 
         return CRTL_ERROR;
+}
+
+
+
+
+
+/**
+ *	add permission
+ *	Author: Rong Tao
+ *	Time:	2018.12.16
+ */
+int crtl_add_read_permission(const char *dirname)
+{
+    if(dirname == NULL)
+    {
+        crtl_print_err("dirname is NULL\n");
+        return CRTL_ERROR;
+    }
+    if(-1 == access(dirname, F_OK))
+    {
+        return CRTL_ERROR;
+    }
+    return chmod(dirname, CRTL_S_R);
+}
+
+/**
+ *	add permission
+ *	Author: Rong Tao
+ *	Time:	2018.12.16
+ */
+int crtl_add_write_permission(const char *dirname)
+{
+    if(dirname == NULL)
+    {
+        crtl_print_err("dirname is NULL\n");
+        return CRTL_ERROR;
+    }
+    if(-1 == access(dirname, F_OK))
+    {
+        return CRTL_ERROR;
+    }
+    return chmod(dirname, CRTL_S_W);
+}
+
+
+/**
+ *	add permission
+ *	Author: Rong Tao
+ *	Time:	2018.12.16
+ */
+int crtl_add_execute_permission(const char *dirname)
+{
+    if(dirname == NULL)
+    {
+        crtl_print_err("dirname is NULL\n");
+        return CRTL_ERROR;
+    }
+    if(-1 == access(dirname, F_OK))
+    {
+        return CRTL_ERROR;
+    }
+    return chmod(dirname, CRTL_S_X);
+}
+
+
+/**
+ *	add permission
+ *	Author: Rong Tao
+ *	Time:	2018.12.16
+ */
+int crtl_add_usr_permission(const char *dirname)
+{
+    if(dirname == NULL)
+    {
+        crtl_print_err("dirname is NULL\n");
+        return CRTL_ERROR;
+    }
+    if(-1 == access(dirname, F_OK))
+    {
+        return CRTL_ERROR;
+    }
+    return chmod(dirname, CRTL_S_USR);
+}
+
+
+/**
+ *	add permission
+ *	Author: Rong Tao
+ *	Time:	2018.12.16
+ */
+int crtl_add_grp_permission(const char *dirname)
+{
+    if(dirname == NULL)
+    {
+        crtl_print_err("dirname is NULL\n");
+        return CRTL_ERROR;
+    }
+    if(-1 == access(dirname, F_OK))
+    {
+        return CRTL_ERROR;
+    }
+    return chmod(dirname, CRTL_S_GRP);
+}
+
+
+/**
+ *	add permission
+ *	Author: Rong Tao
+ *	Time:	2018.12.16
+ */
+int crtl_add_oth_permission(const char *dirname)
+{
+    if(dirname == NULL)
+    {
+        crtl_print_err("dirname is NULL\n");
+        return CRTL_ERROR;
+    }
+    if(-1 == access(dirname, F_OK))
+    {
+        return CRTL_ERROR;
+    }
+    return chmod(dirname, CRTL_S_OTH);
+}
+
+
+/**
+ *	add permission
+ *	Author: Rong Tao
+ *	Time:	2018.12.16
+ */
+int crtl_add_all_permission(const char *dirname)
+{
+    if(dirname == NULL)
+    {
+        crtl_print_err("dirname is NULL\n");
+        return CRTL_ERROR;
+    }
+    if(-1 == access(dirname, F_OK))
+    {
+        return CRTL_ERROR;
+    }
+    return chmod(dirname, CRTL_S_ALL);
 }
 
 

@@ -17,6 +17,8 @@
 
 
 _api void crtl_terminal_size(int *const x, int *const y);
+_api void crtl_terminal_gotoxy(int x, int y);
+_api int crtl_terminal_progress_bar(int posx, int posy, const int iTotal, const int Total, int colorful);
 
 
 #endif //__CRTL_TERMINAL_H

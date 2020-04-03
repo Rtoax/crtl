@@ -5,7 +5,7 @@
 #include "crtl/crtl_log.h"
 #include "crtl/crtl_assert.h"
 #include "crtl/crtl_task.h"
-
+#include "crtl/crtl_tree.h"
 #include "crtl/bits/crtl_lock_rwlock.h"
 
 #include "crtl/easy/byteswap.h"
@@ -18,12 +18,27 @@ static crtl_lock_rw_t _unused __crtl_timers_list_rwlock = CRTL_LOCK_RWLOCK_INITI
 
 /* 定时器链表的读写锁 */
 static LIST_HEAD_UNUSED(__crtl_timers_list_head);
+//static crtl_rbtree_t __crtl_timers_tree = NULL;
 
 
 /* 定时器列表轮询线程初始化标识位 */
 static volatile long _unused __crtl_timers_list_poll_task_init_flag = 0; /* 已初始化=1 */
 static crtl_thread_t _unused __crtl_timer_schedule_threadID;
 
+static int _unused __crtl_timer_id_cmp(const void * data1, const void *data2)
+{
+    const struct crtl_timer_struct *timer1 = data1;
+    const struct crtl_timer_struct *timer2 = data2;
+    
+    const __crtl_timer_id_t timerid1 = timer1->timer_id;
+    const __crtl_timer_id_t timerid2 = timer2->timer_id;
+
+    if(timerid1 > timerid2) return CRTL_GT;
+    else if(timerid1 == timerid2) return CRTL_EQ;
+    else if(timerid1 < timerid2) return CRTL_LT;
+
+    return CRTL_EQ;
+}
 
 /* 查找一个定时器-线程不安全 */
 inline static struct crtl_timer_struct * __crtl_timer_getbyid(__crtl_timer_id_t timeid)
@@ -81,7 +96,7 @@ inline static int _unused __crtl_timer_add_to_list(struct crtl_timer_struct *__i
     /* 如果为空,直接添加 */
     if(list_empty(&__crtl_timers_list_head)) {
         list_add_tail(&__insert_timer->list, &__crtl_timers_list_head);
-
+//        crtl_rbtree_insert(__crtl_timers_tree, __insert_timer, sizeof(struct crtl_timer_struct));
     /* 如果不为空,查找位置 */
     } else {
         /* 轮询定时器链表 */
@@ -101,6 +116,7 @@ inline static int _unused __crtl_timer_add_to_list(struct crtl_timer_struct *__i
             /* 如果是最后一个定时器（最后到时的定时器） */
             if(list_is_last(&__list_ite_timer->list, &__crtl_timers_list_head)) {
                 list_add(&__insert_timer->list, &__list_ite_timer->list);
+//                crtl_rbtree_insert(__crtl_timers_tree, __insert_timer, sizeof(struct crtl_timer_struct));
                 break;
             
             /* 如果不是最后一个定时器， 同时使用 __list_ite_next_timer */
@@ -109,6 +125,7 @@ inline static int _unused __crtl_timer_add_to_list(struct crtl_timer_struct *__i
                 /* 轮询的定时器等于即将插入的定时器，插入*/
                 if(cmp == CRTL_EQ) {
                     list_add(&__insert_timer->list, &__list_ite_timer->list);
+//                    crtl_rbtree_insert(__crtl_timers_tree, __insert_timer, sizeof(struct crtl_timer_struct));
                     break;
                 
                 /* 轮询的定时器小于即将插入的定时器，比较下一个节点 */
@@ -119,6 +136,7 @@ inline static int _unused __crtl_timer_add_to_list(struct crtl_timer_struct *__i
                     /* 下一个节点大于或者等于，直接插入 */
                     if(cmp_next == CRTL_GT || cmp_next == CRTL_EQ) {
                         list_add(&__insert_timer->list, &__list_ite_timer->list);
+//                        crtl_rbtree_insert(__crtl_timers_tree, __insert_timer, sizeof(struct crtl_timer_struct));
                         break;
                     /* 下一个节点小于，继续比较 */
                     } else if(cmp_next == CRTL_LT) {
@@ -169,7 +187,7 @@ static void _unused *__crtl_timer_schedule_task_fn(void*arg)
 
                 /* 从链表中删除这个定时器 */
                 list_del_init(&__this_timer->list);
-            
+//                crtl_rbtree_delete(__crtl_timers_tree, __this_timer);
                 /* 是否为循环定时器 */
                 if(__this_timer->timer_loop == CRTL_TIMER_LOOP) {
                     
@@ -191,6 +209,12 @@ static void _unused *__crtl_timer_schedule_task_fn(void*arg)
         if(list_empty_careful(&__crtl_timers_list_head)) {
             __crtl_dbg("Timer List is empty.>>>>>>>>>>\n");
             CAS(&__crtl_timers_list_poll_task_init_flag, 1, 0);
+
+            /* 释放定时器树 */
+//            if(__crtl_timers_tree) {
+//                crtl_rbtree_destroy(__crtl_timers_tree);
+//                __crtl_timers_tree = NULL;
+//            }
             __crtl_timers_list_unlock;
             break;
         }
@@ -201,7 +225,7 @@ static void _unused *__crtl_timer_schedule_task_fn(void*arg)
     /* 退出线程 */
     __crtl_dbg("Terminate Timer Schedule thread.\n");
     crtl_thread_exit(NULL);
-    
+        
     return NULL;
 }
 
@@ -274,7 +298,11 @@ __crtl_timer_id_t crtl_timer_create(int is_loop, void (*callback)(void *arg), vo
             return 0;
         }
         __crtl_dbg("create timer schedule thread.\n");
+//        __crtl_timers_tree = crtl_rbtree_init(&__crtl_timer_id_cmp, NULL);
     }
+
+//    crtl_rbtree_insert(__crtl_timers_tree, __timer, sizeof(struct crtl_timer_struct));
+    
     __crtl_timers_list_unlock;
     
     /* 获取返回值 */
@@ -329,7 +357,7 @@ _api int crtl_timer_settime_interval(__crtl_timer_id_t timerid, long sec, long n
 }
 
 /* 更新定时器 */
-_api int crtl_timer_nonloop(__crtl_timer_id_t timerid)
+_api int crtl_timer_set_nonloop(__crtl_timer_id_t timerid)
 {
     /* 首先找到这个定时器 */
     struct crtl_timer_struct *__this_timer = NULL;

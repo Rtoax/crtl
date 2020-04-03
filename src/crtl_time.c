@@ -1,5 +1,6 @@
 #include <errno.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <sys/time.h>
 #include <sys/resource.h>
 
@@ -240,4 +241,21 @@ Author:		Jack K. Cohen, Colorado School of Mines, 07/27/90
 	return clock() / (float) CLOCK_UNIT;
 }
 
+
+
+inline uint64_t crtl_asm_rdtsc(void)
+{/*   <RT comment: 2019.09.29>*/
+    union {
+        uint64_t tsc_64;
+        struct {
+            uint32_t lo_32;
+            uint32_t hi_32;
+        };
+    } tsc;
+    /* RDTSC 将时间标签计数器读入 EDX:EAX  <RT comment: 2019.09.29>*/
+    asm volatile("rdtsc" :
+             "=a" (tsc.lo_32),
+             "=d" (tsc.hi_32));
+    return tsc.tsc_64;
+}
 

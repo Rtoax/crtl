@@ -1,6 +1,6 @@
-
-
 #include "crtl/crtl_string.h"
+#include "crtl/crtl_types.h"
+
 
 
 
@@ -209,6 +209,27 @@ _api int crtl_memshow(const void*in, int len)
     printf("\n");
     return len;
 }
+
+
+
+_api void crtl_memswap(crtl_byte *x, crtl_byte *y, size_t size)
+{
+    while(size-- > 0) {
+        crtl_byte tmp = *x;
+        *x++ = *y;
+        *y++ = tmp;
+    }
+}
+
+_api void crtl_memcopy(void *x, void *y, size_t size)
+{
+    while(size-- > 0) {
+        crtl_byte *pbTo = (crtl_byte *)x;
+        crtl_byte *pbFrom = (crtl_byte *)y;
+        *pbTo++ = *pbFrom++;
+    }
+}
+
 
 
 #ifndef SUN_A

@@ -11,9 +11,16 @@ void demo_terminal_size()
 }
 
 
+void demo_terminal_progress_bar()
+{
+    int x, y;
+    crtl_terminal_progress_bar(10, 10, 12, 23, 0);
+}
+
 int main()
 {
     demo_terminal_size();
+    demo_terminal_progress_bar();
 
     return 0;
 }

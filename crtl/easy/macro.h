@@ -109,7 +109,13 @@
 #define READ_ONCE(var) (*((volatile typeof(var) *)(&(var))))
 #endif
 
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+#endif
 
+#ifndef CALL_ONCE
+#define CALL_ONCE(x) static volatile int __call_once##x = 0; if(__call_once##x++==0)
+#endif
 
 /*
  * Check at compile time that something is of a particular type.

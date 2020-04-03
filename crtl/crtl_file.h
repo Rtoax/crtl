@@ -46,7 +46,7 @@
 #define CRTL_S_R         (S_IRUSR|S_IRGRP|S_IROTH)
 #define CRTL_S_W         (S_IWUSR|S_IWGRP|S_IWOTH)
 #define CRTL_S_X         (S_IXUSR|S_IXGRP|S_IXOTH)
-#define CRTL_S_ALL       (S_USR|S_GRP|S_OTH)
+#define CRTL_S_ALL       (CRTL_S_USR|CRTL_S_GRP|CRTL_S_OTH)
 
 
 #define chmod_r(f)      chmod(f, CRTL_S_R);
@@ -68,8 +68,23 @@
 int crtl_mkdir(const char *dir, mode_t mode);
 int crtl_rmdir(const char *dir);
 
+int crtl_is_exist(const char *dirname);
+int crtl_is_readable(const char *dirname);
+int crtl_is_writeable(const char *dirname);
+int crtl_is_executable(const char *dirname);
+
 int crtl_is_directory(const char *file);
 int crtl_is_regular_file(const char *file);
+
+/* 更改文件权限 */
+int crtl_add_read_permission(const char *dirname);
+int crtl_add_write_permission(const char *dirname);
+int crtl_add_execute_permission(const char *dirname);
+int crtl_add_usr_permission(const char *dirname);
+int crtl_add_grp_permission(const char *dirname);
+int crtl_add_oth_permission(const char *dirname);
+int crtl_add_oth_permission(const char *dirname);
+
 
 char *crtl_mktemp_string(char * const tempfile_out, const char *path, const char *fileprefix);
 

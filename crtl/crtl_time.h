@@ -6,6 +6,7 @@
 
 
 inline int crtl_dsleep(double sleep_sec);
+float crtl_cpusecond();
 
 inline int crtl_timeval_subtract(struct timeval *result, struct timeval *x, struct timeval *y);
 
@@ -27,6 +28,8 @@ inline void crtl_timeval_generate(struct timeval *in, long sec, long microsec);
 inline void crtl_timespec_add(struct timespec *in, struct timespec *in2, struct timespec *out);
 inline int crtl_timespec_subabs(struct timespec *in1, struct timespec *in2, struct timespec *out);
 inline void crtl_timespec_generate(struct timespec *in, long sec, long nanosec);
+
+inline uint64_t crtl_asm_rdtsc(void);
 
 
 #endif /*<__CRTL_TIME_H>*/

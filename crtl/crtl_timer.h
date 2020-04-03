@@ -19,7 +19,7 @@ _api int crtl_timer_gettime_interval(crtl_timer_id_t timerid, long *sec, long *n
 _api int crtl_timer_settime_interval(crtl_timer_id_t timerid, long sec, long nanosec);
 
 /* 更新定时器 */
-_api int crtl_timer_nonloop(crtl_timer_id_t timerid);
+_api int crtl_timer_set_nonloop(crtl_timer_id_t timerid);
 
 /* 删除定时器 */
 _api int crtl_timer_delete(crtl_timer_id_t timerid);
