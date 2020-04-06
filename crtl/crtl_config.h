@@ -7,6 +7,9 @@
 typedef __crtl_config_t crtl_config_t;
 
 
+/**
+ *  读写config文件（如xxx.conf文件）
+ */
 _api crtl_config_t *crtl_config_new(void);
 _api void crtl_config_free(crtl_config_t *cfg);
 

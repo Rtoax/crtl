@@ -6,7 +6,7 @@
 /* crypto API */
 #define __assert_prefix     "assert."
 
-void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, const char *__func, const int __line)
+inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, const char *__func, const int __line)
 {
     if(!fp)
     {
@@ -36,4 +36,29 @@ void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, 
     return ;
 }
 
+/* backtrace */
+inline void _unused __crtl_assert_backtrace(FILE *fp)
+{
+    if(fp == NULL)
+    {
+        fp = stderr;
+    }
+ 
+    void *__buffer[__CRTL_BACKTRACE_SIZE];
+    unsigned long size = 0;
+    char **__backtrace;
+    int _unused i;
+    
+    size = backtrace (__buffer, __CRTL_BACKTRACE_SIZE);
+    __backtrace = backtrace_symbols (__buffer, size);
+    
+    //FILE *__fp = fopen("core.121212", "w");
+    //backtrace_symbols_fd (__buffer, size, fileno(fp));
+    
+    backtrace_symbols_fd (__buffer, size, fileno(fp));
+
+    free(__backtrace);
+    
+    return;    
+}
 

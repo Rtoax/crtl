@@ -2,6 +2,8 @@
 #define __CRTL_LIST_H 1
 
 #include "crtl/bits/crtl_list.h"
+#include "crtl/bits/crtl_llist.h"
+
 
 
 

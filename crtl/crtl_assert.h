@@ -6,18 +6,22 @@
 
 #include "crtl/bits/crtl_assert_backtrace.h"
 
+
 #define CRTL_SYS_ERROR  strerror(errno)
 
-/* backtrace */
-#define crtl_assert_backtrace(fp) __crtl_assert_backtrace(fp)
-
+/**
+ *  打印程序断言（调用栈）
+ */
 /* macro */
 #define crtl_assert(exp) crtl_assert_fp(stderr, exp)
 #define crtl_assert_fp(fp, exp) __crtl_assert(fp, !!(exp), 0, __FILE__, __func__, __LINE__)
 
+/* backtrace */
+#define crtl_assert_backtrace(fp) __crtl_assert_backtrace(fp)
+
 
 /* crypto API */
-void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, const char *__func, const int __line);
+inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, const char *__func, const int __line);
 
 
 #endif /*<__CRTL_BITS_ASSERT_H>*/

@@ -1,7 +1,10 @@
 #include <malloc.h>
 #include "crtl/crtl_alloc.h"
 
-
+/**
+ *  分配内存 一维、二维、三维...
+ *  
+ */
 /* allocate a 1-d array */
 void *crtl_malloc1 (int n1, int size)
 {
