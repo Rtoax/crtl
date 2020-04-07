@@ -524,15 +524,14 @@ int crtl_rbtree_insert(struct crtl_rbtree_struct* rbtree, void *data, unsigned i
     newnode->data_size = data_size;
     newnode->data = (void*)data;
     
-    while(*tmp)
-    {
+    while(*tmp) {
         struct crtl_rbtree_node_struct *this = container_of(*tmp, struct crtl_rbtree_node_struct, node);
         parent = *tmp;
         
         int cmp_ret = rbtree->cmp(this->data, data);
-        if(cmp_ret == CRTL_GT) {
+        if(cmp_ret == CRTL_GT || cmp_ret > 0) {
             tmp = &((*tmp)->rb_left);
-        } else if(cmp_ret == CRTL_LT) {
+        } else if(cmp_ret == CRTL_LT || cmp_ret < 0) {
             tmp = &((*tmp)->rb_right);
         } else {
             crtl_print_err("This RBnode already exist.\n");
@@ -565,9 +564,9 @@ struct crtl_rbtree_node_struct *crtl_rbtree_search(struct crtl_rbtree_struct* rb
     {
         struct crtl_rbtree_node_struct *node_data = container_of(node, struct crtl_rbtree_node_struct, node);
         int cmp_ret = rbtree->cmp(node_data->data, data);
-        if(cmp_ret == CRTL_GT) {
+        if(cmp_ret == CRTL_GT || cmp_ret > 0) {
             node = node->rb_left;
-        } else if(cmp_ret == CRTL_LT) {
+        } else if(cmp_ret == CRTL_LT || cmp_ret < 0) {
             node = node->rb_right;
         } else if(cmp_ret == CRTL_EQ) {
             return node_data;
