@@ -76,7 +76,7 @@ int crtl_is_executable(const char *dirname);
 int crtl_is_directory(const char *file);
 int crtl_is_regular_file(const char *file);
 
-/* 更改文件权限 */
+/* 鏇存敼鏂囦欢鏉冮檺 */
 int crtl_add_read_permission(const char *dirname);
 int crtl_add_write_permission(const char *dirname);
 int crtl_add_execute_permission(const char *dirname);

@@ -307,7 +307,7 @@ void crtl_cli_unregister_all(struct crtl_cli_struct *cli, struct crtl_cli_comman
 //Libcli provides a shared C library for including a Cisco-like command-line
 //interface into other software.
 //
-//It¡¯s a telnet interface which supports command-line editing, history,
+//Itâ€™s a telnet interface which supports command-line editing, history,
 //authentication and callbacks for a user-definable function tree.
 //
 //To compile:
