@@ -1,174 +1,153 @@
 <!DOCTYPE html>
-<html>
-
+<!-- saved from url=(0039)https://www.kernel.org/doc/html/latest/ -->
+<html class=" js flexbox canvas canvastext webgl no-touch geolocation 
+				postmessage websqldatabase indexeddb hashchange history draganddrop 
+				websockets rgba hsla multiplebgs backgroundsize borderimage borderradius 
+				boxshadow textshadow opacity cssanimations csscolumns cssgradients 
+				cssreflections csstransforms csstransforms3d csstransitions fontface 
+				generatedcontent video audio localstorage sessionstorage webworkers 
+				applicationcache svg inlinesvg smil svgclippaths" lang="en" style=""><!--<![endif]-->
+				
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta charset="UTF-8">
-
-  <title>CRTL-C RunTime Library</title>
-
-  <style>
-html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}table{border-collapse:collapse;border-spacing:0}
-
-</style>
-
-    <style>
-html, body {
-  background: #111111;
-}
-
-#container {
-  background: #111111;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-}
-
-#stats {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-}
-
-/* Info */
-@keyframes show-info {
-  0% {
-    transform: rotateY(120deg);
-  }
-
-  100% {
-    transform: rotateY(0deg);
-  }
-}
-.info {
-  transition: all 180ms ease-out;
-  transform-style: preserve-3d;
-  transform: perspective(800px);
-  font-family: "Quantico", sans-serif;
-  position: absolute;
-  font-size: 12px;
-  opacity: 0.8;
-  color: white;
-  width: 220px;
-  left: 0px;
-  top: 20px;
-}
-.info:hover {
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
-  opacity: 1;
-}
-.info h1, .info h2, .info h3 {
-  line-height: 1;
-  margin: 5px 0;
-}
-.info a {
-  transition: all 200ms ease-out;
-  border-bottom: 1px dotted rgba(255, 255, 255, 0.4);
-  text-decoration: none;
-  opacity: 0.6;
-  color: white;
-}
-.info a:hover {
-  opacity: 0.99;
-}
-.info .about,
-.info .more {
-  transform-origin: 0% 50%;
-  transform: rotateY(120deg);
-  margin-bottom: 1px;
-  background: rgba(0, 0, 0, 0.8);
-  padding: 12px 15px 12px 20px;
-}
-.info .about {
-  animation: show-info 500ms cubic-bezier(0.23, 1, 0.32, 1) 600ms 1 normal forwards;
-  padding-bottom: 15px;
-}
-.info .about a {
-  opacity: 0.9;
-}
-.info .about h1 {
-  letter-spacing: -1px;
-  font-weight: 300;
-  font-size: 19px;
-  opacity: 0.95;
-}
-.info .about h2 {
-  font-weight: 300;
-  font-size: 13px;
-  opacity: 0.8;
-}
-.info .about h3 {
-  text-transform: uppercase;
-  margin-top: 10px;
-  font-size: 11px;
-}
-.info .about h3:before {
-  margin-right: 2px;
-  font-size: 14px;
-  content: "\203A";
-}
-.info .more {
-  animation: show-info 500ms cubic-bezier(0.23, 1, 0.32, 1) 500ms 1 normal forwards;
-  padding: 5px 15px 10px 20px;
-}
-.info .more a {
-  text-transform: uppercase;
-  margin-right: 10px;
-  font-size: 10px;
-}
-*{margin:0;padding:0;list-style:none;border:none;}
-#zzsc{width:920px;margin:40px auto;}
-
-</style>
-    <script src="js/prefixfree.min.js"></script>
+	<title>The CRTL documentation</title>
+  
+	<script type="text/javascript" src="./js/modernizr.min.js"></script>
+	<script type="text/javascript" id="documentation_options" data-url_root="./" src="./js/documentation_options.js"></script>
+	<script type="text/javascript" src="./js/jquery.js"></script>
+	<script type="text/javascript" src="./js/underscore.js"></script>
+	<script type="text/javascript" src="./js/doctools.js"></script>
+	<script type="text/javascript" src="./js/language_data.js"></script>
+	<script type="text/javascript" src="./js/theme.js"></script>
+	
+	<link rel="stylesheet" href="./js/theme.css" type="text/css">
+	<link rel="stylesheet" href="./js/pygments.css" type="text/css">
+	<link rel="stylesheet" href="./js.css" type="text/css">
+	<link rel="index" title="Index" href="./genindex.html">
+	<link rel="search" title="Search" href="./search.html">
+	<link rel="next" title="The CRTL user’s and administrator’s guide" href="./index.html"> 
 </head>
 
-<body>
-
-	<div id='container'></div>
-	<div class='info'>
-	  <hgroup class='about'>
-	    <h1>C Runtime Library</h1>
-	    <h2>A library of C by Rong Tao</h2>
-	    <h3>Click and Go</h3>
-	  </hgroup>
-	</div>
+<body class="wy-body-for-nav">
+	<div class="wy-grid-for-nav">
+    	
+		<script type="text/javascript" src="./frame/toolbar_left.js"></script>
 		
-	  <script src='js/RequestAnimationFrame.js'></script><script src='js/stats.min.js'></script>
+		<section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+			<nav class="wy-nav-top" aria-label="top navigation">
+				<i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+				<a href="./html/latest/#">The CRTL</a>
+			</nav>
 
-	  <!-- 颗粒框 -->
-	  <script src="js/index.js"></script>
+		  	<div class="wy-nav-content">
+		        <div class="rst-content">
+					<div role="navigation" aria-label="breadcrumbs navigation">
 
-	  <!-- 时间 -->
-	  <!--<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>-->
-	  <!--<script type="text/javascript" src="js/zzsc.js"></script>-->
-	  
-	  <!--<div id="zzsc"></div>-->
-	<div style="text-align:center;clear:both;">
-	
-	<!-- 时间 -->
-	<!--<script src="/gg_bd_ad_720x90.js" type="text/javascript"></script>-->
-	<!--<script src="/follow.js" type="text/javascript"></script>-->
-	
+						<ul class="wy-breadcrumbs">
+							<li><a href="./html/latest/#">Docs</a> »</li>
+							<li>The CRTL documentation</li>
+							<li class="wy-breadcrumbs-aside">
+								<a href="./html/latest/_sources/index.rst.txt" rel="nofollow"> View page source</a>
+							</li>
+						</ul>
+						<hr>
+					</div>
+		          	<div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+		           		<div itemprop="articleBody">
+		  					<div class="section" id="the-crtl-documentation">
+								<span id="linux-doc"></span><h1>The CRTL documentation<a class="headerlink" href="./html/latest/#the-linux-kernel-documentation" title="Permalink to this headline">¶</a></h1>
+								<p>This is the top level of the CRTL’s documentation tree.  CRTL
+								documentation, like the CRTL itself, is very much a work in progress;
+								that is especially true as we work to integrate our many scattered
+								documents into a coherent whole.  Please note that improvements to the
+								documentation are welcome; join the CRTL-doc list at github.com if
+								you want to help out.</p>
+								
+								<div class="section" id="licensing-documentation">
+									<h2>Licensing documentation<a class="headerlink" href="./html/latest/#licensing-documentation" title="Permalink to this headline">¶</a></h2>
+									<p>The following describes the license of the CRTL source code
+										(GPLv2/GPLv3), how to properly mark the license of individual files in the source
+										tree, as well as links to the full license text.</p>
+									<ul class="simple">
+									<li><a class="reference internal" href="./html/latest/process/license-rules.html#kernel-licensing"><span class="std std-ref">CRTL licensing rules</span></a></li>
+									</ul>
+								</div>
+								<div class="section" id="user-oriented-documentation">
+									<h2>User-oriented documentation<a class="headerlink" href="./html/latest/#user-oriented-documentation" title="Permalink to this headline">¶</a></h2>
+									<p>The following manuals are written for <em>users</em> of the CRTL — those who are
+										trying to get it to work optimally on a given system.</p>
+									<div class="toctree-wrapper compound">
+										<ul>
+											<li class="toctree-l1">
+												<a class="reference internal" href="./index.html">The CRTL user’s and administrator’s guide</a>
+												<ul>
+													<li class="toctree-l2">
+														<a class="reference internal" href="./README.html">CRTL release 5.x &lt;https://github.com/Rtoax/crtl&gt;</a>
+													</li>
+												</ul>
+											</li>
+											<li class="toctree-l1">
+												<a class="reference internal" href="./html/latest/kbuild/index.html">CRTL Build System</a>
+												<ul>
+													<li class="toctree-l2"><a class="reference internal" href="./html/latest/kbuild/kconfig-language.html">CRTL Language</a></li>
+													<li class="toctree-l2"><a class="reference internal" href="./html/latest/kbuild/kconfig-macro-language.html">CRTL macro language</a></li>
+												</ul>
+											</li>
+										</ul>
+								</div>
+							</div>
+							<div class="section" id="firmware-related-documentation">
+								<h2>Firmware-related documentation<a class="headerlink" href="./html/latest/#firmware-related-documentation" title="Permalink to this headline">¶</a></h2>
+								<p>The following holds information on the kernel’s expectations regarding the
+								platform firmwares.</p>
+								<div class="toctree-wrapper compound">
+									<ul>
+										<li class="toctree-l1"><a class="reference internal" href="./html/latest/firmware-guide/index.html">The CRTL firmware guide</a>
+											<ul>
+												<li class="toctree-l2"><a class="reference internal" href="./html/latest/firmware-guide/acpi/index.html">ACPI Support</a></li>
+											</ul>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="section" id="translations">
+								<h2>Translations<a class="headerlink" href="./html/latest/#translations" title="Permalink to this headline">¶</a></h2>
+								<div class="toctree-wrapper compound">
+									<ul>
+										<li class="toctree-l1"><a class="reference internal" href="./html/latest/translations/index.html">Translations</a>
+											<ul>
+												<li class="toctree-l2"><a class="reference internal" href="./html/latest/translations/zh_CN/index.html">中文翻译</a></li>
+											</ul>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="section" id="indices-and-tables">
+							<h1>Indices and tables<a class="headerlink" href="./html/latest/#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+							<ul class="simple">
+								<li><a class="reference internal" href="./html/latest/genindex.html"><span class="std std-ref">Index</span></a></li>
+							</ul>
+						</div>
+					</div>
+		           
+				</div>
+
+				<script type="text/javascript" src="./frame/footer.js"></script>
+				
+			</div>
+	      </div>
+	    </section>
+
 	</div>
-	<!-- <iframe frameborder="0" scrolling="no" src="index-notice.html" width="100%" height="500px"></iframe> -->
-
-	<!-- 鼠标点击显示社会主义核心价值观 -->
-	<script type="text/javascript"> /* 鼠标特效 */ 
-		var a_idx = 0; 
-		jQuery(document).ready(function($) { 
-			$("body").click(function(e) { 
-				var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正" ,"法治", "爱国", "敬业", "诚信", "友善"); 
-				var $i = $("<span/>").text(a[a_idx]); 
-				a_idx = (a_idx + 1) % a.length; 
-				var x = e.pageX, y = e.pageY; 
-				$i.css({ "z-index": 999999999999999999999999999999999999999999999999999999999999999999999, "top": y - 20, "left": x, "position": "relative", "font-weight": "bold", "color": "#ff6651" }); 
-				$("body").append($i); 
-				$i.animate({ "top": y - 180, "opacity": 0 }, 1500, function() { $i.remove(); }); 
-			}); 
-		}); 
+	
+	<script type="text/javascript">
+		jQuery(function () {
+			SphinxRtdTheme.Navigation.enable(true);
+		});
 	</script>
-		
-</body>
 
+</body>
 </html>
