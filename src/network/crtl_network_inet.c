@@ -15,6 +15,8 @@
 #include <string.h>
 
 #include "crtl/crtl_log.h"
+#include "crtl/crtl_types.h"
+
 
 /**
  *	Show all if_nameindex in terminal
@@ -30,7 +32,7 @@ int crtl_if_showallnameindexs(void)
 	if (head == NULL) 
 	{
         perror("t_if_getallnameindexs()");
-        return -1;
+        return CRTL_ERROR;
     }
 
 	while (ifni->if_index != 0) 
@@ -42,7 +44,7 @@ int crtl_if_showallnameindexs(void)
 	t_if_freenameindex(head);
     head = NULL;
     ifni = NULL;
-	return 0;
+	return CRTL_SUCCESS;
 }
 
 /**
@@ -59,13 +61,13 @@ int crtl_if_indexexist(unsigned int if_index)
 	{
         perror("t_if_indextoname()");
 		free(if_name);
-        return -1;
+        return CRTL_ERROR;
     }
 	else
 	{
 		crtl_print_err("\033[31m%d:%s\033[0m\n", if_index, if_name);
 		free(if_name);
-		return 0;
+		return CRTL_SUCCESS;
 	}
 }
 
@@ -79,7 +81,7 @@ int crtl_if_nameexist(const char *if_name)
 {
 	if(if_name == NULL)
 	{
-		return -1;
+		return CRTL_ERROR;
 	}
 
 	unsigned int if_index;
@@ -90,7 +92,7 @@ int crtl_if_nameexist(const char *if_name)
 	if (head == NULL) 
 	{
         perror("t_if_nameexist()");
-        return -1;
+        return CRTL_ERROR;
     }
 
 	while (ifni->if_index != 0) 
@@ -109,7 +111,7 @@ int crtl_if_nameexist(const char *if_name)
 	t_if_freenameindex(head);
     head = NULL;
     ifni = NULL;
-	return -1;
+	return CRTL_ERROR;
 }
 
 

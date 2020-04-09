@@ -60,6 +60,7 @@ file(GLOB crtl_hdrs_bits ./crtl/bits/*.h)
 file(GLOB crtl_hdrs_network ./crtl/network/*.h)
 file(GLOB crtl_hdrs_linux ./crtl/linux/*.h)
 file(GLOB crtl_hdrs_tcpip ./crtl/tcp-ip/*.h)
+file(GLOB crtl_hdrs_tcpip_bits ./crtl/tcp-ip/bits/*.h)
 
 install(FILES ${crtl_hdrs} DESTINATION /usr/local/include/crtl/)
 install(FILES ${crtl_hdrs_easy} DESTINATION /usr/local/include/crtl/easy)
@@ -67,4 +68,5 @@ install(FILES ${crtl_hdrs_bits} DESTINATION /usr/local/include/crtl/bits)
 install(FILES ${crtl_hdrs_network} DESTINATION /usr/local/include/crtl/network)
 install(FILES ${crtl_hdrs_linux} DESTINATION /usr/local/include/crtl/linux)
 install(FILES ${crtl_hdrs_tcpip} DESTINATION /usr/local/include/crtl/tcp-ip)
+install(FILES ${crtl_hdrs_tcpip_bits} DESTINATION /usr/local/include/crtl/tcp-ip/bits)
 

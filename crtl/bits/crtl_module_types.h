@@ -35,26 +35,26 @@ typedef unsigned long   crtl_module_msg_type;
 /**
  *  模块间消息头
  */
-struct crtl_module_msghdr_struct {
-    crtl_module_msg_type    msg_type;
-    
-    
-    crtl_boolean            is_sync_msg;    //是否为同步消息
-    crtl_boolean            is_timer_msg;   //是否为定时消息
-
-    crtl_mqd_t              sync_msg_tmp_mqd;//同步消息临时消息队列
-    
-    crtl_boolean            has_data; 
-    size_t                  msg_size; 
-};
+//struct crtl_module_msghdr_struct {
+//    crtl_module_msg_type    msg_type;
+//    
+//    
+//    crtl_boolean            is_sync_msg;    //是否为同步消息
+//    crtl_boolean            is_timer_msg;   //是否为定时消息
+//
+////    crtl_mqd_t              sync_msg_tmp_mqd;//同步消息临时消息队列
+//    
+//    crtl_boolean            has_data; 
+//    size_t                  msg_size; 
+//};
 
 /**
  *  模块间消息体
  */
-struct crtl_module_msg_sturct {
-    struct crtl_module_msghdr_struct msg_hdr;
-    char msg_data[0];
-};
+//struct crtl_module_msg_sturct {
+//    struct crtl_module_msghdr_struct msg_hdr;
+//    char msg_data[0];
+//};
 
 /**
  *  模块结构体
@@ -88,7 +88,7 @@ struct crtl_module_struct{
 /* 应用程序结构体 */
 struct crtl_application_struct {
     crtl_app_name_t app_name;//应用名
-
+    
     /* 模块信息 */
     volatile long modules_rbtree_init_flag;
     crtl_lock_rw_t  modules_rbtree_rwlock; //读写锁
@@ -98,7 +98,7 @@ struct crtl_application_struct {
 #define __CRTL_APP_MODULES_RWLOCK_WRLOCK(p_app) CRTL_LOCK_RWLOCK_WRLOCK(&p_app->modules_rbtree_rwlock)
 #define __CRTL_APP_MODULES_RWLOCK_UNLOCK(p_app) CRTL_LOCK_RWLOCK_UNLOCK(&p_app->modules_rbtree_rwlock)
 #define __CRTL_APP_MODULES_RWLOCK_DESTROY(p_app) CRTL_LOCK_RWLOCK_DESTROY(&p_app->modules_rbtree_rwlock)
-
+    
 };
 
 

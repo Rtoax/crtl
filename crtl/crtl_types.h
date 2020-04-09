@@ -45,6 +45,7 @@ typedef void *          crtl_data_t;
 typedef unsigned char   crtl_byte;
 typedef __crtl_bits_set crtl_bits_set;
 
+typedef int crtl_cmp_fn_t(void *, void *);
 
 
 #define CRTL_BITS_SETSIZE                    __CRTL_BITS_SETSIZE

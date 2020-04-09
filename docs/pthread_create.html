@@ -1,0 +1,231 @@
+
+<!-- saved from url=(0014)about:internet -->
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<LINK rel="StyleSheet" href="../mksman.css">
+
+
+
+<TITLE>pthread_create() -- create thread</TITLE>
+</HEAD>
+<BODY>
+<div id="nsr">
+<TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING=="0">
+<TD ROWSPAN="2" ALIGN="LEFT" VALIGN="TOP">
+<H1 class="header">
+<NOBR>pthread_create()</NOBR>
+<P class="header">create thread&nbsp;</P>
+</TD>
+<TD ALIGN="RIGHT" VALIGN="TOP">
+<H2 class="header">Function</H2>
+</TD>
+</TR>
+<TR>
+<TD ALIGN="RIGHT" VALIGN="TOP">
+<form name="form">
+<select name="site" size="1" onChange="formHandler()">
+<option value="../man3/pthread_create.3.asp#SYNOPSIS">SYNOPSIS</option>
+<option value="../man3/pthread_create.3.asp#DESCRIPTION">DESCRIPTION</option>
+<option value="../man3/pthread_create.3.asp#PARAMETERS">PARAMETERS</option>
+<option value="../man3/pthread_create.3.asp#RETURN_VALUES">RETURN VALUES</option>
+<option value="../man3/pthread_create.3.asp#CONFORMANCE">CONFORMANCE</option>
+<option value="../man3/pthread_create.3.asp#MULTITHREAD_SAFETY_LEVEL">MULTITHREAD SAFETY LEVEL</option>
+<option value="../man3/pthread_create.3.asp#PORTING_ISSUES">PORTING ISSUES</option>
+<option value="../man3/pthread_create.3.asp#AVAILABILITY">AVAILABILITY</option>
+<option value="../man3/pthread_create.3.asp#SEE_ALSO">SEE ALSO</option>
+</select>
+</form>
+</TD>
+</TR>
+</TABLE>
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Begin
+function formHandler(){
+var URL = document.form.site.options[document.form.site.selectedIndex].value;
+location.href=URL;
+// End -->
+}
+</SCRIPT>
+</div>
+<div id="mainbody"><HR class="divider">
+<H2><A NAME="SYNOPSIS">SYNOPSIS</A></H2>
+<P class="synline">
+<TT>#include &lt;pthread.h&gt;</TT>
+</P>
+<P class="synlast">
+<TT>int pthread_create(pthread_t *<I>thread</I>,
+const pthread_attr_t *<I>attr</I>,
+void *(*<I>start</I>)(void *), void *<I>arg</I>);</TT>
+</P>
+
+<HR class="divider">
+<H2><A NAME="DESCRIPTION">DESCRIPTION</A></H2>
+
+<P class="firstline">
+The <TT><NOBR>pthread_create()</NOBR></TT>
+function is used to create a new thread, with attributes
+specified by <I>attr</I>, within a process. If <I>attr</I> is
+NULL, the default attributes are used 
+(see <A HREF="../man3/pthread_attr_init.3.asp"><TT><NOBR>pthread_attr_init()</NOBR></TT></A>).
+If the attribute object is modified later, the thread's
+attributes are not affected. If <I>thread</I> is not <TT>NULL</TT>,
+<TT><NOBR>pthread_create()</NOBR></TT>
+stores the ID of the created thread in the location referenced by
+<I>thread</I>.
+</P>
+<P>
+At creation, the thread executes <I>start</I>, with <I>arg</I>
+as its sole argument.
+The calling function must ensure that <I>arg</I> remains valid for
+the new thread throughout its lifetime. If <I>start</I> returns,
+the effect as if there was an implicit call to <A HREF="../man3/pthread_exit.3.asp"><TT><NOBR>pthread_exit()</NOBR></TT></A>
+using the return value of <I>start</I> as the exit status. Note
+that the thread in which <TT><NOBR>main()</NOBR></TT> was originally invoked
+differs from this. When it returns from <TT><NOBR>main()</NOBR></TT>, the effect
+as if there was an implicit call to <A HREF="../man3/exit.3.asp"><TT><NOBR>exit()</NOBR></TT></A> using the
+return value of <TT><NOBR>main()</NOBR></TT> as the exit status.
+</P>
+<P>
+The signal state of the new thread is initialized as follows:
+</P>
+<UL type="disc">
+<A NAME=""></A><LI>The signal mask is inherited from the creating thread.</LI>
+<A NAME=""></A><LI>The set of signal pending for the new thread is empty.</LI>
+</UL>
+<P>
+If <TT><NOBR>pthread_create()</NOBR></TT>
+fails, no new thread is created and the contents of the location
+referenced by <I>thread</I> are undefined.
+</P>
+
+<HR class="divider">
+<H2><A NAME="PARAMETERS">PARAMETERS</A></H2>
+
+<P class="firstline">
+<DL compact="yes">
+
+<A NAME=""></A><DT><I>thread</I>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Is the location where the ID of the newly created thread should be stored,
+or <TT>NULL</TT> if the thread ID is not required.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><I>attr</I>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Is the thread attribute object specifying the attributes for the thread
+that is being created. If <I>attr</I> is <TT>NULL</TT>,
+the thread is created with default attributes.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><I>start</I>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Is the main function for the thread; the thread begins executing user code
+at this address.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><I>arg</I>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Is the argument passed to <I>start</I>.
+</P>
+</DD>
+
+</DL>
+</P>
+
+<HR class="divider">
+<H2><A NAME="RETURN_VALUES">RETURN VALUES</A></H2>
+
+<P class="firstline">
+On success, <TT><NOBR>pthread_create()</NOBR></TT>
+returns 0. On error, one of the following values is returned:
+</P>
+<P class="firstline">
+<DL compact="yes">
+
+<A NAME=""></A><DT><TT>EAGAIN</TT>&nbsp;</DT>
+<DD>
+<P class="firstline">
+The system lacked the necessary
+resources to create another thread, or the system-imposed
+limit on the total number of threads in a process
+<TT>PTHREAD_THREADS_MAX</TT> would be exceeded.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><TT>EFAULT</TT>&nbsp;</DT>
+<DD>
+<P class="firstline">
+<I>thread</I> or <I>attr</I> is
+an invalid pointer.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><TT>EINVAL</TT>&nbsp;</DT>
+<DD>
+<P class="firstline">
+<I>attr</I> is not an
+initialized thread attribute object.
+</P>
+</DD>
+
+</DL>
+</P>
+
+<HR class="divider">
+<H2><A NAME="CONFORMANCE">CONFORMANCE</A></H2>
+
+<P class="firstline">
+POSIX P1003.1 (1996)
+</P>
+
+<HR class="divider">
+<H2><A NAME="MULTITHREAD_SAFETY_LEVEL">MULTITHREAD SAFETY LEVEL</A></H2>
+
+<P class="firstline">
+MT-safe.
+</P>
+
+<HR class="divider">
+<H2><A NAME="PORTING_ISSUES">PORTING ISSUES</A></H2>
+
+<P class="firstline">
+None.
+</P>
+
+<HR class="divider">
+<H2><A NAME="AVAILABILITY">AVAILABILITY</A></H2>
+
+<P class="firstline">
+PTC MKS Toolkit for Professional Developers<BR>
+PTC MKS Toolkit for Professional Developers 64-Bit Edition<BR>
+PTC MKS Toolkit for Enterprise Developers<BR>
+PTC MKS Toolkit for Enterprise Developers 64-Bit Edition<BR>
+</P>
+
+<HR class="divider">
+<H2><A NAME="SEE_ALSO">SEE ALSO</A></H2>
+<P class="firstline">
+<DL compact="yes">
+<DT><B>Functions:</B></DT>
+<DD><A HREF="../man3/exit.3.asp"><B><TT><NOBR>exit()</NOBR></TT></B></A>, <A HREF="../man3/pthread_attr_init.3.asp"><B><TT><NOBR>pthread_attr_init()</NOBR></TT></B></A>, <A HREF="../man3/pthread_exit.3.asp"><B><TT><NOBR>pthread_exit()</NOBR></TT></B></A>, <A HREF="../man3/pthread_join.3.asp"><B><TT><NOBR>pthread_join()</NOBR></TT></B></A></DD>
+</DL>
+</P>
+<HR class="divider">
+<CENTER><P class="build">
+PTC MKS Toolkit 10.2 Documentation Build 28.
+</P></CENTER><BR style="page-break-after: always;"></div><script async type="text/javascript" src="/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3&ns=1&cb=1406334355"></script>
+</BODY></HTML>
+

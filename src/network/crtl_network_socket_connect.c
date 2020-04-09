@@ -4,6 +4,7 @@
 
 #include "crtl/network/crtl_network_socket.h"
 #include "crtl/crtl_log.h"
+#include "crtl/crtl_types.h"
 #include "crtl/easy/attribute.h"
 
 extern int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
@@ -23,7 +24,7 @@ int crtl_connect_nonblk(int sockfd, const struct sockaddr *saptr, socklen_t sale
 	error = 0;
 	if ( (n = connect(sockfd, saptr, salen)) < 0)
 		if (errno != EINPROGRESS)
-			return(-1);
+			return(CRTL_ERROR);
 
 	/* Do whatever we want while the connect is taking place. */
 
@@ -40,16 +41,16 @@ int crtl_connect_nonblk(int sockfd, const struct sockaddr *saptr, socklen_t sale
 					 nsec ? &tval : NULL)) == 0) {
 		close(sockfd);		/* timeout */
 		errno = ETIMEDOUT;
-		return(-1);
+		return(CRTL_ERROR);
 	}
 
 	if (FD_ISSET(sockfd, &rset) || FD_ISSET(sockfd, &wset)) {
 		len = sizeof(error);
 		if (getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &error, &len) < 0)
-			return(-1);			/* Solaris pending error */
+			return(CRTL_ERROR);			/* Solaris pending error */
 	} else {
 		crtl_print_err("select error: sockfd not set\n");
-        return -1;
+        return CRTL_ERROR;
     }
 
 done:
@@ -58,9 +59,9 @@ done:
 	if (error) {
 		close(sockfd);		/* just in case */
 		errno = error;
-		return(-1);
+		return(CRTL_ERROR);
 	}
-	return(0);
+	return(CRTL_SUCCESS);
 }
 
 /* timeout connect */
