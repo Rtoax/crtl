@@ -630,6 +630,8 @@ struct crtl_rbtree_node_struct* crtl_rbtree_getfirst(struct crtl_rbtree_struct* 
     crtl_assert_fp(stderr, rbtree);
     
     struct rb_node *first_rb_node = rb_first(&rbtree->root);
+    if(!first_rb_node) 
+        return NULL;
     struct crtl_rbtree_node_struct  *first_rt_rbtree_node = rb_entry(first_rb_node, struct crtl_rbtree_node_struct, node);
     
     if(first_rt_rbtree_node)
@@ -642,11 +644,13 @@ struct crtl_rbtree_node_struct* crtl_rbtree_getlast(struct crtl_rbtree_struct* r
 {
     crtl_assert_fp(stderr, rbtree);
     
-    struct rb_node *first_rb_node = rb_last(&rbtree->root);
-    struct crtl_rbtree_node_struct  *first_rt_rbtree_node = rb_entry(first_rb_node, struct crtl_rbtree_node_struct, node);
+    struct rb_node *last_rb_node = rb_last(&rbtree->root);
+    if(!last_rb_node) 
+        return NULL;
+    struct crtl_rbtree_node_struct  *last_rt_rbtree_node = rb_entry(last_rb_node, struct crtl_rbtree_node_struct, node);
     
-    if(first_rt_rbtree_node)
-        return first_rt_rbtree_node;
+    if(last_rt_rbtree_node)
+        return last_rt_rbtree_node;
 
     return NULL;
 }
@@ -657,6 +661,8 @@ struct crtl_rbtree_node_struct* crtl_rbtree_getnext(struct crtl_rbtree_node_stru
     crtl_assert_fp(stderr, node);
     
     struct rb_node *next_rb_node = rb_next(&node->node);
+    if(!next_rb_node) 
+        return NULL;
     struct crtl_rbtree_node_struct  *next_rt_rbtree_node = rb_entry(next_rb_node, struct crtl_rbtree_node_struct, node);
     
     if(next_rt_rbtree_node)
@@ -669,11 +675,13 @@ struct crtl_rbtree_node_struct* crtl_rbtree_getprev(struct crtl_rbtree_node_stru
 {   
     crtl_assert_fp(stderr, node);
     
-    struct rb_node *next_rb_node = rb_prev(&node->node);
-    struct crtl_rbtree_node_struct  *next_rt_rbtree_node = rb_entry(next_rb_node, struct crtl_rbtree_node_struct, node);
+    struct rb_node *prev_rb_node = rb_prev(&node->node);
+    if(!prev_rb_node) 
+        return NULL;
+    struct crtl_rbtree_node_struct  *prev_rt_rbtree_node = rb_entry(prev_rb_node, struct crtl_rbtree_node_struct, node);
     
-    if(next_rt_rbtree_node)
-        return next_rt_rbtree_node;
+    if(prev_rt_rbtree_node)
+        return prev_rt_rbtree_node;
     
     return NULL;
 }
