@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!-- saved from url=(0048)http://man7.org/linux/man-pages/man1/date.1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="./../css/style.css" title="style">
+    <link rel="stylesheet" type="text/css" href="./../css/style2.css" title="style">
+    
+
+    <title>CRTL manual page</title>
+</head>
+
+<body>
+
+<div class="page-top"><a id="top_of_page"></a></div>
+<!--%%%TOP_BAR%%%-->
+    <div class="nav-bar">
+        <table class="nav-table">
+            <tbody>
+            <tr>
+                <td class="nav-cell">
+                    <p class="nav-text">
+                        <a href="../../../../index.html">CRTL</a> &gt; Manual &gt; <a href="../index.html">man-pages</a>
+                    </p>
+                </td>
+                <td class="training-cell">
+                    <p class="training-text"><a class="training-link" href="http://man7.org/training/">CRTL programming training</a></p>
+                </td>
+            </tr>
+        	</tbody>
+        </table>
+    </div>
+
+<hr class="nav-end">
+
+<!--%%%PAGE_START%%%-->
+
+
+<table class="sec-table">
+<tbody><tr>
+    <td>
+        <p class="section-dir">
+<a href="./date.html#NAME">NAME</a> | <a href="http://man7.org/linux/man-pages/man1/date.1.html#SYNOPSIS">SYNOPSIS</a> | <a href="http://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION">DESCRIPTION</a> | <a href="http://man7.org/linux/man-pages/man1/date.1.html#EXAMPLES">EXAMPLES</a> | <a href="http://man7.org/linux/man-pages/man1/date.1.html#DATE_STRING">DATE&nbsp;STRING</a> | <a href="http://man7.org/linux/man-pages/man1/date.1.html#AUTHOR">AUTHOR</a> | <a href="http://man7.org/linux/man-pages/man1/date.1.html#REPORTING_BUGS">REPORTING&nbsp;BUGS</a> | <a href="http://man7.org/linux/man-pages/man1/date.1.html#COPYRIGHT">COPYRIGHT</a> | <a href="http://man7.org/linux/man-pages/man1/date.1.html#SEE_ALSO">SEE&nbsp;ALSO</a> | <a href="http://man7.org/linux/man-pages/man1/date.1.html#COLOPHON">COLOPHON</a>
+        </p>
+    </td>
+    <td class="search-box">
+        <div class="man-search-box">
+
+            <form method="get" action="http://www.google.com/search">
+                <fieldset class="man-search">
+                    <input type="text" name="q" size="10" maxlength="255" value="">
+                    <input type="hidden" name="sitesearch" value="man7.org/linux/man-pages">
+                    <input type="submit" name="sa" value="Search online pages">
+                </fieldset>
+            </form>
+
+        </div>
+    </td>
+    <td> </td>
+</tr>
+</tbody></table>
+
+<pre><span class="headline">DATE(1)                         User Commands                        DATE(1)</span>
+</pre>
+<h2><a id="NAME" href="http://man7.org/linux/man-pages/man1/date.1.html#NAME"></a>NAME  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       date - print or set the system date and time
+</pre>
+<h2><a id="SYNOPSIS" href="http://man7.org/linux/man-pages/man1/date.1.html#SYNOPSIS"></a>SYNOPSIS  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       <b>date </b>[<i>OPTION</i>]... [<i>+FORMAT</i>]
+       <b>date </b>[<i>-u|--utc|--universal</i>] [<i>MMDDhhmm</i>[[<i>CC</i>]<i>YY</i>][<i>.ss</i>]]
+</pre>
+<h2><a id="DESCRIPTION" href="http://man7.org/linux/man-pages/man1/date.1.html#DESCRIPTION"></a>DESCRIPTION  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       Display the current time in the given FORMAT, or set the system date.
+
+       Mandatory arguments to long options are mandatory for short options
+       too.
+
+       <b>-d</b>, <b>--date</b>=<i>STRING</i>
+              display time described by STRING, not 'now'
+
+       <b>--debug</b>
+              annotate the parsed date, and warn about questionable usage to
+              stderr
+
+       <b>-f</b>, <b>--file</b>=<i>DATEFILE</i>
+              like <b>--date</b>; once for each line of DATEFILE
+
+       <b>-I[FMT]</b>, <b>--iso-8601</b>[=<i>FMT</i>]
+              output date/time in ISO 8601 format.  FMT='date' for date only
+              (the default), 'hours', 'minutes', 'seconds', or 'ns' for date
+              and time to the indicated precision.  Example:
+              2006-08-14T02:34:56-06:00
+
+       <b>-R</b>, <b>--rfc-email</b>
+              output date and time in RFC 5322 format.  Example: Mon, 14 Aug
+              2006 02:34:56 <b>-0600</b>
+
+       <b>--rfc-3339</b>=<i>FMT</i>
+              output date/time in RFC 3339 format.  FMT='date', 'seconds',
+              or 'ns' for date and time to the indicated precision.
+              Example: 2006-08-14 02:34:56-06:00
+
+       <b>-r</b>, <b>--reference</b>=<i>FILE</i>
+              display the last modification time of FILE
+
+       <b>-s</b>, <b>--set</b>=<i>STRING</i>
+              set time described by STRING
+
+       <b>-u</b>, <b>--utc</b>, <b>--universal</b>
+              print or set Coordinated Universal Time (UTC)
+
+       <b>--help </b>display this help and exit
+
+       <b>--version</b>
+              output version information and exit
+
+       FORMAT controls the output.  Interpreted sequences are:
+
+       %%     a literal %
+
+       %a     locale's abbreviated weekday name (e.g., Sun)
+
+       %A     locale's full weekday name (e.g., Sunday)
+
+       %b     locale's abbreviated month name (e.g., Jan)
+
+       %B     locale's full month name (e.g., January)
+
+       %c     locale's date and time (e.g., Thu Mar  3 23:05:25 2005)
+
+       %C     century; like %Y, except omit last two digits (e.g., 20)
+
+       %d     day of month (e.g., 01)
+
+       %D     date; same as %m/%d/%y
+
+       %e     day of month, space padded; same as %_d
+
+       %F     full date; like %+4Y-%m-%d
+
+       %g     last two digits of year of ISO week number (see %G)
+
+       %G     year of ISO week number (see %V); normally useful only with %V
+
+       %h     same as %b
+
+       %H     hour (00..23)
+
+       %I     hour (01..12)
+
+       %j     day of year (001..366)
+
+       %k     hour, space padded ( 0..23); same as %_H
+
+       %l     hour, space padded ( 1..12); same as %_I
+
+       %m     month (01..12)
+
+       %M     minute (00..59)
+
+       %n     a newline
+
+       %N     nanoseconds (000000000..999999999)
+
+       %p     locale's equivalent of either AM or PM; blank if not known
+
+       %P     like %p, but lower case
+
+       %q     quarter of year (1..4)
+
+       %r     locale's 12-hour clock time (e.g., 11:11:04 PM)
+
+       %R     24-hour hour and minute; same as %H:%M
+
+       %s     seconds since 1970-01-01 00:00:00 UTC
+
+       %S     second (00..60)
+
+       %t     a tab
+
+       %T     time; same as %H:%M:%S
+
+       %u     day of week (1..7); 1 is Monday
+
+       %U     week number of year, with Sunday as first day of week (00..53)
+
+       %V     ISO week number, with Monday as first day of week (01..53)
+
+       %w     day of week (0..6); 0 is Sunday
+
+       %W     week number of year, with Monday as first day of week (00..53)
+
+       %x     locale's date representation (e.g., 12/31/99)
+
+       %X     locale's time representation (e.g., 23:13:48)
+
+       %y     last two digits of year (00..99)
+
+       %Y     year
+
+       %z     +hhmm numeric time zone (e.g., <b>-0400</b>)
+
+       %:z    +hh:mm numeric time zone (e.g., <b>-04</b>:00)
+
+       %::z   +hh:mm:ss numeric time zone (e.g., <b>-04</b>:00:00)
+
+       %:::z  numeric time zone with : to necessary precision (e.g., <b>-04</b>,
+              +05:30)
+
+       %Z     alphabetic time zone abbreviation (e.g., EDT)
+
+       By default, date pads numeric fields with zeroes.  The following
+       optional flags may follow '%':
+
+       -      (hyphen) do not pad the field
+
+       _      (underscore) pad with spaces
+
+       0      (zero) pad with zeros
+
+       +      pad with zeros, and put '+' before future years with &gt;4 digits
+
+       ^      use upper case if possible
+
+       #      use opposite case if possible
+
+       After any flags comes an optional field width, as a decimal number;
+       then an optional modifier, which is either E to use the locale's
+       alternate representations if available, or O to use the locale's
+       alternate numeric symbols if available.
+</pre>
+<h2><a id="EXAMPLES" href="http://man7.org/linux/man-pages/man1/date.1.html#EXAMPLES"></a>EXAMPLES  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       Convert seconds since the epoch (1970-01-01 UTC) to a date
+
+              $ date --date='@2147483647'
+
+       Show the time on the west coast of the US (use tzselect(1) to find
+       TZ)
+
+              $ TZ='America/Los_Angeles' date
+
+       Show the local time for 9AM next Friday on the west coast of the US
+
+              $ date --date='TZ="America/Los_Angeles" 09:00 next Fri'
+</pre>
+<h2><a id="DATE_STRING" href="http://man7.org/linux/man-pages/man1/date.1.html#DATE_STRING"></a>DATE STRING  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       The --date=STRING is a mostly free format human readable date string
+       such as "Sun, 29 Feb 2004 16:21:42 -0800" or "2004-02-29 16:21:42" or
+       even "next Thursday".  A date string may contain items indicating
+       calendar date, time of day, time zone, day of week, relative time,
+       relative date, and numbers.  An empty string indicates the beginning
+       of the day.  The date string format is more complex than is easily
+       documented here but is fully described in the info documentation.
+</pre>
+<h2><a id="AUTHOR" href="http://man7.org/linux/man-pages/man1/date.1.html#AUTHOR"></a>AUTHOR  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       Written by David MacKenzie.
+</pre>
+<h2><a id="REPORTING_BUGS" href="http://man7.org/linux/man-pages/man1/date.1.html#REPORTING_BUGS"></a>REPORTING BUGS  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       GNU coreutils online help: &lt;<a href="https://www.gnu.org/software/coreutils/">https://www.gnu.org/software/coreutils/</a>&gt;
+       Report any translation bugs to &lt;<a href="https://translationproject.org/team/">https://translationproject.org/team/</a>&gt;
+</pre>
+<h2><a id="COPYRIGHT" href="http://man7.org/linux/man-pages/man1/date.1.html#COPYRIGHT"></a>COPYRIGHT  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       Copyright © 2020 Free Software Foundation, Inc.  License GPLv3+: GNU
+       GPL version 3 or later &lt;<a href="https://gnu.org/licenses/gpl.html">https://gnu.org/licenses/gpl.html</a>&gt;.
+       This is free software: you are free to change and redistribute it.
+       There is NO WARRANTY, to the extent permitted by law.
+</pre>
+<h2><a id="SEE_ALSO" href="http://man7.org/linux/man-pages/man1/date.1.html#SEE_ALSO"></a>SEE ALSO  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       Full documentation &lt;<a href="https://www.gnu.org/software/coreutils/date">https://www.gnu.org/software/coreutils/date</a>&gt;
+       or available locally via: info '(coreutils) date invocation'
+</pre>
+<h2><a id="COLOPHON" href="http://man7.org/linux/man-pages/man1/date.1.html#COLOPHON"></a>COLOPHON  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       This page is part of the <i>coreutils</i> (basic file, shell and text
+       manipulation utilities) project.  Information about the project can
+       be found at ⟨<a href="http://www.gnu.org/software/coreutils/">http://www.gnu.org/software/coreutils/</a>⟩.  If you have a
+       bug report for this manual page, see
+       ⟨<a href="http://www.gnu.org/software/coreutils/">http://www.gnu.org/software/coreutils/</a>⟩.  This page was obtained
+       from the tarball coreutils-8.32.tar.xz fetched from
+       ⟨<a href="http://www.gnutls.org/download.html">http://www.gnutls.org/download.html</a>⟩ on 2020-04-11.  If you discover
+       any rendering problems in this HTML version of the page, or you
+       believe there is a better or more up-to-date source for the page, or
+       you have corrections or improvements to the information in this
+       COLOPHON (which is <i>not</i> part of the original manual page), send a mail
+       to man-pages@man7.org
+
+<span class="footline">GNU coreutils 8.32               March 2020                          DATE(1)</span>
+</pre>
+
+<hr class="end-man-text">
+<p>Pages that refer to this page: 
+    <a href="http://man7.org/linux/man-pages/man1/cronnext.1.html">cronnext(1)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man1/gawk.1.html">gawk(1)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man1/locale.1.html">locale(1)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man1/pmdashping.1.html">pmdashping(1)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man1/pmdate.1.html">pmdate(1)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man1/timedatectl.1.html">timedatectl(1)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man2/clock_getres.2.html">clock_getres(2)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man2/gettimeofday.2.html">gettimeofday(2)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man2/stime.2.html">stime(2)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man2/time.2.html">time(2)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man3/ctime.3.html">ctime(3)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man3/difftime.3.html">difftime(3)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man3/posix_spawn.3.html">posix_spawn(3)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man3/strftime.3.html">strftime(3)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man3/tzset.3.html">tzset(3)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man4/rtc.4.html">rtc(4)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man5/locale.5.html">locale(5)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man5/utmp.5.html">utmp(5)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man7/lvmreport.7.html">lvmreport(7)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man7/time.7.html">time(7)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man8/hwclock.8.html">hwclock(8)</a>,&nbsp; 
+    <a href="http://man7.org/linux/man-pages/man8/rtcwake.8.html">rtcwake(8)</a>
+</p>
+<hr>
+
+ 
+<hr class="start-footer">
+
+<div class="footer"> 
+
+<table class="colophon-table">
+    <tbody><tr>
+    <td class="pub-info">
+        <p>
+            HTML rendering created 2020-04-11
+            by <a href="http://man7.org/mtk/index.html">Michael Kerrisk</a>, 
+            author of 
+            <a href="http://man7.org/tlpi/"><em>The Linux Programming Interface</em></a>, 
+            maintainer of the 
+            <a href="https://www.kernel.org/doc/man-pages/">Linux <em>man-pages</em> project</a>.
+        </p>
+        <p>
+            For details of in-depth
+            <strong>Linux/UNIX system programming training courses</strong>
+            that I teach, look <a href="http://man7.org/training/">here</a>.
+        </p>
+        <p>
+            Hosting by <a href="http://www.jambit.com/index_en.html">jambit GmbH</a>.
+        </p>
+        <p>
+            <a href="http://validator.w3.org/check?uri=referer">
+            <img src="./date(1) - Linux manual page_files/valid-xhtml11" alt="Valid XHTML 1.1" height="31" width="88">
+            </a>
+        </p>
+    </td>
+    <td class="colophon-divider">
+    </td>
+    <td class="tlpi-cover">
+        <a href="http://man7.org/tlpi/"><img src="./date(1) - Linux manual page_files/TLPI-front-cover-vsmall.png" alt="Cover of TLPI"></a>
+    </td>
+    </tr>
+</tbody></table>
+
+</div>
+
+<hr class="end-footer">
+
+
+
+<!--BEGIN-SITETRACKING-->
+<!-- SITETRACKING.man7.org_linux_man-pages -->
+
+<!-- Start of StatCounter Code (xhtml) -->
+
+<script type="text/javascript" async="" src="./date(1) - Linux manual page_files/ga.js.下载"></script><script type="text/javascript">
+//<![CDATA[
+var sc_project=7422636; 
+var sc_invisible=1; 
+var sc_security="9b6714ff"; 
+//]]>
+</script>
+<script type="text/javascript" src="./date(1) - Linux manual page_files/counter_xhtml.js.下载"></script>
+<noscript><div class="statcounter"><a title="website
+statistics" href="http://statcounter.com/"
+class="statcounter"><img class="statcounter"
+src="http://c.statcounter.com/7422636/0/9b6714ff/1/"
+alt="website statistics" /></a></div></noscript>
+
+<!-- End of StatCounter Code -->
+
+
+<!-- Start of Google Analytics Code -->
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9830363-8']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<!-- End of Google Analytics Code -->
+
+<!--END-SITETRACKING-->
+
+
+
+</body></html>
