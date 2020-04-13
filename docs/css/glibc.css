@@ -1,0 +1,137 @@
+
+/* glibc specific CSS.  */
+
+body {
+	font-family: sans-serif;
+	margin:10px 10px 0px 10px;
+	padding:0px;
+}
+
+.centered {
+	display:block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+h1.title {
+	color: #ffffff;
+	text-shadow: 2px 4px 3px rgba(0,0,0,0.3);	
+}
+	
+#centercontent {
+	background:#fff;
+	border:1px solid #000;
+	padding: 10px 10px 10px 10px;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+   	margin-left: 51px;
+   	margin-right:51px;
+}
+
+#menucontent {
+	background:#283d6c;
+	border-top:0px solid #000;
+	border-right:1px solid #000;
+	border-left:1px solid #000;
+	border-bottom:0px solid #000;
+	padding: 10px 10px 10px 10px;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+   	margin-left: 51px;
+   	margin-right:51px;
+	margin-bottom:0px;
+	padding-bottom:10px;
+}
+
+ul.menu {
+	list-style-type:none;
+	margin:0px;
+	padding:0px;
+}
+
+a {
+	color:#07174a;
+}
+
+a:visited, a:link {
+	color:#607ea4;
+}
+
+a:hover, a:active {
+	color:#07174a;
+}
+
+ul.menu a:link, ul.menu a:visited {
+	display:inline;
+	width:10%;
+	font-weight:bold;
+	color:#ffffff;
+	background-color:#607ea4;
+	text-shadow: 2px 2px 2px rgba(0,0,0,0.3);
+	text-align:center;
+	padding:4px;
+	margin:0px;
+	text-decoration:none;
+}
+
+ul.menu a:hover, ul.menu a:active {
+	background-color:#524d49;
+	color:#ffffff;
+	padding:4px;
+	margin:0px;
+}
+
+ul.menu li {
+	display:inline;
+}
+
+#banner {
+	background:#07174a;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	min-height:59px;
+   	margin-left: 51px;
+   	margin-right:51px;
+}
+
+#footer {
+	background:#283d6c;
+	border-top:0px solid #000;
+	border-right:1px solid #000;
+	border-left:1px solid #000;
+	border-bottom:1px solid #000;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	text-align:right;
+	text-shadow: 2px 2px 2px rgba(0,0,0,0.3);
+	color:#ffffff;
+	padding:4px;
+	margin-left:51px;
+  	margin-right:51px;
+}
+
+p,h1,h2,h3,pre,select,form,input {
+	margin:0px 10px 10px 10px;
+}
+		
+h1 {
+	font-size:16px;
+	padding-top:10px;
+}
+
+h2 {
+	font-size:14px;
+	padding-top:10px;
+}
+		
+h3 {
+	font-size:12px;
+	padding-top:10px;
+}
+
+#banner h1 {
+	font-size:30px;
+	padding:10px 10px 0px 10px;
+	margin:0px;
+}

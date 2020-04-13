@@ -1,0 +1,138 @@
+
+body {
+/*	color:#000000;*/
+	background-color:#FFFFFF;
+}
+b    { color:#502000; }
+i    { color:#006000; }
+
+h2 { 
+    color:#A00000; 
+    padding-top: 15px;
+    font-size: 100%;
+    font-weight: bold;
+}
+
+h3 {
+    color:#600000;
+    font-size: 100%;
+    padding-top: 10px;
+    padding-left: 20px;
+}
+
+table.sec-table {
+    width: 100%;
+    border: 1px;
+}
+
+table.nav-table {
+    width: 100%;
+    border-spacing: 0px;
+    border-width: 0px;
+    border-collapse: collapse;
+    border-top: 0px;
+    border-bottom: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+td.nav-cell {
+    padding: 0px;
+    border-width: 0px;
+}
+
+table.colophon-table {
+    width: 100%;
+}
+
+td.search-box {
+    text-align: right;
+}
+
+td.training-cell {
+    text-align: right;
+    padding: 0px;
+    border-width: 0px;
+}
+
+td.pub-info {
+    text-align: left;
+}
+
+td.tlpi-cover {
+    text-align: right;
+}
+
+p.page-copyright {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+fieldset.man-search {
+    border: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+span.headline {
+    font-weight: bold;
+}
+
+span.footline {
+    font-weight: bold;
+}
+
+p.page-xlinks {
+    margin-left: 10px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    background-color: #FFFFC0;
+    padding: 5px;
+    border-color: red;
+    border-style:solid;
+    display: inline-block;
+    border-width: 1px;
+}
+
+
+p.section-dir {
+    font-size: 80%;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    padding: 5px;
+	     /*
+    display: inline-block;
+    border-color: gray;
+    border-style:solid;
+    */
+    border-width: 1px;
+}
+
+hr.end-xlinks{		/* A no-op for now */
+    border: 0px;
+    margin-top:0px; 
+    margin-bottom:0px; 
+}
+
+span.top-link {
+    font-size: 70%;
+}
+
+hr.end-man-text {
+    height: 0px;
+    border-color: #ffffff;
+    width: 100%;
+}
+
+pre  { font-family: monospace, courier; }
+
+#a:link    { text-decoration: none; color: blue; }
+#a:visited { text-decoration: none; color: blue; }
+a:hover   { text-decoration: underline; color: red; }
+a:active  { text-decoration: underline; background-color: #FFD0D0; }
+
+.footer p {
+    margin-top: 0.7em;
+    margin-bottom: 0.7em;
+}
+
