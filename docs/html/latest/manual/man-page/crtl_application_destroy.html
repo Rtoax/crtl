@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!-- saved from url=(0048)http://man7.org/linux/man-pages/man1/date.1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="./../css/style.css" title="style">
+    <link rel="stylesheet" type="text/css" href="./../css/style2.css" title="style">
+    
+	<link rel="shortcut icon" href="./../../../../img/crtl.ico" />
+    <title>CRTL Application Destroy page</title>
+</head>
+
+<body>
+
+<div class="page-top"><a id="top_of_page"></a></div>
+<!--%%%TOP_BAR%%%-->
+    <script type="text/javascript" src="./top_bar.js"></script>
+
+	<hr class="nav-end">
+
+<!--%%%PAGE_START%%%-->
+
+
+<table class="sec-table">
+<tbody><tr>
+    <td>
+        <p class="section-dir">
+			<a href="./crtl_application_destroy.html#NAME">NAME</a> | 
+			<a href="./crtl_application_destroy.html#SYNOPSIS">SYNOPSIS</a> | 
+			<a href="./crtl_application_destroy.html#DESCRIPTION">DESCRIPTION</a> | 
+			<a href="./crtl_application_destroy.html#EXAMPLES">EXAMPLES</a> | 
+			<a href="./crtl_application_destroy.html#DATE_STRING">DATE&nbsp;STRING</a> | 
+			<a href="./crtl_application_destroy.html#AUTHOR">AUTHOR</a> | 
+			<a href="./crtl_application_destroy.html#REPORTING_BUGS">REPORTING&nbsp;BUGS</a> | 
+			<a href="./crtl_application_destroy.html#COPYRIGHT">COPYRIGHT</a> | 
+			<a href="./crtl_application_destroy.html#SEE_ALSO">SEE&nbsp;ALSO</a> | 
+			<a href="./crtl_application_destroy.html#COLOPHON">COLOPHON</a>
+        </p>
+    </td>
+    <td class="search-box">
+        <div class="man-search-box">
+
+            <form method="get" action="http://www.google.com/search">
+                <fieldset class="man-search">
+                    <input type="text" name="q" size="10" maxlength="255" value="">
+                    <input type="hidden" name="sitesearch" value="man7.org/linux/man-pages">
+                    <input type="submit" name="sa" value="Search online pages">
+                </fieldset>
+            </form>
+
+        </div>
+    </td>
+    <td> </td>
+</tr>
+</tbody>
+</table>
+
+<pre>
+	<span class="headline">crtl_application_destroy(1)                         User API                       </span>
+</pre>
+<h2><a id="NAME" href="./crtl_application_destroy.html#NAME"></a>NAME  &nbsp; &nbsp; &nbsp; &nbsp; 
+	<a href="./crtl_application_destroy.html#top_of_page"><span class="top-link">top</span></a>
+</h2>
+<pre>       crtl_application_destroy - destroy a CRTL application</pre>
+<h2>
+	<a id="SYNOPSIS" href="./crtl_application_destroy.html#SYNOPSIS"></a>
+		SYNOPSIS  &nbsp; &nbsp; &nbsp; &nbsp; 
+	<a href="./crtl_application_destroy.html#top_of_page"><span class="top-link">top</span></a>
+</h2>
+<pre>       
+	<b>int crtl_application_destroy</b>(<i>const char *app_name</i>)
+</pre>
+<h2>
+	<a id="DESCRIPTION" href="./crtl_application_destroy.html#DESCRIPTION"></a>
+		DESCRIPTION  &nbsp; &nbsp; &nbsp; &nbsp; 
+	<a href="./crtl_application_destroy.html#top_of_page"><span class="top-link">top</span></a>
+</h2>
+<pre>       Destroy A exist Application
+
+       <b>app_name</b>, <b>const char *</b>=<i>STRING</i>
+              Application Name. String
+</pre>
+<h2>
+	<a id="EXAMPLES" href="./crtl_application_destroy.html#EXAMPLES"></a>
+		EXAMPLES  &nbsp; &nbsp; &nbsp; &nbsp; 
+	<a href="./crtl_application_destroy.html#top_of_page"><span class="top-link">top</span></a>
+</h2>
+<pre>
+	#include &lt;<i>crtl/crtl_module.h</i>&gt;
+	int main(int argc, char *argv[]) {
+		...
+		int ret = crtl_application_create(<i>"App"</i>);
+		...
+		<i>Do what ever you want.</i>
+		...
+		int ret = crtl_application_destroy(<i>"App"</i>);
+		...
+	}
+</pre>
+<h2>
+	<a id="AUTHOR" href="./crtl_application_destroy.html#AUTHOR"></a>
+		AUTHOR  &nbsp; &nbsp; &nbsp; &nbsp; 
+	<a href="./crtl_application_destroy.html#top_of_page"><span class="top-link">top</span></a>
+</h2>
+<pre>       Written by Rong Tao.
+</pre>
+<h2>
+	<a id="COPYRIGHT" href="./crtl_application_destroy.html#COPYRIGHT"></a>
+		COPYRIGHT  &nbsp; &nbsp; &nbsp; &nbsp; 
+	<a href="./crtl_application_destroy.html#top_of_page"><span class="top-link">top</span></a>
+</h2>
+<pre>       Copyright © 2020 Rong Tao.
+</pre>
+<h2>
+	<a id="SEE_ALSO" href="./crtl_application_destroy.html#SEE_ALSO"></a>
+		SEE ALSO  &nbsp; &nbsp; &nbsp; &nbsp; 
+	<a href="./crtl_application_destroy.html#top_of_page"><span class="top-link">top</span></a>
+</h2>
+<pre>       Full documentation &lt;<a href="../crtl_application.html">CRTL Manual Page</a>&gt;
+</pre>
+
+<hr class="end-man-text">
+<p>Pages that refer to this page: 
+    <a href="./crtl_application_create.html">crtl_application_create</a>,&nbsp; 
+</p>
+<hr>
+
+ 
+<script type="text/javascript" src="./footer.js"></script>
+
+
+
+
+</body></html>

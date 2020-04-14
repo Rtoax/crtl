@@ -12,24 +12,9 @@
 
 <div class="page-top"><a id="top_of_page"></a></div>
 <!--%%%TOP_BAR%%%-->
-    <div class="nav-bar">
-        <table class="nav-table">
-            <tbody>
-            <tr>
-                <td class="nav-cell">
-                    <p class="nav-text">
-                        <a href="../../../../index.html">CRTL</a> &gt; Manual &gt; <a href="../index.html">man-pages</a>
-                    </p>
-                </td>
-                <td class="training-cell">
-                    <p class="training-text"><a class="training-link" href="./training/">CRTL programming training</a></p>
-                </td>
-            </tr>
-        	</tbody>
-        </table>
-    </div>
+    <script type="text/javascript" src="./top_bar.js"></script>
 
-<hr class="nav-end">
+	<hr class="nav-end">
 
 <!--%%%PAGE_START%%%-->
 
@@ -81,8 +66,7 @@
 	<a href="./crtl_application_create.html#top_of_page"><span class="top-link">top</span></a>
 </h2>
 <pre>       
-	<b>crtl_application_create </b>[<i>OPTION</i>]... [<i>+FORMAT</i>]
-  	<b>crtl_application_create </b>[<i>-u|--utc|--universal</i>] [<i>MMDDhhmm</i>[[<i>CC</i>]<i>YY</i>][<i>.ss</i>]]
+	<b>int crtl_application_create</b>(<i>const char *app_name</i>)
 </pre>
 <h2>
 	<a id="DESCRIPTION" href="./crtl_application_create.html#DESCRIPTION"></a>
@@ -91,167 +75,53 @@
 </h2>
 <pre>       Create A new Application
 
-       <b>-d</b>, <b>--date</b>=<i>STRING</i>
-              display time described by STRING, not 'now'
-
-
-       After 。。。
+       <b>app_name</b>, <b>const char *</b>=<i>STRING</i>
+              Application Name. String
 </pre>
 <h2>
 	<a id="EXAMPLES" href="./crtl_application_create.html#EXAMPLES"></a>
 		EXAMPLES  &nbsp; &nbsp; &nbsp; &nbsp; 
 	<a href="./crtl_application_create.html#top_of_page"><span class="top-link">top</span></a>
 </h2>
-<pre>       Convert seconds since the epoch (1970-01-01 UTC) to a date
+<pre>
+	#include &lt;<i>crtl/crtl_module.h</i>&gt;
+	int main(int argc, char *argv[]) {
+		...
+		int ret = crtl_application_create(<i>"App"</i>);
+		...
+	}
 </pre>
 <h2>
-	<a id="DATE_STRING" href="./crtl_application_create.html#DATE_STRING"></a>
-		DATE STRING  &nbsp; &nbsp; &nbsp; &nbsp; 
+	<a id="AUTHOR" href="./crtl_application_create.html#AUTHOR"></a>
+		AUTHOR  &nbsp; &nbsp; &nbsp; &nbsp; 
 	<a href="./crtl_application_create.html#top_of_page"><span class="top-link">top</span></a>
 </h2>
-<pre>       The 。。。
+<pre>       Written by Rong Tao.
 </pre>
-<h2><a id="AUTHOR" href="./crtl_application_create.html#AUTHOR"></a>AUTHOR  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       Written by David MacKenzie.
+<h2>
+	<a id="COPYRIGHT" href="./crtl_application_create.html#COPYRIGHT"></a>
+		COPYRIGHT  &nbsp; &nbsp; &nbsp; &nbsp; 
+	<a href="./crtl_application_create.html#top_of_page"><span class="top-link">top</span></a>
+</h2>
+<pre>       Copyright © 2020 Rong Tao.
 </pre>
-<h2><a id="REPORTING_BUGS" href="./crtl_application_create.html#REPORTING_BUGS"></a>REPORTING BUGS  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       GNU coreutils online help: &lt;<a href="https://www.gnu.org/software/coreutils/">https://www.gnu.org/software/coreutils/</a>&gt;
-       Report any translation bugs to &lt;<a href="https://translationproject.org/team/">https://translationproject.org/team/</a>&gt;
-</pre>
-<h2><a id="COPYRIGHT" href="./crtl_application_create.html#COPYRIGHT"></a>COPYRIGHT  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       Copyright © 2020 Free Software Foundation, Inc.  License GPLv3+: GNU
-       GPL version 3 or later &lt;<a href="https://gnu.org/licenses/gpl.html">https://gnu.org/licenses/gpl.html</a>&gt;.
-       This is free software: you are free to change and redistribute it.
-       There is NO WARRANTY, to the extent permitted by law.
-</pre>
-<h2><a id="SEE_ALSO" href="./crtl_application_create.html#SEE_ALSO"></a>SEE ALSO  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       Full documentation &lt;<a href="https://www.gnu.org/software/coreutils/date">https://www.gnu.org/software/coreutils/date</a>&gt;
-       or available locally via: info '(coreutils) date invocation'
-</pre>
-<h2><a id="COLOPHON" href="./crtl_application_create.html#COLOPHON"></a>COLOPHON  &nbsp; &nbsp; &nbsp; &nbsp; <a href="http://man7.org/linux/man-pages/man1/date.1.html#top_of_page"><span class="top-link">top</span></a></h2><pre>       This page is part of the <i>coreutils</i> (basic file, shell and text
-       manipulation utilities) project.  Information about the project can
-       be found at ⟨<a href="http://www.gnu.org/software/coreutils/">http://www.gnu.org/software/coreutils/</a>⟩.  If you have a
-       bug report for this manual page, see
-       ⟨<a href="http://www.gnu.org/software/coreutils/">http://www.gnu.org/software/coreutils/</a>⟩.  This page was obtained
-       from the tarball coreutils-8.32.tar.xz fetched from
-       ⟨<a href="http://www.gnutls.org/download.html">http://www.gnutls.org/download.html</a>⟩ on 2020-04-11.  If you discover
-       any rendering problems in this HTML version of the page, or you
-       believe there is a better or more up-to-date source for the page, or
-       you have corrections or improvements to the information in this
-       COLOPHON (which is <i>not</i> part of the original manual page), send a mail
-       to man-pages@man7.org
-
-<span class="footline">GNU coreutils 8.32               March 2020                          DATE(1)</span>
+<h2>
+	<a id="SEE_ALSO" href="./crtl_application_create.html#SEE_ALSO"></a>
+		SEE ALSO  &nbsp; &nbsp; &nbsp; &nbsp; 
+	<a href="./crtl_application_create.html#top_of_page"><span class="top-link">top</span></a>
+</h2>
+<pre>       Full documentation &lt;<a href="../crtl_application.html">CRTL Manual Page</a>&gt;
 </pre>
 
 <hr class="end-man-text">
 <p>Pages that refer to this page: 
-    <a href="http://man7.org/linux/man-pages/man1/cronnext.1.html">cronnext(1)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man1/gawk.1.html">gawk(1)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man1/locale.1.html">locale(1)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man1/pmdashping.1.html">pmdashping(1)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man1/pmdate.1.html">pmdate(1)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man1/timedatectl.1.html">timedatectl(1)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man2/clock_getres.2.html">clock_getres(2)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man2/gettimeofday.2.html">gettimeofday(2)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man2/stime.2.html">stime(2)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man2/time.2.html">time(2)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man3/ctime.3.html">ctime(3)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man3/difftime.3.html">difftime(3)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man3/posix_spawn.3.html">posix_spawn(3)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man3/strftime.3.html">strftime(3)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man3/tzset.3.html">tzset(3)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man4/rtc.4.html">rtc(4)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man5/locale.5.html">locale(5)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man5/utmp.5.html">utmp(5)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man7/lvmreport.7.html">lvmreport(7)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man7/time.7.html">time(7)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man8/hwclock.8.html">hwclock(8)</a>,&nbsp; 
-    <a href="http://man7.org/linux/man-pages/man8/rtcwake.8.html">rtcwake(8)</a>
+    <a href="./crtl_application_destroy.html">crtl_application_destroy</a>,&nbsp; 
 </p>
 <hr>
 
  
-<hr class="start-footer">
+<script type="text/javascript" src="./footer.js"></script>
 
-<div class="footer"> 
-
-<table class="colophon-table">
-    <tbody><tr>
-    <td class="pub-info">
-        <p>
-            HTML rendering created 2020-04-11
-            by <a href="http://man7.org/mtk/index.html">Michael Kerrisk</a>, 
-            author of 
-            <a href="http://man7.org/tlpi/"><em>The Linux Programming Interface</em></a>, 
-            maintainer of the 
-            <a href="https://www.kernel.org/doc/man-pages/">Linux <em>man-pages</em> project</a>.
-        </p>
-        <p>
-            For details of in-depth
-            <strong>Linux/UNIX system programming training courses</strong>
-            that I teach, look <a href="http://man7.org/training/">here</a>.
-        </p>
-        <p>
-            Hosting by <a href="http://www.jambit.com/index_en.html">jambit GmbH</a>.
-        </p>
-        <p>
-            <a href="http://validator.w3.org/check?uri=referer">
-            <img src="./date(1) - Linux manual page_files/valid-xhtml11" alt="Valid XHTML 1.1" height="31" width="88">
-            </a>
-        </p>
-    </td>
-    <td class="colophon-divider">
-    </td>
-    <td class="tlpi-cover">
-        <a href="http://man7.org/tlpi/"><img src="./date(1) - Linux manual page_files/TLPI-front-cover-vsmall.png" alt="Cover of TLPI"></a>
-    </td>
-    </tr>
-</tbody></table>
-
-</div>
-
-<hr class="end-footer">
-
-
-
-<!--BEGIN-SITETRACKING-->
-<!-- SITETRACKING.man7.org_linux_man-pages -->
-
-<!-- Start of StatCounter Code (xhtml) -->
-
-<script type="text/javascript" async="" src="./date(1) - Linux manual page_files/ga.js.下载"></script><script type="text/javascript">
-//<![CDATA[
-var sc_project=7422636; 
-var sc_invisible=1; 
-var sc_security="9b6714ff"; 
-//]]>
-</script>
-<script type="text/javascript" src="./date(1) - Linux manual page_files/counter_xhtml.js.下载"></script>
-<noscript><div class="statcounter"><a title="website
-statistics" href="http://statcounter.com/"
-class="statcounter"><img class="statcounter"
-src="http://c.statcounter.com/7422636/0/9b6714ff/1/"
-alt="website statistics" /></a></div></noscript>
-
-<!-- End of StatCounter Code -->
-
-
-<!-- Start of Google Analytics Code -->
-
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-9830363-8']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
-<!-- End of Google Analytics Code -->
-
-<!--END-SITETRACKING-->
 
 
 
