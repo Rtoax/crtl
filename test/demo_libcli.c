@@ -480,12 +480,20 @@ void * _unused __libcrtl_cli_callback(void*arg)
 }
 
 
-void demo_libcrtl_cli_test1() 
+void demo_libcrtl_cli_test1_terminal() 
+{
+    run_child(fileno(stdout));
+    while(1)
+    {
+        sleep(1);
+    }
+}
+void demo_libcrtl_cli_test2() 
 {
     crtl_thread_t _unused task;
 
     crtl_thread_normal(&task, __libcrtl_cli_callback, NULL);
-
+    
     while(1)
     {
         sleep(1);
@@ -495,7 +503,9 @@ void demo_libcrtl_cli_test1()
 
 int main()
 {
-    demo_libcrtl_cli_test1();
+//    demo_libcrtl_cli_test1_terminal();
+
+    demo_libcrtl_cli_test2();
 
     
     return 0;

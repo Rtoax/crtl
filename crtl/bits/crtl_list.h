@@ -31,8 +31,10 @@
  * generate better code by using them directly rather than
  * using the generic single-entry routines.
  */
-
+    
+#define LIST_NULL_INIT(name) { NULL, NULL }
 #define LIST_HEAD_INIT(name) { &(name), &(name) }
+
 
 #define LIST_HEAD(name) \
 	struct list_head name = LIST_HEAD_INIT(name)
