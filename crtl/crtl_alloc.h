@@ -12,12 +12,20 @@
  *  分配一维数组
  */
 void *crtl_malloc1 (int n1, int size);
-void *crtl_remalloc1(void *v, int n1, int size);
 void **crtl_malloc2 (int n1, int n2, int size);
 void ***crtl_malloc3 (int n1, int n2, int n3, int size);
 void ****crtl_malloc4 (int n1, int n2, int n3, int n4, int size);
 void *****crtl_malloc5 (int n1, int n2, int n3, int n4, int n5, int size);
 void ******crtl_malloc6 (int n1, int n2, int n3, int n4, int n5, int n6, int size);
+
+
+void *crtl_remalloc1(void *v, int n1, int size);
+void **crtl_remalloc2(void **v, int n1, int n2, int size);
+void ***crtl_remalloc3 (void ***v, int n1, int n2, int n3, int size);
+void ****crtl_remalloc4 (void ****v, int n1, int n2, int n3, int n4, int size);
+void *****crtl_remalloc5 (void *****v, int n1, int n2, int n3, int n4, int n5, int size);
+void ******crtl_remalloc6 (void ******v, int n1, int n2, int n3, int n4, int n5, int n6, int size);
+
 
 /**
  *  释放内存 一维、二维、三维...
