@@ -108,7 +108,7 @@ void demo_rbtree_original()
 struct structA{
     int a;
 };
-int demo_crtl_rbtree_cmp(void *d1, void *d2)
+int demo_crtl_rbtree_cmp(const void *d1, const void *d2)
 {
     struct structA *a1 = (struct structA *)d1;
     struct structA *a2 = (struct structA *)d2;
@@ -118,7 +118,7 @@ int demo_crtl_rbtree_cmp(void *d1, void *d2)
 
     return CRTL_EQ;
 }
-int demo_crtl_rbtree_display(void *data)
+int demo_crtl_rbtree_display(const void *data)
 {
     struct structA *a1 = (struct structA *)data;
     return printf("%d\n", a1->a);

@@ -210,7 +210,8 @@ struct crtl_rbtree_struct {
 
     int (*cmp)(const void *data1, const void*data2);
     int (*display)(const void *data);
-
+    crtl_boolean alloc;
+    
     struct crtl_rbtree_iterator_struct iter;
 };
 

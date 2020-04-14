@@ -17,6 +17,7 @@ typedef struct crtl_rbtree_iterator_struct* crtl_rbtree_iterator_t;
 
 
 crtl_rbtree_t crtl_rbtree_init(int (*cmp)(const void *, const void *), int (*display)(const void *));
+crtl_rbtree_t crtl_rbtree_init_alloc(int (*cmp)(const void *, const void *), int (*display)(const void *));
 
 int crtl_rbtree_insert(crtl_rbtree_t rbtree, void *data, unsigned int data_size);
 

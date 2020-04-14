@@ -478,7 +478,7 @@ inline static void _unused* crtl_rbtree_iterator_next(struct crtl_rbtree_iterato
 inline static void _unused* crtl_rbtree_iterator_prev(struct crtl_rbtree_iterator_struct *iter);
 inline static void _unused* crtl_rbtree_iterator_last(struct crtl_rbtree_iterator_struct *iter);
 
-struct crtl_rbtree_struct* crtl_rbtree_init(int (*cmp)(const void *, const void *), int (*display)(const void *))
+static struct crtl_rbtree_struct* __crtl_rbtree_init(int (*cmp)(const void *, const void *), int (*display)(const void *), crtl_boolean alloc)
 {
     struct crtl_rbtree_struct* rbtree = malloc(sizeof(struct crtl_rbtree_struct));
     if(!rbtree)
@@ -487,6 +487,9 @@ struct crtl_rbtree_struct* crtl_rbtree_init(int (*cmp)(const void *, const void 
         crtl_assert_fp(stderr, rbtree);
         return NULL;
     }
+    memset(rbtree, 0, sizeof(struct crtl_rbtree_struct));
+    
+    rbtree->alloc = alloc;
     
     rbtree->root.rb_node = NULL;
 
@@ -506,6 +509,15 @@ struct crtl_rbtree_struct* crtl_rbtree_init(int (*cmp)(const void *, const void 
     return rbtree;
 }
 
+struct crtl_rbtree_struct* crtl_rbtree_init(int (*cmp)(const void *, const void *), int (*display)(const void *))
+{
+    return __crtl_rbtree_init(cmp, display, crtl_false);
+}
+struct crtl_rbtree_struct* crtl_rbtree_init_alloc(int (*cmp)(const void *, const void *), int (*display)(const void *))
+{
+    return __crtl_rbtree_init(cmp, display, crtl_true);
+}
+
 
 /* insert */
 int crtl_rbtree_insert(struct crtl_rbtree_struct* rbtree, void *data, unsigned int data_size)
@@ -522,7 +534,14 @@ int crtl_rbtree_insert(struct crtl_rbtree_struct* rbtree, void *data, unsigned i
     
     struct crtl_rbtree_node_struct *newnode = malloc(sizeof(struct crtl_rbtree_node_struct));
     newnode->data_size = data_size;
-    newnode->data = (void*)data;
+
+    if(rbtree->alloc) {
+        newnode->data = malloc(data_size);
+        memcpy(newnode->data, data, data_size);
+    } else {
+        newnode->data = (void*)data;
+    }
+    
     
     while(*tmp) {
         struct crtl_rbtree_node_struct *this = container_of(*tmp, struct crtl_rbtree_node_struct, node);
@@ -598,6 +617,10 @@ int crtl_rbtree_delete(struct crtl_rbtree_struct* rbtree, const void *data)
         return CRTL_ERROR;
     }
     rb_erase(&node_data->node, &rbtree->root);
+    
+    if(rbtree->alloc) {
+        free(node_data->data);
+    }
     free(node_data);
 
     rbtree->nnode -= 1;
