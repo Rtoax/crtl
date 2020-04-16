@@ -54,7 +54,7 @@ void crtl_thread_exit(int *retval)
 
 int crtl_thread_kill(crtl_thread_t thread, int sig)
 {
-    if(0 == pthread_kill(thread, sig)) {
+    if(0 != pthread_kill(thread, sig)) {
         crtl_print_err("pthread_kill error. %s\n", CRTL_SYS_ERROR);
         return CRTL_ERROR;
     }

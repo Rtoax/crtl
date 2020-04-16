@@ -2,6 +2,7 @@
 #define __CRTL_BITS_TIMER_DEF_H 1
 
 #include <signal.h>
+#include <sys/timerfd.h>
 
 #include "crtl/bits/crtl_time_def.h"
 #include "crtl/crtl_list.h"
@@ -79,6 +80,43 @@ struct crtl_timer_struct {
     struct list_head list;
 };
 
+
+typedef enum {
+    RT_TIMER_CTRL_GETID,
+    RT_TIMER_CTRL_GETFD,
+    RT_TIMER_CTRL_GETNAME,
+    RT_TIMER_CTRL_GETFN,
+    RT_TIMER_CTRL_GETARG,
+    RT_TIMER_CTRL_GETLOOPTYPE,
+    RT_TIMER_CTRL_GETNLOOP,
+    RT_TIMER_CTRL_GETINTERVAL,
+    RT_TIMER_CTRL_SETID,
+    RT_TIMER_CTRL_SETFD,
+    RT_TIMER_CTRL_SETNAME,
+    RT_TIMER_CTRL_SETFN,
+    RT_TIMER_CTRL_SETARG,
+    RT_TIMER_CTRL_SETLOOPTYPE,
+    RT_TIMER_CTRL_SETNLOOP,
+    RT_TIMER_CTRL_SETINTERVAL,
+}__rt_timer_ctrl_t;
+    
+    /* for __rt_rawtimer_ctrl */
+#define TIMER_GET_ID            RT_TIMER_CTRL_GETID
+#define TIMER_GET_FD            RT_TIMER_CTRL_GETFD
+#define TIMER_GET_NAME          RT_TIMER_CTRL_GETNAME
+#define TIMER_GET_FN            RT_TIMER_CTRL_GETFN
+#define TIMER_GET_ARG           RT_TIMER_CTRL_GETARG
+#define TIMER_GET_LOOPTYPE      RT_TIMER_CTRL_GETLOOPTYPE
+#define TIMER_GET_NLOOP         RT_TIMER_CTRL_GETNLOOP
+#define TIMER_GET_INTERVAL      RT_TIMER_CTRL_GETINTERVAL
+#define TIMER_SET_ID            RT_TIMER_CTRL_SETID
+#define TIMER_SET_FD            RT_TIMER_CTRL_SETFD
+#define TIMER_SET_NAME          RT_TIMER_CTRL_SETNAME
+#define TIMER_SET_FN            RT_TIMER_CTRL_SETFN
+#define TIMER_SET_ARG           RT_TIMER_CTRL_SETARG
+#define TIMER_SET_LOOPTYPE      RT_TIMER_CTRL_SETLOOPTYPE
+#define TIMER_SET_NLOOP         RT_TIMER_CTRL_SETNLOOP
+#define TIMER_SET_INTERVAL      RT_TIMER_CTRL_SETINTERVAL
 
 
 #endif /*<__CRTL_BITS_TIMER_DEF_H>*/

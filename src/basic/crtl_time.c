@@ -125,6 +125,32 @@ inline void crtl_timespec_add(struct timespec *in, struct timespec *in2, struct 
     out->tv_sec = in->tv_sec + in2->tv_sec + (in->tv_nsec+in2->tv_nsec)/1000000000;
 	out->tv_nsec = (in->tv_nsec+in2->tv_nsec)%1000000000;
 }
+
+#define __CRTL_NSEC_PER_SEC 1000000000ULL
+
+
+
+
+long long crtl_timespec_sub_nsec(struct timespec a, struct timespec b)
+{
+	long long ret = __CRTL_NSEC_PER_SEC * b.tv_sec + b.tv_nsec;
+
+	ret -= __CRTL_NSEC_PER_SEC * a.tv_sec + a.tv_nsec;
+	return ret;
+}
+
+struct timespec crtl_timespec_add_timespec(struct timespec ts, unsigned long long ns)
+{
+	ts.tv_nsec += ns;
+	while (ts.tv_nsec >= __CRTL_NSEC_PER_SEC) {
+		ts.tv_nsec -= __CRTL_NSEC_PER_SEC;
+		ts.tv_sec++;
+	}
+	return ts;
+}
+
+
+
 inline void crtl_timeval_add(struct timeval *in, struct timeval *in2, struct timeval *out)
 {
     out->tv_sec = in->tv_sec + in2->tv_sec + (in->tv_usec+in2->tv_usec)/1000000;

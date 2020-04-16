@@ -29,8 +29,9 @@ enum{
 };
 
 enum {
-    CRTL_ERROR = -1,
-    CRTL_SUCCESS,
+    CRTL_ERROR = -2,
+    CRTL_NOTSUPPORT,
+    CRTL_SUCCESS = 0,
     CRTL_SPECIAL,
 };
 

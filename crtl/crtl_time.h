@@ -28,6 +28,10 @@ inline void crtl_timeval_generate(struct timeval *in, long sec, long microsec);
 inline void crtl_timespec_add(struct timespec *in, struct timespec *in2, struct timespec *out);
 inline int crtl_timespec_subabs(struct timespec *in1, struct timespec *in2, struct timespec *out);
 inline void crtl_timespec_generate(struct timespec *in, long sec, long nanosec);
+long long crtl_timespec_sub_nsec(struct timespec a, struct timespec b);
+struct timespec crtl_timespec_add_timespec(struct timespec ts, unsigned long long ns);
+
+
 
 inline uint64_t crtl_asm_rdtsc(void);
 

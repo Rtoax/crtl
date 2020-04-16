@@ -1,8 +1,16 @@
+#include <string.h>
 #include <crtl/crtl_tree.h>
 #include <crtl/crtl_log.h>
 #include <crtl/crtl_timer.h>
 #include <crtl/crtl_task.h>
 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////TEST
+/////////////////////////////////////////////////////////////////////////////////////////////TEST
+/////////////////////////////////////////////////////////////////////////////////////////////TEST
+/////////////////////////////////////////////////////////////////////////////////////////////TEST
+/////////////////////////////////////////////////////////////////////////////////////////////TEST
 
 void timer_callback(void * arg)
 {
@@ -20,11 +28,15 @@ void demo_timer_create_test()
     int i;
     crtl_timer_id_t timerid[10];
     for(i=0;i<sizeof(timerid)/sizeof(timerid[0]);i++) {
-        timerid[i] = crtl_timer_create(crtl_true, &timer_callback, &timerid[i], (i+1)%3+1, 0);
+        timerid[i] = crtl_timer_create(crtl_true, &timer_callback, &timerid[i], 1, 0);
         crtl_print_info("Create: timerid = %ld(%p)\n", timerid[i],(void*)timerid[i]);
     }
     
     sleep(3);
+    for(i=0;i<sizeof(timerid)/sizeof(timerid[0]);i++) {
+        crtl_timer_settime_interval(timerid[i], 2, 0);
+    }
+    sleep(10);
     for(i=0;i<sizeof(timerid)/sizeof(timerid[0])-1;i++) {
         sleep(1);
         crtl_timer_delete(timerid[i]);
@@ -90,11 +102,119 @@ void demo_timer_create_test_multi_thread()
     }
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////TEST
+/////////////////////////////////////////////////////////////////////////////////////////////TEST
+/////////////////////////////////////////////////////////////////////////////////////////////TEST
+/////////////////////////////////////////////////////////////////////////////////////////////TEST
+/////////////////////////////////////////////////////////////////////////////////////////////TEST
+static void demo_timerfd_timer_callback(void *arg)
+{
+    crtl_print_warning("callback. %s\n", (char*)arg);
+}
+
+#define demo_timerfd_create(timerfd, cb, loop, sec, nsec) \
+    int _unused timerfd = crtl_timerfd_create(loop, &cb, #timerfd, sec, nsec)
+
+static void _unused demo_timerfd_demo1()
+{
+
+    demo_timerfd_create(t1, demo_timerfd_timer_callback, true, 1, 1);
+    demo_timerfd_create(t2, demo_timerfd_timer_callback, true, 1, 1);
+    demo_timerfd_create(t3, demo_timerfd_timer_callback, false, 1, 1);
+    demo_timerfd_create(t4, demo_timerfd_timer_callback, true, 1, 1);
+    
+    sleep(4);
+    crtl_print_warning("add new one.\n");
+    demo_timerfd_create(t5, demo_timerfd_timer_callback, true, 1, 1);
+    demo_timerfd_create(t6, demo_timerfd_timer_callback, false, 1, 1);
+    
+
+    sleep(4);
+    crtl_timerfd_delete(t4);
+    
+    crtl_print_warning("add new one done.\n");
+    while(1)sleep(1);
+
+}
+static void _unused demo_timerfd_demo2()
+{
+
+    demo_timerfd_create(t1, demo_timerfd_timer_callback, true, 1, 1);
+    demo_timerfd_create(t2, demo_timerfd_timer_callback, true, 1, 1);
+    demo_timerfd_create(t3, demo_timerfd_timer_callback, false, 2, 1);
+    demo_timerfd_create(t4, demo_timerfd_timer_callback, true, 1, 1);
+
+
+    sleep(3);
+    crtl_print_warning("delete t2\n");
+    crtl_timerfd_delete(t2);
+    crtl_print_warning("delete t2 done\n");
+    
+    sleep(5);
+//    crtl_print_warning("destroy\n");
+    crtl_timerfds_destroy();
+    
+    demo_timerfd_create(t5, demo_timerfd_timer_callback, true, 1, 1);
+    while(1)
+        sleep(1);
+    
+}
+
+static void _unused demo_timerfd_demo3()
+{
+
+    demo_timerfd_create(t1, demo_timerfd_timer_callback, true, 1, 1);
+    demo_timerfd_create(t2, demo_timerfd_timer_callback, true, 1, 1);
+
+    crtl_print_warning("timerfd = %d\n", t1);
+    crtl_print_warning("timerfd = %d\n", t2);
+
+
+    sleep(2);
+    
+    int loop_type = 0;
+    crtl_timerfd_ctrl(t1, TIMER_GET_LOOPTYPE, &loop_type);
+    crtl_print_warning("looptype = %ld\n", loop_type);
+    crtl_timerfd_ctrl(t1, TIMER_SET_LOOPTYPE, CRTL_TIMER_NONLOOP);
+
+    sleep(2);
+    
+    struct itimerspec itimerspec = {{2,2}, {3,3}};
+    crtl_timerfd_ctrl(t2, TIMER_SET_INTERVAL, itimerspec);
+    crtl_print_warning("TIMER_SET_INTERVAL\n");
+
+    memset(&itimerspec, 0x00, sizeof(itimerspec));
+    crtl_timerfd_ctrl(t2, TIMER_GET_INTERVAL, &itimerspec);
+    crtl_print_warning("get Time Interval: {{%ld,%ld},{%ld,%ld}}\n",
+                itimerspec.it_value.tv_sec,
+                itimerspec.it_value.tv_nsec,
+                itimerspec.it_interval.tv_sec,
+                itimerspec.it_interval.tv_nsec);
+
+//    char name[20];
+//    crtl_timerfd_ctrl(t2, TIMER_GET_NAME, name);
+//    crtl_print_warning("name  %s\n", name);
+//    crtl_timerfd_ctrl(t2, TIMER_SET_NAME, "rongtao");
+//    
+//    crtl_timerfd_ctrl(t2, TIMER_GET_NAME, name);
+//    crtl_print_warning("name  %s\n", name);
+                
+    while(1)sleep(1);
+    
+}
+
+
+
+
 int main()
 {
 //    demo_timer_create_test();
-    demo_timer_create_test_multi_thread();
-
+//    demo_timer_create_test_multi_thread();
+    
+//    demo_timerfd_demo1();
+    demo_timerfd_demo2();
+//    demo_timerfd_demo3();
     
     
     return 0;
