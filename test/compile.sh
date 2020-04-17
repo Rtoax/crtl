@@ -6,5 +6,5 @@ fi
 
 ./install_crtl.sh
 
-gcc $* -lcrtl
+gcc $* -lcrtl -lcmocka
 

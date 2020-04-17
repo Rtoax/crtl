@@ -124,6 +124,7 @@ crtl_threadpool_t *crtl_threadpool_create(int thread_count, int queue_size, int 
     int i;
     (void) flags;
 
+    /* 参数有效性 */
     if(thread_count <= 0 || thread_count > MAX_THREADS || queue_size <= 0 || queue_size > MAX_QUEUE) 
     {
         crtl_print_err("out of range error.\n");
@@ -143,13 +144,13 @@ crtl_threadpool_t *crtl_threadpool_create(int thread_count, int queue_size, int 
     pool->head = pool->tail = pool->count = 0;
     pool->shutdown = pool->started = 0;
 
-    /* Allocate thread and task queue */
+    /* Allocate thread and task queue *//* 线程ID数组内存申请 */
     pool->threads = (pthread_t *)malloc(sizeof(pthread_t) * thread_count);
     pool->queue = (crtl_threadpool_task_t *)malloc(sizeof(crtl_threadpool_task_t) * queue_size);
 
     /* Initialize mutex and conditional variable first */
-    if((pthread_mutex_init(&(pool->lock), NULL) != 0) ||
-       (pthread_cond_init(&(pool->notify), NULL) != 0) ||
+    if((pthread_mutex_init(&(pool->lock), NULL) != 0) ||/* 初始化一个互斥锁 */
+       (pthread_cond_init(&(pool->notify), NULL) != 0) ||/* 初始化一个条件变量  */
        (pool->threads == NULL) ||
        (pool->queue == NULL)) 
     {
@@ -158,18 +159,16 @@ crtl_threadpool_t *crtl_threadpool_create(int thread_count, int queue_size, int 
     }
 
     /* Start worker threads */
-    for(i = 0; i < thread_count; i++) 
-    {
+    for(i = 0; i < thread_count; i++) {
         /* 创建线程，并将线程置于等待状态 */
-        if(pthread_create(&(pool->threads[i]), NULL, crtl_threadpool_thread, (void*)pool) != 0) 
-        {
+        if(pthread_create(&(pool->threads[i]), NULL, crtl_threadpool_thread, (void*)pool) != 0) {
             /* 如果创建失败，则销毁 */
             crtl_print_err("ptread_create error.\n");
-            crtl_threadpool_destroy(pool, 0);
+            crtl_threadpool_destroy(pool, 0);/* 失败，销毁这个线程池 */
             return NULL;
         }
-        pool->thread_count++;
-        pool->started++;
+        pool->thread_count++;/* 成功，线程计数+1 */
+        pool->started++;/* 起始值+1 */
     }
     return pool;
 
@@ -205,17 +204,17 @@ int crtl_threadpool_add(crtl_threadpool_t *pool, void (*function)(void *), void 
         return crtl_threadpool_invalid;
     }
 
-    if(pthread_mutex_lock(&(pool->lock)) != 0) 
+    if(pthread_mutex_lock(&(pool->lock)) != 0) /* 锁定线程池  */
     {
         crtl_print_err("mutex lock error.\n");
         return crtl_threadpool_lock_failure;
     }
 
-    next = (pool->tail + 1) % pool->queue_size;
+    next = (pool->tail + 1) % pool->queue_size;/* 查找任务要添加到线程池的位置 */
 
     do {
         /* Are we full ? */
-        if(pool->count == pool->queue_size) 
+        if(pool->count == pool->queue_size) /* 线程池已满 */
         {
             crtl_print_err("this thread pool is full.\n");
             err = crtl_threadpool_queue_full;
@@ -223,7 +222,7 @@ int crtl_threadpool_add(crtl_threadpool_t *pool, void (*function)(void *), void 
         }
 
         /* Are we shutting down ? */
-        if(pool->shutdown) 
+        if(pool->shutdown) /* 是否为关闭状态 */
         {
             crtl_print_err("this thread pool is shutdown.\n");
             err = crtl_threadpool_shutdown;

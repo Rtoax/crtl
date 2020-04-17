@@ -5,6 +5,8 @@
 #include "crtl/crtl_types.h"
 
 #include "crtl/bits/crtl_tree_rbtree.h"
+#include "crtl/bits/crtl_tree_huffman.h"
+
 
 
 typedef struct crtl_rbtree_struct*          crtl_rbtree_t;
