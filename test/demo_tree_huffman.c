@@ -10,7 +10,7 @@
 
 // Validate the memory allocation for the histogram structure.
 static void
-test_histogram_allocation(void **state)
+test_histogram_allocation(void **state) //直方图
 {
     huf_histogram_t *histogram = NULL;
 
@@ -39,7 +39,7 @@ test_histogram_populate(void **state)
     assert_non_null(histogram);
 
     uint32_t array1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    huf_histogram_populate(histogram, array1, sizeof(array1));
+    huf_histogram_populate(histogram, array1, sizeof(array1)); //填充
     assert_true(histogram->start == 0);
     unsigned i;
     
@@ -139,6 +139,9 @@ int demo1_test_histogram(void)
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 static void
 test_symbol_mapping_allocation(void **state)
@@ -292,7 +295,7 @@ int demo1_test_symbol_mapping(void)
 int main()
 {
     demo1_test_histogram();
-    demo1_test_symbol_mapping();
+//    demo1_test_symbol_mapping();
 
     return 0;
 }

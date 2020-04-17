@@ -5,10 +5,7 @@
 
 
 // Initialize a new instance of the frequency histogram.
-huf_error_t
-huf_histogram_init(
-        huf_histogram_t **self,
-        size_t iota, size_t length)
+huf_error_t huf_histogram_init(huf_histogram_t **self,   size_t iota, size_t length)
 {
     routine_m();
 

@@ -100,13 +100,13 @@ struct crtl_threadpool_t {
 
 
 /**
- * @function void *crtl_threadpool_thread(void *threadpool)
+ * @function void *__crtl_threadpool_thread(void *threadpool)
  * @brief the worker thread
  * @param threadpool the pool which own the thread
  */
-static void *crtl_threadpool_thread(void *threadpool);
+static void *__crtl_threadpool_thread(void *threadpool);
 
-int crtl_threadpool_free(crtl_threadpool_t *pool);
+static int __crtl_threadpool_free(crtl_threadpool_t *pool);
 
 /* create thread pool */
 /**
@@ -161,7 +161,7 @@ crtl_threadpool_t *crtl_threadpool_create(int thread_count, int queue_size, int 
     /* Start worker threads */
     for(i = 0; i < thread_count; i++) {
         /* 创建线程，并将线程置于等待状态 */
-        if(pthread_create(&(pool->threads[i]), NULL, crtl_threadpool_thread, (void*)pool) != 0) {
+        if(pthread_create(&(pool->threads[i]), NULL, __crtl_threadpool_thread, (void*)pool) != 0) {
             /* 如果创建失败，则销毁 */
             crtl_print_err("ptread_create error.\n");
             crtl_threadpool_destroy(pool, 0);/* 失败，销毁这个线程池 */
@@ -176,7 +176,7 @@ crtl_threadpool_t *crtl_threadpool_create(int thread_count, int queue_size, int 
     crtl_print_err("some happend during init threadpool.\n");
     
     if(pool) {
-        crtl_threadpool_free(pool);
+        __crtl_threadpool_free(pool);
     }
     return NULL;
 }
@@ -236,7 +236,7 @@ int crtl_threadpool_add(crtl_threadpool_t *pool, void (*function)(void *), void 
         pool->count += 1;
 
         /* pthread_cond_broadcast: 向一个任务发送条件信号，执行任务 */
-        if(pthread_cond_signal(&(pool->notify)) != 0) 
+        if(pthread_cond_signal(&(pool->notify)) != 0)  /* 执行任务 */
         {
             crtl_print_err("pthread_cond_signal error.\n");
             err = crtl_threadpool_lock_failure;
@@ -313,13 +313,13 @@ int crtl_threadpool_destroy(crtl_threadpool_t *pool, int flags)
     /* Only if everything went well do we deallocate the pool */
     if(!err) 
     {
-        crtl_threadpool_free(pool);
+        __crtl_threadpool_free(pool);
     }
     return err;
 }
 
 /* 释放线程池资源 */
-int crtl_threadpool_free(crtl_threadpool_t *pool)
+static int __crtl_threadpool_free(crtl_threadpool_t *pool)
 {
     if(pool == NULL || pool->started > 0) {
         return -1;
@@ -342,7 +342,7 @@ int crtl_threadpool_free(crtl_threadpool_t *pool)
 }
 
 /* 线程池线程的初始状态与任务分配 */
-static void *crtl_threadpool_thread(void *threadpool)
+static void *__crtl_threadpool_thread(void *threadpool)
 {
     crtl_threadpool_t *pool = (crtl_threadpool_t *)threadpool;
     crtl_threadpool_task_t task;
