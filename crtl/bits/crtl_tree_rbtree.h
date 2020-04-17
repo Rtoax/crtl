@@ -1,6 +1,10 @@
 #ifndef __CRTL_BITS_TREE_RBTREE_H
 #define __CRTL_BITS_TREE_RBTREE_H 1
 
+/**
+ *  红黑树： AVL平衡二叉树
+ */
+
 
 #include "crtl/crtl_types.h"
 

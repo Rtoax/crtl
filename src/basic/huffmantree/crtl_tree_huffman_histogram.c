@@ -5,84 +5,84 @@
 
 
 // Initialize a new instance of the frequency histogram.
-huf_error_t huf_histogram_init(huf_histogram_t **self,   size_t iota, size_t length)
+crtl_huf_error_t crtl_huf_histogram_init(crtl_huf_histogram_t **self,   size_t iota, size_t length)
 {
-    routine_m();
+    __crtl_huf_routine_m();
 
-    routine_param_m(self);
-    routine_param_m(iota);
-    routine_param_m(length);
+    __crtl_huf_routine_param_m(self);
+    __crtl_huf_routine_param_m(iota);
+    __crtl_huf_routine_param_m(length);
 
-    huf_error_t err = huf_malloc(void_pptr_m(self),
-            sizeof(huf_histogram_t), 1);
-    if (err != HUF_ERROR_SUCCESS) {
-        routine_error_m(err);
+    crtl_huf_error_t err = crtl_huf_malloc(__crtl_void_pptr_m(self),
+            sizeof(crtl_huf_histogram_t), 1);
+    if (err != CRTL_HUF_ERROR_SUCCESS) {
+        __crtl_huf_routine_error_m(err);
     }
 
-    huf_histogram_t *self_ptr = *self;
+    crtl_huf_histogram_t *self_ptr = *self;
 
-    err = huf_malloc(void_pptr_m(&self_ptr->frequencies),
+    err = crtl_huf_malloc(__crtl_void_pptr_m(&self_ptr->frequencies),
             sizeof(uint64_t), length);
-    if (err != HUF_ERROR_SUCCESS) {
-        routine_error_m(err);
+    if (err != CRTL_HUF_ERROR_SUCCESS) {
+        __crtl_huf_routine_error_m(err);
     }
 
     self_ptr->iota = iota;
     self_ptr->length = length;
     self_ptr->start = -1;
 
-    routine_yield_m();
+    __crtl_huf_routine_yield_m();
 }
 
 
 // Release memory occupied by the frequency histogram.
-huf_error_t
-huf_histogram_free(huf_histogram_t **self)
+crtl_huf_error_t
+crtl_huf_histogram_free(crtl_huf_histogram_t **self)
 {
-    routine_m();
-    routine_param_m(self);
+    __crtl_huf_routine_m();
+    __crtl_huf_routine_param_m(self);
 
-    huf_histogram_t *self_ptr = *self;
+    crtl_huf_histogram_t *self_ptr = *self;
 
     free(self_ptr->frequencies);
     free(self_ptr);
 
     *self = NULL;
 
-    routine_yield_m();
+    __crtl_huf_routine_yield_m();
 }
 
 
 // Reset all collected statistics.
-huf_error_t
-huf_histogram_reset(huf_histogram_t *self)
+crtl_huf_error_t
+crtl_huf_histogram_reset(crtl_huf_histogram_t *self)
 {
-    routine_m();
-    routine_param_m(self);
+    __crtl_huf_routine_m();
+    __crtl_huf_routine_param_m(self);
 
     memset(self->frequencies, 0,
             sizeof(uint64_t) * self->length);
     self->start = -1;
 
-    routine_yield_m();
+    __crtl_huf_routine_yield_m();
 }
 
 
 // Increase the appropriate element of the frequencies
 // chart by one if the element was found in the specified
 // buffer.
-huf_error_t
-huf_histogram_populate(
-        huf_histogram_t *self,
+crtl_huf_error_t
+crtl_huf_histogram_populate(
+        crtl_huf_histogram_t *self,
         void *buf, size_t len)
 {
-    routine_m();
+    __crtl_huf_routine_m();
 
     uint8_t *buf_ptr = buf;
     uint8_t *buf_end = buf_ptr + len;
 
-    routine_param_m(self);
-    routine_param_m(buf);
+    __crtl_huf_routine_param_m(self);
+    __crtl_huf_routine_param_m(buf);
 
     // Calculate frequencies of the symbols.
     while (buf_ptr + self->iota <= buf_end) {
@@ -102,6 +102,6 @@ huf_histogram_populate(
         }
     }
 
-    routine_yield_m();
+    __crtl_huf_routine_yield_m();
 }
 

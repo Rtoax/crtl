@@ -4,7 +4,7 @@
 
 
 static const char*
-__huf_error_map[] = {
+__crtl_huf_error_map[] = {
     "Success",
     "Failed to allocate the memory block",
     "An invalid argument was specified to the function",
@@ -14,33 +14,33 @@ __huf_error_map[] = {
 };
 
 // Initialize a new instance of the configuration.
-huf_error_t
-huf_config_init(huf_config_t **self)
+crtl_huf_error_t
+crtl_huf_config_init(crtl_huf_config_t **self)
 {
-    routine_m();
-    routine_param_m(self);
+    __crtl_huf_routine_m();
+    __crtl_huf_routine_param_m(self);
 
-    huf_error_t err = huf_malloc(void_pptr_m(self),
-            sizeof(huf_config_t), 1);
-    if (err != HUF_ERROR_SUCCESS) {
-        routine_error_m(err);
+    crtl_huf_error_t err = crtl_huf_malloc(__crtl_void_pptr_m(self),
+            sizeof(crtl_huf_config_t), 1);
+    if (err != CRTL_HUF_ERROR_SUCCESS) {
+        __crtl_huf_routine_error_m(err);
     }
 
-    routine_yield_m();
+    __crtl_huf_routine_yield_m();
 }
 
 
 // Release memory occupied by the configuration.
-huf_error_t
-huf_config_free(huf_config_t **self)
+crtl_huf_error_t
+crtl_huf_config_free(crtl_huf_config_t **self)
 {
-    routine_m();
-    routine_param_m(self);
+    __crtl_huf_routine_m();
+    __crtl_huf_routine_param_m(self);
 
     free(*self);
     *self = NULL;
 
-    routine_yield_m();
+    __crtl_huf_routine_yield_m();
 }
 
 
@@ -48,42 +48,42 @@ huf_config_free(huf_config_t **self)
 
 // Return string representation of the specified error.
 const char*
-huf_error_string(huf_error_t error)
+crtl_huf_error_string(crtl_huf_error_t error)
 {
-    size_t huf_error_map_len = (sizeof(__huf_error_map) 
-            / sizeof(*__huf_error_map));
+    size_t crtl_huf_error_map_len = (sizeof(__crtl_huf_error_map) 
+            / sizeof(*__crtl_huf_error_map));
 
     // Return "Uknown failure" if the specified error
     // values is not defined in the error list.
-    if (error < 0 || error >= huf_error_map_len) {
-        return __huf_error_map[huf_error_map_len-1];
+    if (error < 0 || error >= crtl_huf_error_map_len) {
+        return __crtl_huf_error_map[crtl_huf_error_map_len-1];
     }
 
     // Otherwise simply return the string by the
     // position in the map.
-    return __huf_error_map[error];
+    return __crtl_huf_error_map[error];
 }
 
 
 
 // Initialize a new instance of the read-writer.
-huf_error_t
-huf_read_writer_init(
-        huf_read_writer_t **self,
-        huf_reader_t reader,
-        huf_writer_t writer)
+crtl_huf_error_t
+crtl_huf_read_writer_init(
+        crtl_huf_read_writer_t **self,
+        crtl_huf_reader_t reader,
+        crtl_huf_writer_t writer)
 {
-    routine_m();
+    __crtl_huf_routine_m();
 
-    huf_error_t err;
-    huf_read_writer_t *self_ptr;
+    crtl_huf_error_t err;
+    crtl_huf_read_writer_t *self_ptr;
 
-    routine_param_m(self);
+    __crtl_huf_routine_param_m(self);
 
-    err = huf_malloc(void_pptr_m(self),
-            sizeof(huf_read_writer_t), 1);
-    if (err != HUF_ERROR_SUCCESS) {
-        routine_error_m(err);
+    err = crtl_huf_malloc(__crtl_void_pptr_m(self),
+            sizeof(crtl_huf_read_writer_t), 1);
+    if (err != CRTL_HUF_ERROR_SUCCESS) {
+        __crtl_huf_routine_error_m(err);
     }
 
     self_ptr = *self;
@@ -91,75 +91,75 @@ huf_read_writer_init(
     self_ptr->reader = reader;
     self_ptr->writer = writer;
 
-    routine_yield_m();
+    __crtl_huf_routine_yield_m();
 }
 
 
 // Release memory occupied by the read-writer.
-huf_error_t
-huf_read_writer_free(huf_read_writer_t **self)
+crtl_huf_error_t
+crtl_huf_read_writer_free(crtl_huf_read_writer_t **self)
 {
-    routine_m();
-    routine_param_m(self);
+    __crtl_huf_routine_m();
+    __crtl_huf_routine_param_m(self);
 
     free(*self);
     *self = NULL;
 
-    routine_yield_m();
+    __crtl_huf_routine_yield_m();
 }
 
 
 // Write the specified amount of byte from the buffer
 // starting from the *buf* pointer.
-huf_error_t
-huf_write(huf_writer_t writer, const void *buf, size_t count)
+crtl_huf_error_t
+crtl_huf_write(crtl_huf_writer_t writer, const void *buf, size_t count)
 {
-    routine_m();
-    routine_param_m(buf);
+    __crtl_huf_routine_m();
+    __crtl_huf_routine_param_m(buf);
 
     size_t have_written = write(writer, buf, count);
     if (have_written < 0) {
-        routine_error_m(HUF_ERROR_READ_WRITE);
+        __crtl_huf_routine_error_m(CRTL_HUF_ERROR_READ_WRITE);
     }
 
-    routine_yield_m();
+    __crtl_huf_routine_yield_m();
 }
 
 
 // Read the specified amount of bytes into the buffer
 // starting from the *buf* pointer.
-huf_error_t
-huf_read(huf_reader_t reader, void *buf, size_t *count)
+crtl_huf_error_t
+crtl_huf_read(crtl_huf_reader_t reader, void *buf, size_t *count)
 {
-    routine_m();
+    __crtl_huf_routine_m();
 
-    routine_param_m(buf);
-    routine_param_m(count);
+    __crtl_huf_routine_param_m(buf);
+    __crtl_huf_routine_param_m(count);
 
     size_t have_read = read(reader, buf, *count);
     if (have_read < 0) {
         *count = 0;
-        routine_error_m(HUF_ERROR_READ_WRITE);
+        __crtl_huf_routine_error_m(CRTL_HUF_ERROR_READ_WRITE);
     }
 
     *count = have_read;
-    routine_yield_m();
+    __crtl_huf_routine_yield_m();
 }
 
 
 
 // Allocate the memory block of the specified size.
-huf_error_t
-huf_malloc(void** ptr, size_t size, size_t num)
+crtl_huf_error_t
+crtl_huf_malloc(void** ptr, size_t size, size_t num)
 {
-    routine_m();
-    routine_param_m(ptr);
+    __crtl_huf_routine_m();
+    __crtl_huf_routine_param_m(ptr);
 
     *ptr = calloc(num, size);
     if (!*ptr) {
-        routine_error_m(HUF_ERROR_MEMORY_ALLOCATION);
+        __crtl_huf_routine_error_m(CRTL_HUF_ERROR_MEMORY_ALLOCATION);
     }
 
-    routine_yield_m();
+    __crtl_huf_routine_yield_m();
 }
 
