@@ -2,7 +2,7 @@
 #define __CRTL_BITS_TREE_HUFFMAN_H 1
 
 /**
- *  ¹þ¸¥ÂüÊ÷£º ´øÓÐÈ¨ÖµµÄ¶þ²æÊ÷
+ *  å“ˆå¼—æ›¼æ ‘ï¼š å¸¦æœ‰æƒå€¼çš„äºŒå‰æ ‘
  */
 
 #include <stdio.h>
