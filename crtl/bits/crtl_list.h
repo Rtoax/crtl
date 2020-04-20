@@ -722,6 +722,9 @@ static _unused inline void list_splice_tail_init(struct list_head *list, struct 
 
 
 
+void list_sort(void *priv, struct list_head *head, int (*cmp)(void *priv, struct list_head *a, struct list_head *b));
+
+
 /* Double linked lists 散列表 *****************************************************************************************/
 /*
  * Double linked lists with a single pointer list head.

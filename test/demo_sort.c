@@ -20,6 +20,8 @@ static int demo_sort_test_cmp(const void *d1, const void *d2)
                     56,35,6,4567,5,678,567,8,576,8,12,312,13,41,34,12,312,3,23,23,\
                     42,435,3,456,345,2,45,1234,52,345,2345234,52,435,24,52,451,\
                     34,13,4,13,41,3,41,34,1,34,13,42,345,34,56,435,64,5673,12,\
+                    34,13,4,13,41,3,41,34,1,34,13,123,12,3,1234,23,45,234,52,\
+                    45,234,52,34,5243,542,345,34,56,435,64,5673,12,\
                     31,23,123,12,323,4,34,5,4356,45,6546,2435,3,456,45,7,134,13,41,34,13,413,41,34,13,4};
 
 
@@ -142,6 +144,23 @@ void demo_sort_test8()
     
 }
 
+void demo_sort_test9()
+{
+    printf("Sort ---------------\n");
+
+    int a[] = ARRAY_INT;
+
+    crtl_sort(a, sizeof(a)/sizeof(a[0]), sizeof(a[0]), demo_sort_test_cmp, NULL);
+
+    int i;
+    for(i=0;i<sizeof(a)/sizeof(a[0]); i++)
+    {
+        printf("%d - ", a[i]);
+    }
+    printf("\n");
+    
+}
+
 
 int main()
 {
@@ -153,6 +172,7 @@ int main()
     demo_sort_test6();
     demo_sort_test7();
     demo_sort_test8();
+    demo_sort_test9();
     
     return 0;
 }

@@ -13,6 +13,8 @@ void crtl_sort_qsortH(void *base,size_t lo,size_t hi,size_t size,int (*cmp)(cons
 void crtl_sort_qsortL(void *base,size_t lo,size_t hi,size_t size,int (*cmp)(const void *, const void *));
 void crtl_sort_selection(void *base,size_t num,size_t size,int (*cmp)(const void *, const void *));
 void crtl_sort_shell(void *base,size_t num,size_t size,int (*cmp)(const void *, const void *));
+void crtl_sort(void *base, size_t num, size_t size, int (*cmp_func)(const void *, const void *), 
+                                                    void (*swap_func)(void *, void *, int size));
 
 
 

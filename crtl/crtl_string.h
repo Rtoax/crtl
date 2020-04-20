@@ -19,6 +19,7 @@
 
 #include "crtl/bits/crtl_regex.h"
 
+_api char *crtl_skip_spaces(const char *str);
 
 _api int crtl_strstripc(char *str, const char ch);
 _api int crtl_strccount (char c, char *s);
@@ -32,10 +33,16 @@ _api unsigned long crtl_estrtoul(char *s);
 
 _api float crtl_estrtof(char *s);
 _api double crtl_estrtod(char *s);
+
+_api int crtl_strtobool(const char *s, bool *res);
+
+
 _api char *crtl_strjoint(char *dst, const char *fmt, ...);
 _api int crtl_memshow(const void*in, int len);
 _api void crtl_memswap(crtl_byte *x, crtl_byte *y, size_t size);
 _api void crtl_memcopy(void *x, void *y, size_t size);
+_api int crtl_strncasecmp(const char *s1, const char *s2, size_t len);
+_api int crtl_strcasecmp(const char *s1, const char *s2);
 
 
 /* string to numeric conversion with error checking */
@@ -48,6 +55,7 @@ unsigned long crtl_eatov(char *s);
 float crtl_eatof(char *s);
 double crtl_eatod(char *s);
 
+bool crtl_glob_match(char const *pat, char const *str);
 
 
 #endif /*<__CRTL_STRING_H>*/

@@ -7,20 +7,8 @@
 
 #include "crtl/bits/crtl_lock_semaphore.h"
 #include "crtl/bits/crtl_lock_mutex.h"
+#include "crtl/bits/crtl_llist.h"
 
-
-/* tty_buffer: linux-2.26 linux/tty.h */
-struct crtl_atty_buffer {
-	struct crtl_atty_buffer  *next;
-	char                *char_buf_ptr;
-	unsigned char       *flag_buf_ptr;
-	int                 used;
-	int                 size;
-	int                 commit;
-	int                 read;
-	/* Data points here */
-	unsigned long       data[0];
-};
 
 /* macros */
 #define __CRTL_ATTY_BUFFER_PAGE	((((1UL<<12) - sizeof(struct atty_buffer)) / 2) & ~0xFF)
@@ -42,15 +30,61 @@ struct crtl_atty_buffer {
 #define __CRTL_ATTY_OVERRUN	4
 
 
+/* tty_buffer: linux-2.26 linux/tty.h */
+struct crtl_atty_buffer {
+    union {
+		struct crtl_atty_buffer *next;
+		struct llist_node free;
+	};
+//    char                *char_buf_ptr;
+//    unsigned char       *flag_buf_ptr;
+    int                 used;
+    int                 size;
+    int                 commit;
+    int                 read;
+	int                 flags;
+    /* Data points here */
+    unsigned long       data[0];
+};
+
+
 /* atty_bufhead: linux-2.26 linux/tty.h */
 struct crtl_atty_bufhead {
 	crtl_lock_sem_t            lock;
+    int  priority;
 	struct crtl_atty_buffer *head;	/* Queue head */
+	struct crtl_atty_buffer sentinel;	
 	struct crtl_atty_buffer *tail;	/* Active buffer */
-	struct crtl_atty_buffer *free;	/* Free queue head */
+	struct llist_head free;	/* Free queue head */
 	int memory_used;		/* Buffer space used excluding
 								free queue */
+    int mem_limit;                                
 };
+//
+//struct crtl_atty_port {/*     <rongtao 2019.11.11>*/
+//	struct crtl_atty_bufhead	buf;		/* Locked internally */
+//	struct crtl_atty_struct	*tty;		/* Back pointer */
+//	struct crtl_atty_struct	*itty;		/* internal back ptr */
+//	const struct crtl_atty_port_operations *ops;	/* Port operations */
+//	const struct crtl_atty_port_client_operations *client_ops; /* Port client operations */
+//	crtl_lock_sem_t		lock;		/* Lock protecting tty field */
+//	int			blocked_open;	/* Waiting to open */
+//	int			count;		/* Usage count */
+//	unsigned long		flags;		/* User TTY flags ASYNC_ */
+//	unsigned long		iflags;		/* Internal flags TTY_PORT_ */
+//	unsigned char		console:1,	/* port is a console */
+//				low_latency:1;	/* optional: tune for latency */
+//	crtl_lock_mutex_t		mutex;		/* Locking */
+//	crtl_lock_mutex_t		buf_mutex;	/* Buffer alloc lock */
+//	unsigned char		*xmit_buf;	/* Optional buffer */
+//	unsigned int		close_delay;	/* Close port delay */
+//	unsigned int		closing_wait;	/* Delay for output */
+//	int			drain_delay;	/* Set to zero if no pure time
+//						   based drain is needed else
+//						   set to size of fifo */
+//	void 			*client_data;
+//};
+
 
 
 struct crtl_atty_struct;

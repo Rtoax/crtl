@@ -533,6 +533,48 @@ int demo_list_8_for_each_and_entry()
     return 0;
 }
 
+static int list_sort_test_cmp(void *priv, struct list_head *a, struct list_head *b)
+{
+    struct list_test *t1 = container_of(a, struct list_test, list);
+    struct list_test *t2 = container_of(b, struct list_test, list);
+    return t1->a-t2->a;
+}
+
+void demo_list_9_list_sort()
+{
+    printf("sort:::::::::::::::::::::::\n");
+    struct list_head lhead;
+    int __a = 13;
+    
+    struct list_test lt1 = LIST_TEST_INITIALIZER(1);
+    struct list_test lt2 = LIST_TEST_INITIALIZER(2);
+    struct list_test lt3 = LIST_TEST_INITIALIZER(3);
+    struct list_test lt4 = LIST_TEST_INITIALIZER(4);
+    struct list_test lt5 = LIST_TEST_INITIALIZER(5);
+    struct list_test lt6 = LIST_TEST_INITIALIZER(6);
+    
+    struct list_test *iter;
+    
+    INIT_LIST_HEAD(&lhead);
+    
+    
+    list_add_tail(&lt2.list, &lhead);
+    list_add_tail(&lt4.list, &lhead);
+    list_add_tail(&lt5.list, &lhead);
+    list_add_tail(&lt1.list, &lhead);
+    list_add_tail(&lt3.list, &lhead);
+
+    list_for_each_entry(iter, &lhead, list) {
+		printf("%d - ", iter->a);
+	}printf("\n");
+
+    list_sort(NULL, &lhead, &list_sort_test_cmp);
+    
+    list_for_each_entry(iter, &lhead, list) {
+		printf("%d - ", iter->a);
+	}printf("\n");
+}
+
 
 int main()
 {
@@ -544,7 +586,7 @@ int main()
     demo_list_6_cut();
     demo_list_7_splice();
     demo_list_8_for_each_and_entry();
-    
+    demo_list_9_list_sort();
 
 
     return 0;
