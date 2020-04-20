@@ -14,6 +14,7 @@
 
 
 
+
 #define CRTL_BIT(nr)			(CRTL_UL(1) << (nr))/*   <rongtao 2019.10>*/
 #define CRTL_BIT_ULL(nr)		(CRTL_ULL(1) << (nr))
 #define CRTL_BIT_MASK(nr)		(CRTL_UL(1) << ((nr) % CRTL_BITS_PER_LONG))

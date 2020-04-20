@@ -332,7 +332,14 @@ static inline unsigned long __xchg(unsigned long x, volatile void * ptr, int siz
 #define CAS(loc, old_value, new_value) __sync_bool_compare_and_swap((void **)loc, old_value, new_value)
 
 
-
+#ifndef cmpxchg
+#define cmpxchg(ptr, o, n)		    \
+({									\
+	__typeof__(*(ptr)) __o = (o);					\
+	__typeof__(*(ptr)) __n = (n);					\
+	(__typeof__(*(ptr))) __sync_val_compare_and_swap((ptr),__o,__n);\
+})
+#endif
 
 
 
