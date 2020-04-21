@@ -12,8 +12,9 @@
 
 #include "crtl/crtl_types.h"
 
+//当前目录
 #define CRTL_CURRENT_DIR   "."
-#define CRTL_FATHER_DIR        ".."
+#define CRTL_FATHER_DIR        ".." //上一级目录
 
 
 /* default file access permissions for new files */
@@ -64,10 +65,11 @@
 //int crtl_chk_fd(int fd);
 
 
-
+/* 创建文件夹 */
 int crtl_mkdir(const char *dir, mode_t mode);
-int crtl_rmdir(const char *dir);
+int crtl_rmdir(const char *dir); /* 删除文件夹 */
 
+/* 文件选项 */
 int crtl_is_exist(const char *dirname);
 int crtl_is_readable(const char *dirname);
 int crtl_is_writeable(const char *dirname);
