@@ -110,6 +110,8 @@ int test_hashmap_generic(void)
 		long k = (long)entry->key;
 		long v = (long)entry->value;
 
+        printf("(%ld, %ld)\n", k, v);
+        
 		found_msk |= 1ULL << k;
 		if (CHECK(v - k != 1024, "invalid k/v pair: %ld = %ld\n", k, v))
 			return 1;

@@ -21,7 +21,8 @@ int crtl_spin_lock(crtl_lock_spin_t *__lock, int trylock);
 
 int crtl_spin_unlock(crtl_lock_spin_t *__lock);
 
-
+#define __CRTL_SPIN_LOCK_UNLOCKED(lock) \
+    crtl_spin_init_shared(&lock)
 
 
 #ifndef _PTHREAD_H
