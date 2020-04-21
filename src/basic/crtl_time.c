@@ -3,9 +3,12 @@
 #include <stdint.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <stdio.h>
+#include <time.h>
 
 #include "crtl/crtl_time.h"
 #include "crtl/crtl_types.h"
+#include "crtl/crtl_log.h"
 
 
 
@@ -33,6 +36,16 @@ inline int crtl_dsleep (double sleep_sec)
             return rval;
     }
     return 0;
+}
+
+inline int crtl_delayed_exit_thread(int seconds)
+{
+  struct timespec delay = { seconds, 0 };
+  struct timespec remaining = { 0 };
+  if (nanosleep (&delay, &remaining) != 0)
+    crtl_print_err("nanosleep: %d seconds.\n", seconds);
+  /* Exit the process sucessfully.  */
+  exit (0);
 }
 
 inline int crtl_timeval_subtract(struct timeval *result, struct timeval *x, struct timeval *y)

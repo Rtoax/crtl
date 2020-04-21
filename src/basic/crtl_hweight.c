@@ -1,5 +1,4 @@
 
-#include <stdint.h>
 #include "crtl/bits/crtl_hweight.h"
 
 /**

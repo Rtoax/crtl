@@ -6,6 +6,8 @@
 
 
 inline int crtl_dsleep(double sleep_sec);
+inline int crtl_delayed_exit_thread(int seconds);
+
 float crtl_cpusecond();
 
 inline int crtl_timeval_subtract(struct timeval *result, struct timeval *x, struct timeval *y);

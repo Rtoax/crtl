@@ -1,3 +1,5 @@
+#include <errno.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <libgen.h> //basename
@@ -87,4 +89,32 @@ inline int crtl_memprint(FILE* fp, void *const addr, unsigned int size)
     return count;
 }
 
+
+static inline void __crtl_print_failure(const char *file, int line, const char *format, va_list ap)
+{
+    int saved_errno = errno;
+    printf ("error: %s:%d: ", file, line);
+    vprintf (format, ap);
+    puts ("");
+    errno = saved_errno;
+}
+
+
+inline int crtl_print_failure(const char *file, int line, const char *format, ...)
+{
+    va_list ap;
+    va_start (ap, format);
+    __crtl_print_failure (file, line, format, ap);
+    va_end (ap);
+    return 1;
+}
+
+inline void crtl_print_exit_failure(int status, const char *file, int line, const char *format, ...)
+{
+    va_list ap;
+    va_start (ap, format);
+    __crtl_print_failure (file, line, format, ap);
+    va_end (ap);
+    exit (status);
+}
 

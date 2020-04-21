@@ -42,6 +42,9 @@ inline int crtl_printfp(FILE *fp, crtl_log_level_t level, int prefix, int _unuse
                           const char *fmt, ...);
 inline int crtl_memprint(FILE* fp, void *const addr, unsigned int size);
 
+inline int crtl_print_failure(const char *file, int line, const char *format, ...);
+inline void crtl_print_exit_failure(int status, const char *file, int line, const char *format, ...);
+
 
 #endif /*<__CRTL_LOG_H>*/
 
