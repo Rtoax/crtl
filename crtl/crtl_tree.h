@@ -4,6 +4,7 @@
 
 #include "crtl/crtl_types.h"
 
+#include "crtl/bits/crtl_tree_avl.h"
 #include "crtl/bits/crtl_tree_rbtree.h"
 #include "crtl/bits/crtl_tree_huffman.h"
 
