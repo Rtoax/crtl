@@ -17,7 +17,7 @@
 #include "crtl/easy/byteswap.h"
 
 
-#include "crtl_mute_dbg_log.h"
+#include "crtl_mute_dbg.h"
 
 
 /* rb tree of all timers you create */

@@ -4,6 +4,7 @@
 
 #define CRTL_TYPE_NAME_SIZE              63
 
+#define CRTL_NAME_SIZE  256
 
 
 

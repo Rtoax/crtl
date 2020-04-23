@@ -106,6 +106,9 @@ void demo_rbtree_original()
 }
 
 
+
+
+
 struct structA{
     int a;
 };
@@ -192,9 +195,9 @@ void demo_crtl_rbtree()
 
 int main()
 {
-//    demo_rbtree_original();
+    demo_rbtree_original();
 
-    demo_crtl_rbtree();
+//    demo_crtl_rbtree();
 
     return 0;
 }

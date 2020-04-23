@@ -14,7 +14,7 @@
  */
 /* macro */
 #define crtl_assert(exp) crtl_assert_fp(stderr, exp)
-#define crtl_assert_fp(fp, exp) __crtl_assert(fp, !!(exp), 0, __FILE__, __func__, __LINE__)
+#define crtl_assert_fp(fp, exp) __crtl_assert(fp, !!(exp), 1, __FILE__, __func__, __LINE__)
 
 /* backtrace */
 #define crtl_assert_backtrace(fp) __crtl_assert_backtrace(fp)
