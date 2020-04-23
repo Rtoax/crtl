@@ -2,12 +2,13 @@
 #define __CRTL_BITS_TYPES_BITS_SET_H 1
 
 
-#define bits_set                        __crtl_bits_set
-#define BITS_SETSIZE                    __CRTL_BITS_SETSIZE
-#define BITS_SET(bit, p_bits_set)       __CRTL_BITS_SET(bit, p_bits_set)
-#define BITS_CLR(bit, p_bits_set)       __CRTL_BITS_CLR(bit, p_bits_set)
-#define BITS_ISSET(bit, p_bits_set)     __CRTL_BITS_ISSET(bit, p_bits_set)
-#define BITS_ZERO(p_bits_set)           __CRTL_BITS_ZERO(p_bits_set)
+//#define bits_set                        __crtl_bits_set
+//#define BITS_SETSIZE                    __CRTL_BITS_SETSIZE
+//#define BITS_SET(bit, p_bits_set)       __CRTL_BITS_SET(bit, p_bits_set)
+//#define BITS_CLR(bit, p_bits_set)       __CRTL_BITS_CLR(bit, p_bits_set)
+//#define BITS_ISSET(bit, p_bits_set)     __CRTL_BITS_ISSET(bit, p_bits_set)
+//#define BITS_ZERO(p_bits_set)           __CRTL_BITS_ZERO(p_bits_set)
+
 
 
 /**
@@ -38,6 +39,18 @@ typedef struct {
     ((void) (__CRTL_BITS (s)[__CRTL_BITS_ELT(d)] &= ~ __CRTL_BITS_MASK(d)))
 #define __CRTL_BITS_ISSET(d, s) \
     ((__CRTL_BITS (s)[__CRTL_BITS_ELT (d)] & __CRTL_BITS_MASK (d)) != 0)
+
+
+
+
+typedef __crtl_bits_set crtl_bits_set;
+
+
+#define CRTL_BITS_SETSIZE                    __CRTL_BITS_SETSIZE
+#define CRTL_BITS_SET(bit, p_bits_set)       __CRTL_BITS_SET(bit, p_bits_set)
+#define CRTL_BITS_CLR(bit, p_bits_set)       __CRTL_BITS_CLR(bit, p_bits_set)
+#define CRTL_BITS_ISSET(bit, p_bits_set)     __CRTL_BITS_ISSET(bit, p_bits_set)
+#define CRTL_BITS_ZERO(p_bits_set)           __CRTL_BITS_ZERO(p_bits_set)
 
 
 

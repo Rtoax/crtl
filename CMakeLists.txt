@@ -20,7 +20,7 @@ aux_source_directory(./src/tcp-ip  DIR_SRCS)
 set(CMAKE_C_FLAGS "-g -Wall")
 
 #添加头文件路径 
-include_directories( ./crtl ./ )
+include_directories( ./crtl ./ ./src )
 
 #添加库 
 find_library(RT rt /usr/lib64) 

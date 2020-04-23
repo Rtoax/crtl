@@ -204,7 +204,76 @@ static void _unused demo_timerfd_demo3()
     
 }
 
+void timerfd_callback(void * arg)
+{
+    int *timerfd = (int *)arg;
+    crtl_print_info("timeout callback timerfd %d\n", *timerfd);
+}
 
+
+void *demo_timerfd_create_test_multi_thread_fn(void*arg)
+{
+    crtl_print_debug("Rong. %ld\n", crtl_thread_self());
+
+    int i;
+    int timerfd[5] = {0};
+    for(i=0;i<sizeof(timerfd)/sizeof(timerfd[0]);i++) {
+        timerfd[i] = crtl_timerfd_create(crtl_true, &timerfd_callback, &timerfd[i], i+1, 0);
+        crtl_print_info("Create: timerid = %d(%x)(%d)\n", timerfd[i], timerfd[i],sizeof(int));
+    }
+    
+    sleep(3);
+    for(i=0;i<sizeof(timerfd)/sizeof(timerfd[0]);i++) {
+        sleep(1);
+        crtl_timerfd_delete(timerfd[i]);
+        crtl_print_notice("Delete: timerid = %d\n", timerfd[i]);
+    }
+    
+    while(1) {
+        sleep(1);
+    }
+    return NULL;
+}
+
+void demo_timerfd_create_test_multi_thread()
+{
+    crtl_thread_t thread1, thread2, thread3, thread4;
+    crtl_thread_normal(&thread1, demo_timerfd_create_test_multi_thread_fn, NULL);
+        sleep(1);
+    crtl_thread_normal(&thread2, demo_timerfd_create_test_multi_thread_fn, NULL);
+        sleep(1);
+    crtl_thread_normal(&thread3, demo_timerfd_create_test_multi_thread_fn, NULL);
+        sleep(1);
+    crtl_thread_normal(&thread4, demo_timerfd_create_test_multi_thread_fn, NULL);
+
+
+    sleep(13);
+//    crtl_timerfds_destroy();
+    
+    int i;
+    int timerfd[5] = {0};
+    for(i=0;i<sizeof(timerfd)/sizeof(timerfd[0]);i++) {
+        timerfd[i] = crtl_timerfd_create(crtl_true, &timerfd_callback, &timerfd[i], i+1, 0);
+        crtl_print_info("Create: timerid = %d(%lx)(%d)\n", timerfd[i], timerfd[i],sizeof(int));
+    }
+    sleep(13);
+    for(i=0;i<sizeof(timerfd)/sizeof(timerfd[0]);i++) {
+        sleep(1);
+        crtl_timerfd_delete(timerfd[i]);
+        crtl_print_notice("Delete: timerid = %d\n", timerfd[i]);
+    }
+    
+    
+        sleep(1);
+    crtl_thread_normal(&thread2, demo_timerfd_create_test_multi_thread_fn, NULL);
+        sleep(1);
+    crtl_thread_normal(&thread4, demo_timerfd_create_test_multi_thread_fn, NULL);
+    
+    while(1) {
+        sleep(1);
+//        crtl_print_info(">>>>>>>>>>>>>>>\n");
+    }
+}
 
 
 int main()
@@ -213,9 +282,9 @@ int main()
 //    demo_timer_create_test_multi_thread();
     
 //    demo_timerfd_demo1();
-    demo_timerfd_demo2();
+//    demo_timerfd_demo2();
 //    demo_timerfd_demo3();
-    
+    demo_timerfd_create_test_multi_thread();
     
     return 0;
 }

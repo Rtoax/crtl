@@ -17,6 +17,7 @@
 #include "crtl/easy/byteswap.h"
 
 
+#include "crtl_mute_dbg_log.h"
 
 
 /* rb tree of all timers you create */
@@ -61,6 +62,7 @@ static void __sche_sighandler(int signum)
     crtl_thread_exit(NULL);
     __crtl_dbg("Terminate Timer Schedule thread.\n");
 }
+_hidden int __crtl_timerfds_destroy();
 
 /* update rbtree of timer */
 static void* __rt_timerfd_polling_thread(void *arg)
@@ -74,7 +76,7 @@ static void* __rt_timerfd_polling_thread(void *arg)
     int _unused nready;
     uint64_t exp;
     
-//    __crtl_dbg("polling timerfds.\n");
+    __crtl_dbg("polling timerfds __rt_timerfd_update_and_execute = %ld.\n", __rt_timerfd_update_and_execute);
     
     /* rbtree timer loop */
     while(1)
@@ -128,6 +130,13 @@ static void* __rt_timerfd_polling_thread(void *arg)
             }
             
         }
+        __crtl_dbg("Ntimer %d.\n", crtl_rbtree_nnode(__rt_rbtree_static_timerfds));
+            
+        if(crtl_rbtree_is_empty(__rt_rbtree_static_timerfds) == CRTL_SUCCESS) {
+            __crtl_dbg("Ready to Terminate Timer Schedule thread.\n");
+            /* 退出线程 */
+            __crtl_timerfds_destroy();
+        }
         __RBTREE_TIMERFD_UNLOCK;
     }
 
@@ -155,7 +164,7 @@ static struct crtl_timer_struct * _unused __find_timer_by_timerfd(int timerfd)
 _api int crtl_timerfd_create(int is_loop, __crtl_timer_cb_fn_t callback, void *arg, int sec, int nsec)
 {
     //crtl_print_err("timer->%s\n", name);
-    
+    __RBTREE_TIMERFD_LOCK;
     if(!__rt_rbtree_static_timerfds)
     {
         __rt_rbtree_static_timerfds = crtl_rbtree_init(&__rt_rbtree_cmp_fn_timerfd, NULL);
@@ -169,6 +178,9 @@ _api int crtl_timerfd_create(int is_loop, __crtl_timer_cb_fn_t callback, void *a
         FD_ZERO(&__rt_timerfds_fdset);
         
     }
+    __RBTREE_TIMERFD_UNLOCK;
+
+    __RBTREE_TIMERFD_LOCK;
     if(CAS(&__crtl_timerfds_list_poll_task_init_flag, 0, 1)) {
         __crtl_dbg("__crtl_timerfds_list_poll_task_init_flag = %ld.\n", __crtl_timerfds_list_poll_task_init_flag);
         
@@ -179,11 +191,12 @@ _api int crtl_timerfd_create(int is_loop, __crtl_timer_cb_fn_t callback, void *a
         if(ret != CRTL_SUCCESS) {/* 初始化失败 */
             crtl_print_err("crtl_thread_create error.\n");
             crtl_assert_fp(stderr, 0);
+            __RBTREE_TIMERFD_UNLOCK;
             return -1;
         }
     }
     //crtl_print_err("timer->%s\n", name);
-
+    __RBTREE_TIMERFD_UNLOCK;
     
     
     if(!callback)
@@ -395,7 +408,13 @@ _api int crtl_timerfd_delete(int timerfd)
     FD_CLR(__timer->timer_fd, &__rt_timerfds_fdset);
     
     crtl_rbtree_delete(__rt_rbtree_static_timerfds, __timer);
-
+    
+    __crtl_dbg("Ntimer %d.\n", crtl_rbtree_nnode(__rt_rbtree_static_timerfds));
+    if(crtl_rbtree_is_empty(__rt_rbtree_static_timerfds) == CRTL_SUCCESS) {
+        __crtl_dbg("Ready to Terminate Timer Schedule thread.\n");
+        /* 退出线程 */
+        __crtl_timerfds_destroy();
+    }
     __RBTREE_TIMERFD_UNLOCK;
 
     close(__timer->timer_fd);
@@ -407,10 +426,8 @@ _api int crtl_timerfd_delete(int timerfd)
     
 }
 
-/* destroy all timers */
-_api int crtl_timerfds_destroy()
+_hidden int __crtl_timerfds_destroy() 
 {
-    __RBTREE_TIMERFD_LOCK;
     /* 退出线程 */
     __crtl_dbg("Terminate Timer Schedule thread.\n");
     crtl_thread_kill(__rt_timerfd_update_and_execute, SIGINT);
@@ -418,6 +435,16 @@ _api int crtl_timerfds_destroy()
     
     int ret = crtl_rbtree_destroy(__rt_rbtree_static_timerfds);
     __rt_rbtree_static_timerfds = NULL;
+    FD_ZERO(&__rt_timerfds_fdset);
+    return ret;
+}
+
+/* destroy all timers */
+_api int crtl_timerfds_destroy()
+{
+    __RBTREE_TIMERFD_LOCK;
+    
+    int ret = __crtl_timerfds_destroy();
     __RBTREE_TIMERFD_UNLOCK;
     
     return ret;
