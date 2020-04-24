@@ -6,5 +6,5 @@ fi
 
 ./install_crtl.sh
 
-gcc $* -lcrtl -lcmocka
+gcc $* -lcrtl -lcmocka `pkg-config --libs libcrtl`
 

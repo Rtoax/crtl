@@ -71,3 +71,5 @@ install(FILES ${crtl_hdrs_linux} DESTINATION /usr/local/include/crtl/linux)
 install(FILES ${crtl_hdrs_tcpip} DESTINATION /usr/local/include/crtl/tcp-ip)
 install(FILES ${crtl_hdrs_tcpip_bits} DESTINATION /usr/local/include/crtl/tcp-ip/bits)
 
+# For pkg-config --libs --cflags libcrtl
+install(FILES ${PROJECT_BINARY_DIR}/../libcrtl.pc DESTINATION /usr/lib/pkgconfig)

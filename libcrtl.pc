@@ -1,0 +1,13 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libcrtl
+Version: 1.0.0
+Description: c Run-Time Library
+URL: http://libcrtl.org/
+
+Libs: -L${libdir} -lrt -lpthread -lm -ldl -lcrtl
+Cflags: -I${includedir}
+
