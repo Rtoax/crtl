@@ -2,6 +2,125 @@
 #ifndef __CRTL_BITS_QUEUE_H
 #define __CRTL_BITS_QUEUE_H 1
 
+
+
+
+
+
+/* copyright (c) 2013, ben noordhuis <info@bnoordhuis.nl>
+ *
+ * permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * the software is provided "as is" and the author disclaims all warranties
+ * with regard to this software including all implied warranties of
+ * merchantability and fitness. in no event shall the author be liable for
+ * any special, direct, indirect, or consequential damages or any damages
+ * whatsoever resulting from loss of use, data or profits, whether in an
+ * action of contract, negligence or other tortious action, arising out of
+ * or in connection with the use or performance of this software.
+ */
+
+#ifndef crtl_queue_h_
+#define crtl_queue_h_
+
+#include <stddef.h>
+
+typedef void *crtl_queue_t[2];
+
+/* private macros. */
+#define crtl_queue_next(q)       (*(crtl_queue_t **) &((*(q))[0]))
+#define crtl_queue_prev(q)       (*(crtl_queue_t **) &((*(q))[1]))
+#define crtl_queue_prev_next(q)  (crtl_queue_next(crtl_queue_prev(q)))
+#define crtl_queue_next_prev(q)  (crtl_queue_prev(crtl_queue_next(q)))
+
+/* public macros. */
+#define crtl_queue_data(ptr, type, field)                                          \
+  ((type *) ((char *) (ptr) - offsetof(type, field)))
+
+/* important note: mutating the list while crtl_queue_foreach is
+ * iterating over its elements results in undefined behavior.
+ */
+#define crtl_queue_foreach(q, h)                                                   \
+  for ((q) = crtl_queue_next(h); (q) != (h); (q) = crtl_queue_next(q))
+
+#define crtl_queue_empty(q)                                                        \
+  ((const crtl_queue_t *) (q) == (const crtl_queue_t *) crtl_queue_next(q))
+
+#define crtl_queue_head(q)                                                         \
+  (crtl_queue_next(q))
+
+#define crtl_queue_init(q)                                                         \
+  do {                                                                        \
+    crtl_queue_next(q) = (q);                                                      \
+    crtl_queue_prev(q) = (q);                                                      \
+  }                                                                           \
+  while (0)
+
+#define crtl_queue_add(h, n)                                                       \
+  do {                                                                        \
+    crtl_queue_prev_next(h) = crtl_queue_next(n);                                       \
+    crtl_queue_next_prev(n) = crtl_queue_prev(h);                                       \
+    crtl_queue_prev(h) = crtl_queue_prev(n);                                            \
+    crtl_queue_prev_next(h) = (h);                                                 \
+  }                                                                           \
+  while (0)
+
+#define crtl_queue_split(h, q, n)                                                  \
+  do {                                                                        \
+    crtl_queue_prev(n) = crtl_queue_prev(h);                                            \
+    crtl_queue_prev_next(n) = (n);                                                 \
+    crtl_queue_next(n) = (q);                                                      \
+    crtl_queue_prev(h) = crtl_queue_prev(q);                                            \
+    crtl_queue_prev_next(h) = (h);                                                 \
+    crtl_queue_prev(q) = (n);                                                      \
+  }                                                                           \
+  while (0)
+
+#define crtl_queue_move(h, n)                                                      \
+  do {                                                                        \
+    if (crtl_queue_empty(h))                                                       \
+      crtl_queue_init(n);                                                          \
+    else {                                                                    \
+      crtl_queue_t* q = crtl_queue_head(h);                                               \
+      crtl_queue_split(h, q, n);                                                   \
+    }                                                                         \
+  }                                                                           \
+  while (0)
+
+#define crtl_queue_insert_head(h, q)                                               \
+  do {                                                                        \
+    crtl_queue_next(q) = crtl_queue_next(h);                                            \
+    crtl_queue_prev(q) = (h);                                                      \
+    crtl_queue_next_prev(q) = (q);                                                 \
+    crtl_queue_next(h) = (q);                                                      \
+  }                                                                           \
+  while (0)
+
+#define crtl_queue_insert_tail(h, q)                                               \
+  do {                                                                        \
+    crtl_queue_next(q) = (h);                                                      \
+    crtl_queue_prev(q) = crtl_queue_prev(h);                                            \
+    crtl_queue_prev_next(q) = (q);                                                 \
+    crtl_queue_prev(h) = (q);                                                      \
+  }                                                                           \
+  while (0)
+
+#define crtl_queue_remove(q)                                                       \
+  do {                                                                        \
+    crtl_queue_prev_next(q) = crtl_queue_next(q);                                       \
+    crtl_queue_next_prev(q) = crtl_queue_prev(q);                                       \
+  }                                                                           \
+  while (0)
+
+#endif /* crtl_queue_h_ */
+
+
+
+
+
+
 /*-
  * Copyright (c) 1991, 1993
  *      The Regents of the University of California.  All rights reserved.

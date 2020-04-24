@@ -66,7 +66,7 @@ static inline int _unused crtl_atomic_set(crtl_atomic_t *addr, int newval)
 	return newval;
 }
 
-static inline int crtl_atomic_cmpxchg_relaxed(crtl_atomic_t *ptr, int old, int new)
+static inline int _unused crtl_atomic_cmpxchg_relaxed(crtl_atomic_t *ptr, int old, int new)
 {
 	int oldval;
 	unsigned long res;
@@ -87,7 +87,7 @@ static inline int crtl_atomic_cmpxchg_relaxed(crtl_atomic_t *ptr, int old, int n
 	return oldval;
 }
 
-static inline bool crtl_atomic_try_cmpxchg_relaxed(crtl_atomic_t *v, int *old, int new)
+static inline bool _unused crtl_atomic_try_cmpxchg_relaxed(crtl_atomic_t *v, int *old, int new)
 {
 	int r, o = *old;
 	r = crtl_atomic_cmpxchg_relaxed(v, o, new);
@@ -95,6 +95,30 @@ static inline bool crtl_atomic_try_cmpxchg_relaxed(crtl_atomic_t *v, int *old, i
 		*old = r;
 	return likely(r == o);
 }
+
+static int _unused crtl_atomic_cmpxchgi(int* ptr, int oldval, int newval) 
+{
+#if defined(__i386__) || defined(__x86_64__)
+  int out;
+  __asm__ __volatile__ ("lock; cmpxchg %2, %1;"
+                        : "=a" (out), "+m" (*(volatile int*) ptr)
+                        : "r" (newval), "0" (oldval)
+                        : "memory");
+  return out;
+#elif defined(__MVS__)
+  unsigned int op4;
+  if (__plo_CSST(ptr, (unsigned int*) &oldval, newval,
+                (unsigned int*) ptr, *ptr, &op4))
+    return oldval;
+  else
+    return op4;
+#elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+  return atomic_cas_uint((uint_t *)ptr, (uint_t)oldval, (uint_t)newval);
+#else
+  return __sync_val_compare_and_swap(ptr, oldval, newval);
+#endif
+}
+
 
 #endif /*<__CRTL_BITS_ATOMIC_H>*/
 

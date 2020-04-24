@@ -117,6 +117,14 @@
 #define CALL_ONCE(x) static volatile int __call_once##x = 0; if(__call_once##x++==0)
 #endif
 
+#ifndef ACCESS_ONCE
+#define ACCESS_ONCE(type, var) (*(volatile type*) &(var))
+#endif
+
+#ifndef ROUND_UP
+#define ROUND_UP(a, b) ((a) % (b) ? ((a) + (b)) - ((a) % (b)) : (a))
+#endif
+
 /*
  * Check at compile time that something is of a particular type.
  * Always evaluates to 1 so you may use it easily in comparisons.

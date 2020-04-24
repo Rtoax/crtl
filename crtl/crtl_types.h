@@ -11,6 +11,7 @@
 
 #include "crtl/bits/crtl_types_size.h"
 #include "crtl/bits/crtl_types_fn.h"
+#include "crtl/bits/crtl_types_buffer.h"
 
 #include "crtl/bits/crtl_types_c_builtin.h"
 
