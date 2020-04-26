@@ -2,7 +2,8 @@
 #define __CRTL_SORT_H 1
 
 
-#include "crtl/crtl_types.h"
+
+#include "crtl/bits/crtl_types_basic.h"
 
 
 void crtl_sort_cocktailshaker(void *base, size_t num, size_t size, int (*cmp)(const void *, const void *));

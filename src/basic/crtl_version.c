@@ -1,6 +1,28 @@
 #include "crtl/bits/crtl_version.h"
 
 
+ /*
+ * Versions with the same major number are ABI stable. API is allowed to
+ * evolve between minor releases, but only in a backwards compatible way.
+ * Make sure you update the -soname directives in configure.ac
+ * whenever you bump UV_VERSION_MAJOR or CRTL_VERSION_MINOR (but
+ * not CRTL_VERSION_PATCH.)
+ */
+
+#define CRTL_VERSION_MAJOR 1
+#define CRTL_VERSION_MINOR 0
+#define CRTL_VERSION_PATCH 0
+
+#define CRTL_VERSION_IS_RELEASE 1
+
+#define CRTL_VERSION_SUFFIX ""
+
+#define CRTL_VERSION_HEX  ((CRTL_VERSION_MAJOR << 16) | \
+                         (CRTL_VERSION_MINOR <<  8) | \
+                         (CRTL_VERSION_PATCH))
+
+
+
 #define CRTL_STRINGIFY(v) CRTL_STRINGIFY_HELPER(v)
 #define CRTL_STRINGIFY_HELPER(v) #v
 

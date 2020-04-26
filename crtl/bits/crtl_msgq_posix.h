@@ -13,7 +13,9 @@
 
 #include "crtl/crtl_file.h"
 
-#include "crtl/crtl_types.h"
+#include "crtl/bits/crtl_types_basic.h"
+#include "crtl/bits/crtl_types_string.h"
+
 
 
 typedef mqd_t crtl_mqd_t;

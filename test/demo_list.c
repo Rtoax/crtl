@@ -576,8 +576,46 @@ void demo_list_9_list_sort()
 }
 
 
+struct llist_test{
+    int a;
+    struct llist_node llist;
+};
+struct llist_test  llist_nodes[] = {
+            {1}, {3}, {4}, {2}, {6},
+            };
+#define NLLIST_NODE (sizeof(llist_nodes)/sizeof(llist_nodes[0]))
+
+
+static void demo_llist_1_add()
+{
+    struct llist_head head;
+    init_llist_head(&head);
+
+    int i;
+    for(i=0;i<NLLIST_NODE;i++)
+        llist_add(&llist_nodes[i].llist, &head);
+
+    struct llist_node *pos, *next, *node;
+    struct llist_test *entry;
+
+    node = head.first;
+    llist_for_each_entry(entry, node, llist) {
+        printf("%d\n", entry->a);
+    }
+
+    node = llist_reverse_order(head.first);
+    llist_for_each_entry(entry, node, llist) {
+        printf("%d\n", entry->a);
+    }
+
+}
+
+
+
+
 int main()
 {
+#if 0
     demo_list_1_add_del_swap_for_each();
     demo_list_2_move_and_move_tail();
     demo_list_3_bulk_move();
@@ -588,6 +626,11 @@ int main()
     demo_list_8_for_each_and_entry();
     demo_list_9_list_sort();
 
+#else
+    demo_llist_1_add();
 
+    
+#endif
+    
     return 0;
 }

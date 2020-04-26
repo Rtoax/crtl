@@ -7,7 +7,7 @@
 
 #include "crtl/bits/crtl_getpar.h"
 #include "crtl/easy/attribute.h"
-#include "crtl/crtl_types.h"
+#include "crtl/bits/crtl_types_basic.h"
 #include "crtl/crtl_file.h"
 #include "crtl/crtl_log.h"
 #include "crtl/crtl_alloc.h"

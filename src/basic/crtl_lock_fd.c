@@ -1,5 +1,5 @@
 #include "crtl_lock.h"
-#include "crtl_types.h"
+#include "crtl/bits/crtl_types_basic.h"
 
 
 void crtl_fd_lock(int fd)

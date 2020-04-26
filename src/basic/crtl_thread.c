@@ -1,7 +1,8 @@
 #include "crtl/bits/crtl_thread.h"
 #include "crtl/crtl_log.h"
 #include "crtl/crtl_assert.h"
-#include "crtl/crtl_types.h"
+
+#include "crtl/bits/crtl_types_basic.h"
 
 
 #include "crtl/bits/crtl_types_bits_set.h"
@@ -486,6 +487,44 @@ int crtl_threadattr_setscope(crtl_threadattr_t *__attr, int __scope)
         return CRTL_ERROR;
     }
     return CRTL_SUCCESS;
+}
+
+
+
+/* On MacOS, threads other than the main thread are created with a reduced
+ * stack size by default.  Adjust to RLIMIT_STACK aligned to the page size.
+ *
+ * On Linux, threads created by musl have a much smaller stack than threads
+ * created by glibc (80 vs. 2048 or 4096 kB.)  Follow glibc for consistency.
+ */
+size_t crtl_thread_getstack_size(void) 
+{
+    struct rlimit lim;
+    size_t stacksize = 0;
+    
+    if (getrlimit(RLIMIT_STACK, &lim))
+        abort();
+
+    if (lim.rlim_cur != RLIM_INFINITY) {
+        /* pthread_attr_setstacksize() expects page-aligned values. */
+        lim.rlim_cur -= lim.rlim_cur % (rlim_t) getpagesize();
+
+        /* Musl's PTHREAD_STACK_MIN is 2 KB on all architectures, which is
+        * too small to safely receive signals on.
+        *
+        * Musl's PTHREAD_STACK_MIN + MINSIGSTKSZ == 8192 on arm64 (which has
+        * the largest MINSIGSTKSZ of the architectures that musl supports) so
+        * let's use that as a lower bound.
+        *
+        * We use a hardcoded value because PTHREAD_STACK_MIN + MINSIGSTKSZ
+        * is between 28 and 133 KB when compiling against glibc, depending
+        * on the architecture.
+        */
+        if (lim.rlim_cur >= 8192)
+            if (lim.rlim_cur >= PTHREAD_STACK_MIN)
+                stacksize = lim.rlim_cur;
+    }
+    return stacksize;
 }
 
 

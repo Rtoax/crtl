@@ -1,1 +1,4 @@
-libcurl.so libcstl.so libuv.so libssl.so
+libcstl.so
+libcurl.so
+libssl.so
+libuv.so

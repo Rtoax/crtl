@@ -21,8 +21,8 @@ function config_libchk()
 		return 1
 	fi
 	
-	libso=$1
-	libname=`echo ${libso%.*} | tr '[a-z]' '[A-Z]'` #libssl.so -> LIBSSL
+	libso=`echo ${1%.*}| xargs| tr '\t' ' ' | tr '\n' ' '| sed 's/[[:space:]]//g'`
+	libname=`echo $libso| sed "s/[^[:alnum:]]/_/g" | tr '[a-z]' '[A-Z]'` #libssl.so -> LIBSSL
 	libmacro="HAVE_$libname"
 	echo -e "/* The $libname library */" >> $CONFIG_FILE
 	ldconfig -p | grep $libso 2>&1 1>/dev/null
@@ -37,8 +37,8 @@ function config_libchk()
 
 function config_hdrchk()
 {
-	hdr=$1
-	hdrmacro="HAVE_`echo $hdr | sed "s/[^[:alnum:]]/_/g" | sed -e 's/^[ \t]*//g'| sed 's/[[:space:]]//g' | tr '[a-z]' '[A-Z]'`" #sys/socket.h -> HAVE_SYS_SOCKET_H
+	hdr=`echo $1| xargs| tr '\t' ' ' | tr '\n' ' ' | sed 's/[[:space:]]//g'`
+	hdrmacro="HAVE_`echo $hdr | sed "s/[^[:alnum:]]/_/g"  | tr '[a-z]' '[A-Z]'`" #sys/socket.h -> HAVE_SYS_SOCKET_H
 
 	#现在 /usr/include 中查找， 再去 /usr/local/include 查找
 	echo -e "/* The $hdr header */" >> $CONFIG_FILE
@@ -61,7 +61,7 @@ function config_libchkall()
 		echo "Not exist $CONFIG_LIB_CHK_FILE"
 		return 1
 	fi
-	libs=`cat $CONFIG_LIB_CHK_FILE`
+	libs=`cat $CONFIG_LIB_CHK_FILE| xargs | tr '\t' ' ' | tr '\n' ' '`
 	for lib in $libs; do
 		config_libchk $lib
 	done
@@ -74,22 +74,48 @@ function config_hdrchkall()
 		echo "Not exist $CONFIG_HDR_CHK_FILE"
 		return 1
 	fi
-	hdrs=`cat $CONFIG_HDR_CHK_FILE`
+	hdrs=`cat $CONFIG_HDR_CHK_FILE| xargs | tr '\t' ' ' | tr '\n' ' '`
 	for hdr in $hdrs; do
 		config_hdrchk $hdr
 	done
 }
 
-#删除已存在的 config.h 文件
-rm -f $CONFIG_FILE
 
-#生成 config.h 文件描述
-config_header
+function config_help()
+{
+	echo  "Usage:"
+	echo  "  -f config :  生成config.h 文件"
+	echo  "  -h header :  对 $CONFIG_HDR_CHK_FILE 进行排序"
+	echo  "  -l library:  对 $CONFIG_LIB_CHK_FILE 进行排序"
+}
 
-#查询 config.h 中的依赖头文件
-config_hdrchkall
+if [ $# == 0 ]; then
+	echo  "$0 "
+	config_help
+	exit 1
+fi
 
-#查询 config.h 中的依赖库
-config_libchkall
+case $1 in
+-f|config)
+	#删除已存在的 config.h 文件
+	rm -f $CONFIG_FILE
+	#生成 config.h 文件描述
+	config_header
+	#查询 config.h 中的依赖头文件
+	config_hdrchkall
+	#查询 config.h 中的依赖库
+	config_libchkall
+;;
+-h|header)
+	cat $CONFIG_HDR_CHK_FILE | xargs | tr ' ' '\n' | sort | uniq > $CONFIG_HDR_CHK_FILE
+;;
+-l|library)
+	cat $CONFIG_LIB_CHK_FILE | xargs | tr ' ' '\n' | sort | uniq > $CONFIG_LIB_CHK_FILE
+;;
+*)
+	config_help
+;;
+esac
+
 
 

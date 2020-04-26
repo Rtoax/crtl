@@ -4,7 +4,8 @@
 
 #include "crtl/network/crtl_network_socket.h"
 #include "crtl/crtl_log.h"
-#include "crtl/crtl_types.h"
+
+#include "crtl/bits/crtl_types_basic.h"
 #include "crtl/easy/attribute.h"
 
 extern int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);

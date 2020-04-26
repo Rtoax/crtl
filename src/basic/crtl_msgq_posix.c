@@ -1,7 +1,8 @@
 #include "crtl/bits/crtl_msgq_posix.h"
 #include "crtl/crtl_log.h"
 #include "crtl/crtl_assert.h"
-#include "crtl/crtl_types.h"
+
+#include "crtl/bits/crtl_types_basic.h"
 #include "crtl/crtl_time.h"
 #include "crtl/easy/macro.h"
 

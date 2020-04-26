@@ -16,7 +16,7 @@
 
 #include "crtl/tcp-ip/crtl_ether.h"
 #include "crtl/crtl_log.h"
-#include "crtl/crtl_types.h"
+#include "crtl/bits/crtl_types_basic.h"
 #include "crtl/linux/crtl_linux_user.h"
 
 

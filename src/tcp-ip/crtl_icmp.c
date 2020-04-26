@@ -29,7 +29,7 @@
 #include <netinet/ip_icmp.h> //__USE_BSD
 
 
-#include "crtl/crtl_types.h"
+#include "crtl/bits/crtl_types_basic.h"
 
 #include "crtl/crtl_log.h"
 #include "crtl/easy/attribute.h"

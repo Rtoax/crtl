@@ -13,7 +13,7 @@
 #include "crtl/bits/crtl_queue.h"
 #include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"
-#include "crtl/crtl_types.h"
+#include "crtl/bits/crtl_types_basic.h"
 
 
 

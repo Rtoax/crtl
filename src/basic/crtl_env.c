@@ -1,7 +1,7 @@
 #include <string.h>
 #include "crtl/bits/crtl_env.h"
 #include "crtl/easy/attribute.h"
-#include "crtl/crtl_types.h"
+#include "crtl/bits/crtl_types_basic.h"
 #include "crtl/crtl_assert.h"
 
 

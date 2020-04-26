@@ -10,7 +10,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-#include "crtl/crtl_types.h"
+#include "crtl/bits/crtl_types_basic.h"
 
 //当前目录
 #define CRTL_CURRENT_DIR   "."

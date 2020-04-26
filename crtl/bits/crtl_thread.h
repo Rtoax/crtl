@@ -7,6 +7,9 @@
 #include <pthread.h>
 #include <signal.h>
 #include <sched.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <limits.h>
 
 #include "crtl/crtl_lock.h"
 
@@ -82,7 +85,7 @@ int crtl_threadattr_setscope_system(crtl_threadattr_t *__attr);
 int crtl_threadattr_setscope_process(crtl_threadattr_t *__attr);
 int crtl_threadattr_setscope(crtl_threadattr_t *__attr, int __scope);
 
-
+size_t crtl_thread_getstack_size(void);
 int crtl_threadattr_getstack(const crtl_threadattr_t *__attr, void ** __stackaddr, size_t * __stacksize);
 int crtl_threadattr_setstack(crtl_threadattr_t *__attr, void *__stackaddr, size_t __stacksize);
 

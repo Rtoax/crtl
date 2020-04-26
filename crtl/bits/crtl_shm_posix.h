@@ -8,7 +8,8 @@
 #include <unistd.h>          /* For truncate */
 
 #include "crtl/crtl_file.h"
-#include "crtl/crtl_types.h"
+
+#include "crtl/bits/crtl_types_basic.h"
 
 #include "crtl/easy/attribute.h"
 

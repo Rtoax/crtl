@@ -1,7 +1,7 @@
 
 #include "crtl/crtl_log.h"
 #include "crtl/crtl_assert.h"
-#include "crtl/crtl_types.h"
+#include "crtl/bits/crtl_types_basic.h"
 #include "crtl/crtl_file.h"
 #include "crtl/crtl_alloc.h"
 #include "crtl/crtl_tree.h"
