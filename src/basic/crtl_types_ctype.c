@@ -73,7 +73,7 @@ int crtl_hex2bin(uint8_t *dst, const char *src, int count)
  * @src: binary data
  * @count: binary data length
  */
-char *bin2hex(char *dst, const void *src, int count)
+char *crtl_bin2hex(char *dst, const void *src, int count)
 {
 	const unsigned char *_src = src;
 

@@ -30,6 +30,7 @@ struct crtl_wait_queue_head {
 	crtl_lock_spin_t		lock;
 	struct list_head	head;
 };
+
 typedef struct crtl_wait_queue_head crtl_wait_queue_head_t;
 
 

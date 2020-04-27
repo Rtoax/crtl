@@ -252,7 +252,7 @@ _api int crtl_memshow(const void*in, int len)
     char _unused const *c = in;
     int i;
     for(i=0;i<len;i++, c++)
-        printf("%02x ", *c);
+        printf("%02x ", (unsigned char)*c);
     printf("\n");
     return len;
 }

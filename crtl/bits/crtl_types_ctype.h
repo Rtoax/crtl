@@ -59,6 +59,9 @@ static const char __crtl_string_cletters[] = "abcdefghijklmnopqrstuvwxyzABCDEFGH
 static const char __crtl_hex_asc[] = "0123456789abcdef";
 static const char __crtl_hex_asc_upper[] = "0123456789ABCDEF";
 
+int crtl_hex_to_bin(char ch);
+int crtl_hex2bin(uint8_t *dst, const char *src, int count);
+char *crtl_bin2hex(char *dst, const void *src, int count);
 
 
 

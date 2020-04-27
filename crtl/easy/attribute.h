@@ -22,6 +22,7 @@
 #define _aligned_largest    __attribute__((__aligned__))
 #define _naked			    __attribute__((__naked__))
 #define _weak               __attribute__((weak))//变量加上weak时，是弱符号。函数加上weak时，是弱引用，可以不实现。
+#define _pure		        __attribute__((pure))
 
 #else
 
@@ -42,6 +43,7 @@
 #define _aligned_largest
 #define _naked	
 #define _weak
+#define _pure
 
 #endif
 

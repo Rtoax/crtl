@@ -48,4 +48,3 @@ unsigned long __sw_hweight64(uint64_t w)
     return w;
 }
 
-

@@ -2,6 +2,8 @@
 #define __CRTL_EASY_BYTESWAP_H 1
 
 #include <stdint.h>
+#include <endian.h>
+
 
 
 #ifdef __x86_64__
@@ -119,6 +121,38 @@ static inline __attribute__((const)) uint64_t __linux_arch_swab64(uint64_t val)
 #define __linux_arch_swab64 __linux_arch_swab64
 
 #endif /* _LINUX_ASM_X86_SWAB_H */
+
+
+#if BYTE_ORDER == LITTLE_ENDIAN
+#define le16_to_cpu(val) (val)
+#define le32_to_cpu(val) (val)
+#define le64_to_cpu(val) (val)
+#define be16_to_cpu(val) _swapbyte16(val)
+#define be32_to_cpu(val) _swapbyte32(val)
+#define be64_to_cpu(val) _swapbyte64(val)
+
+#define cpu_to_le16(val) (val)
+#define cpu_to_le32(val) (val)
+#define cpu_to_le64(val) (val)
+#define cpu_to_be16(val) _swapbyte16(val)
+#define cpu_to_be32(val) _swapbyte32(val)
+#define cpu_to_be64(val) _swapbyte64(val)
+#endif
+#if BYTE_ORDER == BIG_ENDIAN
+#define le16_to_cpu(val) _swapbyte16(val)
+#define le32_to_cpu(val) _swapbyte32(val)
+#define le64_to_cpu(val) _swapbyte64(val)
+#define be16_to_cpu(val) (val)
+#define be32_to_cpu(val) (val)
+#define be64_to_cpu(val) (val)
+
+#define cpu_to_le16(val) _swapbyte16(val)
+#define cpu_to_le32(val) _swapbyte32(val)
+#define cpu_to_le64(val) _swapbyte64(val)
+#define cpu_to_be16(val) (val)
+#define cpu_to_be32(val) (val)
+#define cpu_to_be64(val) (val)
+#endif
 
 
 

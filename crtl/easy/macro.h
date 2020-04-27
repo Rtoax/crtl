@@ -224,6 +224,94 @@ static inline unsigned long __xchg(unsigned long x, volatile void * ptr, int siz
 #endif
 
 /**
+ * __ffs - find first bit in word.
+ * @word: The word to search
+ *
+ * Undefined if no bit exists, so code should check against 0 first.
+ */
+static inline unsigned long __attribute__((unused)) __ffs(unsigned long word)
+{
+	return __builtin_ctzl(word);
+}
+
+/*
+ * ffz - find first zero in word.
+ * @word: The word to search
+ *
+ * Undefined if no zero exists, so code should check against ~0UL first.
+ */
+#define ffz(x)  __ffs(~(x))
+
+/**
+ * __ffs64 - find first set bit in a 64 bit word
+ * @word: The 64 bit word
+ *
+ * On 64 bit arches this is a synomyn for __ffs
+ * The result is not defined if no bits are set, so check that @word
+ * is non-zero before calling this.
+ */
+static inline unsigned long __ffs64(uint64_t word)
+{
+//#if CRTL_BITS_PER_LONG == 32
+//	if (((uint32_t)word) == 0UL)
+//		return __ffs((uint32_t)(word >> 32)) + 32;
+//#elif CRTL_BITS_PER_LONG != 64
+//#error CRTL_BITS_PER_LONG not 32 or 64
+//#endif
+	return __ffs((unsigned long)word);
+}
+
+/**
+ * fls - find last (most-significant) bit set
+ * @x: the word to search
+ *
+ * This is defined the same way as ffs.
+ * Note fls(0) = 0, fls(1) = 1, fls(0x80000000) = 32.
+ */
+static inline int fls(unsigned int x)
+{
+	return x ? sizeof(x) * 8 - __builtin_clz(x) : 0;
+}
+
+/**
+ * __fls - find last (most-significant) set bit in a long word
+ * @word: the word to search
+ *
+ * Undefined if no set bit exists, so code should check against 0 first.
+ */
+static inline unsigned long __fls(unsigned long word)
+{
+	return (sizeof(word) * 8) - 1 - __builtin_clzl(word);
+}
+
+
+/**
+ * fls64 - find last set bit in a 64-bit word
+ * @x: the word to search
+ *
+ * This is defined in a similar way as the libc and compiler builtin
+ * ffsll, but returns the position of the most significant set bit.
+ *
+ * fls64(value) returns 0 if value is 0 or the position of the last
+ * set bit if value is nonzero. The last (most significant) bit is
+ * at position 64.
+ */
+
+static inline int fls64(uint64_t x)
+{
+	if (x == 0)
+		return 0;
+	return __fls(x) + 1;
+}
+static inline unsigned fls_long(unsigned long l)
+{
+	if (sizeof(l) == 4)
+		return fls(l);
+	return fls64(l);
+}
+
+
+/**
  *  x=8: 0000 0000 0000 1000; number of "1" 
  *  8 -> 1
  */
