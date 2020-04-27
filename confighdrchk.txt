@@ -29,6 +29,7 @@ regex.h
 semaphore.h
 signal.h
 stdarg.h
+stdatomic.h
 stdbool.h
 stddef.h
 stdint.h

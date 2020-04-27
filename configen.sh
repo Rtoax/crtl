@@ -12,6 +12,18 @@ CONFIG_USR_LOCAL_INCLUDE=/usr/local/include
 function config_header()
 {
 	echo -e "/* This is $CONFIG_LIB_NAME config.h file, `date` */\n" >> $CONFIG_FILE
+
+	echo -e "\n/* LibCRTL Name */"	>> $CONFIG_FILE
+	echo -e "#define LIBCRTL_NAME \"Libcrtl\""	>> $CONFIG_FILE
+	
+	echo -e "\n/* LibCRTL Author */"	>> $CONFIG_FILE
+	echo -e "#define LIBCRTL_AUTHOR \"Koma Rong\""	>> $CONFIG_FILE
+	
+	echo -e "\n/* LibCRTL Version Info */"	>> $CONFIG_FILE
+	echo -e "#define LIBCRTL_VERSION_MAJOR 1"	>> $CONFIG_FILE
+	echo -e "#define LIBCRTL_VERSION_MINOR 0" 	>> $CONFIG_FILE
+	echo -e "#define LIBCRTL_VERSION_PATCH 0" 	>> $CONFIG_FILE
+	echo -e "\n"	>> $CONFIG_FILE
 }
 
 

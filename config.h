@@ -1,4 +1,17 @@
-/* This is LibCRTL config.h file, 2020年 04月 24日 星期五 18:46:38 CST */
+/* This is LibCRTL config.h file, 2020年 04月 26日 星期日 16:07:58 CST */
+
+
+/* LibCRTL Name */
+#define LIBCRTL_NAME "Libcrtl"
+
+/* LibCRTL Author */
+#define LIBCRTL_AUTHOR "Koma Rong"
+
+/* LibCRTL Version Info */
+#define LIBCRTL_VERSION_MAJOR 1
+#define LIBCRTL_VERSION_MINOR 0
+#define LIBCRTL_VERSION_PATCH 0
+
 
 /* The arpa/inet.h header */
 #define HAVE_ARPA_INET_H 1
@@ -92,6 +105,9 @@
 
 /* The stdarg.h header */
 #define HAVE_STDARG_H 0
+
+/* The stdatomic.h header */
+#define HAVE_STDATOMIC_H 0
 
 /* The stdbool.h header */
 #define HAVE_STDBOOL_H 0
