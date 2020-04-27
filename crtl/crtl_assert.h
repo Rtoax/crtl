@@ -17,7 +17,8 @@
 #define crtl_assert_fp(fp, exp) __crtl_assert(fp, !!(exp), 1, __FILE__, __func__, __LINE__)
 
 /* backtrace */
-#define crtl_assert_backtrace(fp) __crtl_assert_backtrace(fp)
+#define crtl_backtrace() __crtl_assert_backtrace(stderr)
+#define crtl_backtrace_fp(fp) __crtl_assert_backtrace(fp)
 
 
 /* crypto API */

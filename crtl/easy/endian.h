@@ -8,9 +8,6 @@
 
 #include "crtl/easy/attribute.h"
 
-#if PLATFORM_ENV_IS_LITTLE_ENDIAN && PLATFORM_ENV_IS_BIG_ENDIAN
-#error "Can't define 1 PLATFORM_ENV_IS_LITTLE_ENDIAN and PLATFORM_ENV_IS_BIG_ENDIAN as the same time."
-#endif
 
 #define IS_BIG_ENDIAN       __IS_BIG_ENDIAN
 #define IS_LITTLE_ENDIAN    __IS_LITTLE_ENDIAN

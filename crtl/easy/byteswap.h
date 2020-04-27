@@ -1,6 +1,8 @@
 #ifndef __CRTL_EASY_BYTESWAP_H
 #define __CRTL_EASY_BYTESWAP_H 1
 
+
+#include <stdio.h>
 #include <stdint.h>
 #include <endian.h>
 
@@ -83,22 +85,14 @@ void crtl_swapdouble(double *tndd8);
 
 
 
-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note *//*   <rongtao 2019.10.11>*/
-#ifndef _LINUX_ASM_X86_SWAB_H
-#define _LINUX_ASM_X86_SWAB_H
-
-#include <stdio.h>
-#include <stdint.h>
-
-
-static inline __attribute__((const)) uint32_t __linux_arch_swab32(uint32_t val)
+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+static inline __attribute__((const)) uint32_t crtl_asm_swab32(uint32_t val)
 {
 	asm("bswapl %0" : "=r" (val) : "0" (val));
 	return val;
 }
-#define __linux_arch_swab32 __linux_arch_swab32
 
-static inline __attribute__((const)) uint64_t __linux_arch_swab64(uint64_t val)
+static inline __attribute__((const)) uint64_t crtl_asm_swab64(uint64_t val)
 {
 #ifdef __i386__
 	union {
@@ -118,9 +112,6 @@ static inline __attribute__((const)) uint64_t __linux_arch_swab64(uint64_t val)
 	return val;
 #endif
 }
-#define __linux_arch_swab64 __linux_arch_swab64
-
-#endif /* _LINUX_ASM_X86_SWAB_H */
 
 
 #if BYTE_ORDER == LITTLE_ENDIAN

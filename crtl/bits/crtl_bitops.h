@@ -73,7 +73,7 @@ static inline int crtl_get_bitmask_order(unsigned int count)
  * @word: value to rotate
  * @shift: bits to roll
  */
-static inline uint64_t rol64(uint64_t word, unsigned int shift)
+static inline uint64_t crtl_rol64(uint64_t word, unsigned int shift)
 {
 	return (word << (shift & 63)) | (word >> ((-shift) & 63));
 }
@@ -83,7 +83,7 @@ static inline uint64_t rol64(uint64_t word, unsigned int shift)
  * @word: value to rotate
  * @shift: bits to roll
  */
-static inline uint64_t ror64(uint64_t word, unsigned int shift)
+static inline uint64_t crtl_ror64(uint64_t word, unsigned int shift)
 {
 	return (word >> (shift & 63)) | (word << ((-shift) & 63));
 }
@@ -93,7 +93,7 @@ static inline uint64_t ror64(uint64_t word, unsigned int shift)
  * @word: value to rotate
  * @shift: bits to roll
  */
-static inline uint32_t rol32(uint32_t word, unsigned int shift)
+static inline uint32_t crtl_rol32(uint32_t word, unsigned int shift)
 {
 	return (word << (shift & 31)) | (word >> ((-shift) & 31));
 }
@@ -103,7 +103,7 @@ static inline uint32_t rol32(uint32_t word, unsigned int shift)
  * @word: value to rotate
  * @shift: bits to roll
  */
-static inline uint32_t ror32(uint32_t word, unsigned int shift)
+static inline uint32_t crtl_ror32(uint32_t word, unsigned int shift)
 {
 	return (word >> (shift & 31)) | (word << ((-shift) & 31));
 }
@@ -113,7 +113,7 @@ static inline uint32_t ror32(uint32_t word, unsigned int shift)
  * @word: value to rotate
  * @shift: bits to roll
  */
-static inline uint16_t rol16(uint16_t word, unsigned int shift)
+static inline uint16_t crtl_rol16(uint16_t word, unsigned int shift)
 {
 	return (word << (shift & 15)) | (word >> ((-shift) & 15));
 }
@@ -123,7 +123,7 @@ static inline uint16_t rol16(uint16_t word, unsigned int shift)
  * @word: value to rotate
  * @shift: bits to roll
  */
-static inline uint16_t ror16(uint16_t word, unsigned int shift)
+static inline uint16_t crtl_ror16(uint16_t word, unsigned int shift)
 {
 	return (word >> (shift & 15)) | (word << ((-shift) & 15));
 }
@@ -133,7 +133,7 @@ static inline uint16_t ror16(uint16_t word, unsigned int shift)
  * @word: value to rotate
  * @shift: bits to roll
  */
-static inline uint8_t rol8(uint8_t word, unsigned int shift)
+static inline uint8_t crtl_rol8(uint8_t word, unsigned int shift)
 {
 	return (word << (shift & 7)) | (word >> ((-shift) & 7));
 }
@@ -143,7 +143,7 @@ static inline uint8_t rol8(uint8_t word, unsigned int shift)
  * @word: value to rotate
  * @shift: bits to roll
  */
-static inline uint8_t ror8(uint8_t word, unsigned int shift)
+static inline uint8_t crtl_ror8(uint8_t word, unsigned int shift)
 {
 	return (word >> (shift & 7)) | (word << ((-shift) & 7));
 }
@@ -155,7 +155,7 @@ static inline uint8_t ror8(uint8_t word, unsigned int shift)
  *
  * This is safe to use for 16- and 8-bit types as well.
  */
-static inline int32_t sign_extend32(uint32_t value, int index)
+static inline int32_t crtl_sign_extend32(uint32_t value, int index)
 {
 	uint8_t shift = 31 - index;
 	return (int32_t)(value << shift) >> shift;
@@ -166,7 +166,7 @@ static inline int32_t sign_extend32(uint32_t value, int index)
  * @value: value to sign extend
  * @index: 0 based bit index (0<=index<64) to sign bit
  */
-static inline int64_t sign_extend64(uint64_t value, int index)
+static inline int64_t crtl_sign_extend64(uint64_t value, int index)
 {
 	uint8_t shift = 63 - index;
 	return (int64_t)(value << shift) >> shift;
@@ -175,7 +175,7 @@ static inline int64_t sign_extend64(uint64_t value, int index)
 
 
 
-static inline int get_count_order(unsigned int count)
+static inline int crtl_get_count_order(unsigned int count)
 {
 	int order;
 
@@ -191,7 +191,7 @@ static inline int get_count_order(unsigned int count)
  *
  * it is same as get_count_order() but with long type parameter
  */
-static inline int get_count_order_long(unsigned long l)
+static inline int crtl_get_count_order_long(unsigned long l)
 {
 	if (l == 0UL)
 		return -1;
@@ -212,7 +212,7 @@ static inline int get_count_order_long(unsigned long l)
  * @addr: the address to start counting from
  * @value: the value to assign
  */
-static inline void assign_bit(long nr, volatile unsigned long *addr, bool value)
+static inline void crtl_assign_bit(long nr, volatile unsigned long *addr, bool value)
 {
 	if (value)
 		crtl_set_bit(nr, addr);
@@ -220,7 +220,7 @@ static inline void assign_bit(long nr, volatile unsigned long *addr, bool value)
 		crtl_clear_bit(nr, addr);
 }
 
-static inline void __assign_bit(long nr, volatile unsigned long *addr, bool value)
+static inline void __crtl_assign_bit(long nr, volatile unsigned long *addr, bool value)
 {
 	if (value)
 		__crtl_set_bit(nr, addr);
@@ -229,8 +229,8 @@ static inline void __assign_bit(long nr, volatile unsigned long *addr, bool valu
 }
 
 
-#ifndef set_mask_bits
-#define set_mask_bits(ptr, mask, bits)	\
+#ifndef crtl_set_mask_bits
+#define crtl_set_mask_bits(ptr, mask, bits)	\
 ({								\
 	const typeof(*(ptr)) mask__ = (mask), bits__ = (bits);	\
 	typeof(*(ptr)) old__, new__;				\
@@ -244,8 +244,8 @@ static inline void __assign_bit(long nr, volatile unsigned long *addr, bool valu
 })
 #endif
 
-#ifndef bit_clear_unless
-#define bit_clear_unless(ptr, clear, test)	\
+#ifndef crtl_bit_clear_unless
+#define crtl_bit_clear_unless(ptr, clear, test)	\
 ({								\
 	const typeof(*(ptr)) clear__ = (clear), test__ = (test);\
 	typeof(*(ptr)) old__, new__;				\

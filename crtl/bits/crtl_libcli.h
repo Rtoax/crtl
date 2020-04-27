@@ -165,7 +165,7 @@ struct crtl_cli_comphelp {
     int num_entries;
 };
 
-enum optarg_flags {
+enum crtl_cli_optarg_flags {
     CLI_CMD_OPTIONAL_FLAG       = 1 << 0,
     CLI_CMD_OPTIONAL_ARGUMENT   = 1 << 1,
     CLI_CMD_ARGUMENT            = 1 << 2,

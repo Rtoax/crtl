@@ -23,7 +23,7 @@ inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *_
         fprintf(fp, __ASSERT_NOTE_FMT"\n", __ASSERT_NOTE_CONTEXT);
         fprintf(fp, "%s"__ASSERT_NOTE_FMT"%s\n",__ASSERT_NOTE_PREFIX, __ASSERT_NOTE_CONTEXT,__ASSERT_NOTE_SUBFIX);
         
-        crtl_assert_backtrace(fp);
+        __crtl_assert_backtrace(fp);
 
         fflush(fp);
     }
