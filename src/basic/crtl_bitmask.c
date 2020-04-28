@@ -6,15 +6,15 @@
 #include <crtl/bits/crtl_bitmask.h>
 
 /* How many bits in an unsigned long */
-#define bitsperlong (8 * sizeof(unsigned long))
+#define __BITS_PER_LONG (8 * sizeof(unsigned long))
 
-/* howmany(a,b) : how many elements of size b needed to hold all of a */
-#define howmany(x, y) (((x)+((y)-1))/(y))
+/* __HOWMANY_LONGS(a,b) : how many elements of size b needed to hold all of a */
+#define __HOWMANY_LONGS(x, y) (((x)+((y)-1))/(y))
 
 /* How many longs in mask of n bits */
-#define longsperbits(n) howmany(n, bitsperlong)
+#define __LONGS_PER_BITS(n) __HOWMANY_LONGS(n, __BITS_PER_LONG)
 
-#define max(a, b) ((a) > (b) ? (a) : (b))
+#define __MAX(a, b) ((a) > (b) ? (a) : (b))
 
 /*
  * Allocate and free `struct bitmask *`
@@ -29,7 +29,7 @@ struct crtl_bitmask *crtl_bitmask_alloc(unsigned int n)
 	if (bmp == 0)
 		return 0;
 	bmp->size = n;
-	bmp->maskp = calloc(longsperbits(n), sizeof(unsigned long));
+	bmp->maskp = calloc(__LONGS_PER_BITS(n), sizeof(unsigned long));
 	if (bmp->maskp == 0) {
 		free(bmp);
 		return 0;
@@ -48,7 +48,7 @@ void crtl_bitmask_free(struct crtl_bitmask *bmp)
 }
 
 /*
- * The routines _getbit() and _setbit() are the only
+ * The routines __crtl_bitmask_getbit() and __crtl_bitmask_setbit() are the only
  * routines that actually understand the layout of bmp->maskp[].
  *
  * On little endian architectures, this could simply be an array of
@@ -59,23 +59,23 @@ void crtl_bitmask_free(struct crtl_bitmask *bmp)
  */
 
 /* Return the value (0 or 1) of bit n in bitmask bmp */
-static unsigned int _getbit(const struct crtl_bitmask *bmp, unsigned int n)
+static unsigned int __crtl_bitmask_getbit(const struct crtl_bitmask *bmp, unsigned int n)
 {
 	if (n < bmp->size)
-		return (bmp->maskp[n/bitsperlong] >> (n % bitsperlong)) & 1;
+		return (bmp->maskp[n/__BITS_PER_LONG] >> (n % __BITS_PER_LONG)) & 1;
 	else
 		return 0;
 }
 
 /* Set bit n in bitmask bmp to value v (0 or 1) */
-static void _setbit(struct crtl_bitmask *bmp, unsigned int n, unsigned int v)
+static void __crtl_bitmask_setbit(struct crtl_bitmask *bmp, unsigned int n, unsigned int v)
 {
 	if (n < bmp->size) {
 		if (v)
-			bmp->maskp[n/bitsperlong] |= 1UL << (n % bitsperlong);
+			bmp->maskp[n/__BITS_PER_LONG] |= 1UL << (n % __BITS_PER_LONG);
 		else
-			bmp->maskp[n/bitsperlong] &=
-				~(1UL << (n % bitsperlong));
+			bmp->maskp[n/__BITS_PER_LONG] &=
+				~(1UL << (n % __BITS_PER_LONG));
 	}
 }
 
@@ -96,13 +96,13 @@ static void _setbit(struct crtl_bitmask *bmp, unsigned int n, unsigned int v)
  * matching the %u were all of the input or if the next character in
  * the input past the numbers was one of the allowed next characters.
  */
-static int scan_was_ok(int sret, char nextc, const char *ok_next_chars)
+static int __crtl_bitmask_scan_was_ok(int sret, char nextc, const char *ok_next_chars)
 {
 	return sret == 1 ||
 		(sret == 2 && strchr(ok_next_chars, nextc) != NULL);
 }
 
-static const char *nexttoken(const char *q,  int sep)
+static const char *__crtl_bitmask_nexttoken(const char *q,  int sep)
 {
 	if (q)
 		q = strchr(q, sep);
@@ -114,7 +114,7 @@ static const char *nexttoken(const char *q,  int sep)
 /* Set a single bit i in bitmask */
 struct crtl_bitmask *crtl_bitmask_setbit(struct crtl_bitmask *bmp, unsigned int i)
 {
-	_setbit(bmp, i, 1);
+	__crtl_bitmask_setbit(bmp, i, 1);
 	return bmp;
 }
 
@@ -123,7 +123,7 @@ struct crtl_bitmask *crtl_bitmask_setall(struct crtl_bitmask *bmp)
 {
 	unsigned int i;
 	for (i = 0; i < bmp->size; i++)
-		_setbit(bmp, i, 1);
+		__crtl_bitmask_setbit(bmp, i, 1);
 	return bmp;
 }
 
@@ -132,7 +132,7 @@ struct crtl_bitmask *crtl_bitmask_clearall(struct crtl_bitmask *bmp)
 {
 	unsigned int i;
 	for (i = 0; i < bmp->size; i++)
-		_setbit(bmp, i, 0);
+		__crtl_bitmask_setbit(bmp, i, 0);
 	return bmp;
 }
 
@@ -141,7 +141,7 @@ int crtl_bitmask_isallclear(const struct crtl_bitmask *bmp)
 {
 	unsigned int i;
 	for (i = 0; i < bmp->size; i++)
-		if (_getbit(bmp, i))
+		if (__crtl_bitmask_getbit(bmp, i))
 			return 0;
 	return 1;
 }
@@ -149,7 +149,7 @@ int crtl_bitmask_isallclear(const struct crtl_bitmask *bmp)
 /* True if specified bit i is set */
 int crtl_bitmask_isbitset(const struct crtl_bitmask *bmp, unsigned int i)
 {
-	return _getbit(bmp, i);
+	return __crtl_bitmask_getbit(bmp, i);
 }
 
 /* Number of lowest set bit (min) */
@@ -158,13 +158,13 @@ unsigned int crtl_bitmask_first(const struct crtl_bitmask *bmp)
 	return crtl_bitmask_next(bmp, 0);
 }
 
-/* Number of highest set bit (max) */
+/* Number of highest set bit (__MAX) */
 unsigned int crtl_bitmask_last(const struct crtl_bitmask *bmp)
 {
 	unsigned int i;
 	unsigned int m = bmp->size;
 	for (i = 0; i < bmp->size; i++)
-		if (_getbit(bmp, i))
+		if (__crtl_bitmask_getbit(bmp, i))
 			m = i;
 	return m;
 }
@@ -174,7 +174,7 @@ unsigned int crtl_bitmask_next(const struct crtl_bitmask *bmp, unsigned int i)
 {
 	unsigned int n;
 	for (n = i; n < bmp->size; n++)
-		if (_getbit(bmp, n))
+		if (__crtl_bitmask_getbit(bmp, n))
 			break;
 	return n;
 }
@@ -196,7 +196,7 @@ int crtl_bitmask_parselist(const char *buf, struct crtl_bitmask *bmp)
 	crtl_bitmask_clearall(bmp);
 
 	q = buf;
-	while (p = q, q = nexttoken(q, ','), p) {
+	while (p = q, q = __crtl_bitmask_nexttoken(q, ','), p) {
 		unsigned int a;		/* begin of range */
 		unsigned int b;		/* end of range */
 		unsigned int s;		/* stride */
@@ -205,20 +205,20 @@ int crtl_bitmask_parselist(const char *buf, struct crtl_bitmask *bmp)
 		int sret;		/* sscanf return (number of matches) */
 
 		sret = sscanf(p, "%u%c", &a, &nextc);
-		if (!scan_was_ok(sret, nextc, ",-"))
+		if (!__crtl_bitmask_scan_was_ok(sret, nextc, ",-"))
 			goto err;
 		b = a;
 		s = 1;
-		c1 = nexttoken(p, '-');
-		c2 = nexttoken(p, ',');
+		c1 = __crtl_bitmask_nexttoken(p, '-');
+		c2 = __crtl_bitmask_nexttoken(p, ',');
 		if (c1 != NULL && (c2 == NULL || c1 < c2)) {
 			sret = sscanf(c1, "%u%c", &b, &nextc);
-			if (!scan_was_ok(sret, nextc, ",:"))
+			if (!__crtl_bitmask_scan_was_ok(sret, nextc, ",:"))
 				goto err;
-			c1 = nexttoken(c1, ':');
+			c1 = __crtl_bitmask_nexttoken(c1, ':');
 			if (c1 != NULL && (c2 == NULL || c1 < c2)) {
 				sret = sscanf(c1, "%u%c", &s, &nextc);
-				if (!scan_was_ok(sret, nextc, ","))
+				if (!__crtl_bitmask_scan_was_ok(sret, nextc, ","))
 					goto err;
 			}
 		}
@@ -227,7 +227,7 @@ int crtl_bitmask_parselist(const char *buf, struct crtl_bitmask *bmp)
 		if (b >= bmp->size)
 			goto err;
 		while (a <= b) {
-			_setbit(bmp, a, 1);
+			__crtl_bitmask_setbit(bmp, a, 1);
 			a += s;
 		}
 	}
@@ -238,7 +238,7 @@ err:
 }
 
 /*
- * emit(buf, buflen, rbot, rtop, len)
+ * __crtl_bitmask_emit(buf, buflen, rbot, rtop, len)
  *
  * Helper routine for bitmask_displaylist().  Write decimal number
  * or range to buf+len, suppressing output past buf+buflen, with optional
@@ -246,14 +246,14 @@ err:
  * all fit.
  */
 
-static inline int emit(char *buf, int buflen, int rbot, int rtop, int len)
+static inline int __crtl_bitmask_emit(char *buf, int buflen, int rbot, int rtop, int len)
 {
 	if (len > 0)
-		len += snprintf(buf + len, max(buflen - len, 0), ",");
+		len += snprintf(buf + len, __MAX(buflen - len, 0), ",");
 	if (rbot == rtop)
-		len += snprintf(buf + len, max(buflen - len, 0), "%d", rbot);
+		len += snprintf(buf + len, __MAX(buflen - len, 0), "%d", rbot);
 	else
-		len += snprintf(buf + len, max(buflen - len, 0), "%d-%d",
+		len += snprintf(buf + len, __MAX(buflen - len, 0), "%d-%d",
 				rbot, rtop);
 	return len;
 }
@@ -285,7 +285,7 @@ int crtl_bitmask_displaylist(char *buf, int buflen, const struct crtl_bitmask *b
 		rtop = cur;
 		cur = crtl_bitmask_next(bmp, cur+1);
 		if (cur >= bmp->size || cur > rtop + 1) {
-			len = emit(buf, buflen, rbot, rtop, len);
+			len = __crtl_bitmask_emit(buf, buflen, rbot, rtop, len);
 			rbot = cur;
 		}
 	}

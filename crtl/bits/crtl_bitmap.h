@@ -92,45 +92,28 @@
  * Provided in lib/bitmap.c to avoid circular dependency.
  */
 extern unsigned long *bitmap_alloc(unsigned int nbits);
-extern unsigned long *bitmap_zalloc(unsigned int nbits);
 extern void bitmap_free(unsigned long *bitmap);
 
 /*
  * lib/bitmap.c provides these functions:
  */
 
-extern int __bitmap_empty(const unsigned long *bitmap, unsigned int nbits);
-extern int __bitmap_full(const unsigned long *bitmap, unsigned int nbits);
-extern int __bitmap_equal(const unsigned long *bitmap1,
-			  const unsigned long *bitmap2, unsigned int nbits);
-extern bool __bitmap_or_equal(const unsigned long *src1,
-				     const unsigned long *src2,
-				     const unsigned long *src3,
-				     unsigned int nbits);
-extern void __bitmap_complement(unsigned long *dst, const unsigned long *src,
-			unsigned int nbits);
-extern void __bitmap_shift_right(unsigned long *dst, const unsigned long *src,
-				unsigned int shift, unsigned int nbits);
-extern void __bitmap_shift_left(unsigned long *dst, const unsigned long *src,
-				unsigned int shift, unsigned int nbits);
-extern void bitmap_cut(unsigned long *dst, const unsigned long *src,
-		       unsigned int first, unsigned int cut,
-		       unsigned int nbits);
-extern int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
-			const unsigned long *bitmap2, unsigned int nbits);
-extern void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
-			const unsigned long *bitmap2, unsigned int nbits);
-extern void __bitmap_xor(unsigned long *dst, const unsigned long *bitmap1,
-			const unsigned long *bitmap2, unsigned int nbits);
-extern int __bitmap_andnot(unsigned long *dst, const unsigned long *bitmap1,
-			const unsigned long *bitmap2, unsigned int nbits);
-extern void __bitmap_replace(unsigned long *dst,
-			const unsigned long *old, const unsigned long *new,
-			const unsigned long *mask, unsigned int nbits);
-extern int __bitmap_intersects(const unsigned long *bitmap1,
-			const unsigned long *bitmap2, unsigned int nbits);
-extern int __bitmap_subset(const unsigned long *bitmap1,
-			const unsigned long *bitmap2, unsigned int nbits);
+//extern int __bitmap_empty(const unsigned long *bitmap, unsigned int nbits);
+//extern int __bitmap_full(const unsigned long *bitmap, unsigned int nbits);
+extern int __bitmap_equal(const unsigned long *bitmap1, const unsigned long *bitmap2, unsigned int nbits);
+extern bool __bitmap_or_equal(const unsigned long *src1, const unsigned long *src2, const unsigned long *src3,unsigned int nbits);
+extern void __bitmap_complement(unsigned long *dst, const unsigned long *src, unsigned int nbits); //补充-取反
+extern void __bitmap_shift_right(unsigned long *dst, const unsigned long *src, unsigned int shift, unsigned int nbits);
+extern void __bitmap_shift_left(unsigned long *dst, const unsigned long *src, 	unsigned int shift, unsigned int nbits);
+extern void bitmap_cut(unsigned long *dst, const unsigned long *src, unsigned int first, unsigned int cut, unsigned int nbits);
+extern int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1, const unsigned long *bitmap2, unsigned int nbits);
+extern void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1, const unsigned long *bitmap2, unsigned int nbits);
+extern void __bitmap_xor(unsigned long *dst, const unsigned long *bitmap1, const unsigned long *bitmap2, unsigned int nbits);
+extern int __bitmap_andnot(unsigned long *dst, const unsigned long *bitmap1, const unsigned long *bitmap2, unsigned int nbits);
+extern void __bitmap_replace(unsigned long *dst, const unsigned long *old, const unsigned long *new, 
+                                const unsigned long *mask, unsigned int nbits);
+extern int __bitmap_intersects(const unsigned long *bitmap1, const unsigned long *bitmap2, unsigned int nbits);
+extern int __bitmap_subset(const unsigned long *sub_bitmap1, const unsigned long *bitmap2, unsigned int nbits);
 extern int __bitmap_weight(const unsigned long *bitmap, unsigned int nbits);
 extern void __bitmap_set(unsigned long *map, unsigned int start, int len);
 extern void __bitmap_clear(unsigned long *map, unsigned int start, int len);
@@ -165,22 +148,71 @@ bitmap_find_next_zero_area(unsigned long *map,
 					      align_mask, 0);
 }
 
-extern int bitmap_parse(const char *buf, unsigned int buflen,
-			unsigned long *dst, int nbits);
-extern int bitmap_parse_user(const char *ubuf, unsigned int ulen,
-			unsigned long *dst, int nbits);
-extern int bitmap_parselist(const char *buf, unsigned long *maskp,
-			int nmaskbits);
-extern int bitmap_parselist_user(const char *ubuf, unsigned int ulen,
-			unsigned long *dst, int nbits);
-extern void bitmap_remap(unsigned long *dst, const unsigned long *src,
-		const unsigned long *old, const unsigned long *new, unsigned int nbits);
-extern int bitmap_bitremap(int oldbit,
-		const unsigned long *old, const unsigned long *new, int bits);
-extern void bitmap_onto(unsigned long *dst, const unsigned long *orig,
-		const unsigned long *relmap, unsigned int bits);
-extern void bitmap_fold(unsigned long *dst, const unsigned long *orig,
-		unsigned int sz, unsigned int nbits);
+/**
+ * bitmap_parse - convert an ASCII hex string into a bitmap.
+ * @start: pointer to buffer containing string.
+ * @buflen: buffer size in bytes.  If string is smaller than this
+ *    then it must be terminated with a \0 or \n. In that case,
+ *    UINT_MAX may be provided instead of string length.
+ * @maskp: pointer to bitmap array that will contain result.
+ * @nmaskbits: size of bitmap, in bits.
+ *
+ * Commas group hex digits into chunks.  Each chunk defines exactly 32
+ * bits of the resultant bitmask.  No chunk may specify a value larger
+ * than 32 bits (%-EOVERFLOW), and if a chunk specifies a smaller value
+ * then leading 0-bits are prepended.  %-EINVAL is returned for illegal
+ * characters. Grouping such as "1,,5", ",44", "," or "" is allowed.
+ * Leading, embedded and trailing whitespace accepted.
+ */
+extern int bitmap_parse(const char *buf, unsigned int buflen, unsigned long *dst, int nbits);
+
+/*
+ * Bitmap printing & parsing functions: first version by Nadia Yvette Chambers,
+ * second version by Paul Jackson, third by Joe Korty.
+ */
+
+/**
+ * bitmap_parse_user - convert an ASCII hex string in a user buffer into a bitmap
+ *
+ * @ubuf: pointer to user buffer containing string.
+ * @ulen: buffer size in bytes.  If string is smaller than this
+ *    then it must be terminated with a \0.
+ * @maskp: pointer to bitmap array that will contain result.
+ * @nmaskbits: size of bitmap, in bits.
+ */
+extern int bitmap_parse_user(const char *ubuf, unsigned int ulen, unsigned long *dst, int nbits);
+
+/**
+ * bitmap_parselist - convert list format ASCII string to bitmap
+ * @buf: read user string from this buffer; must be terminated
+ *    with a \0 or \n.
+ * @maskp: write resulting mask here
+ * @nmaskbits: number of bits in mask to be written
+ *
+ * Input format is a comma-separated list of decimal numbers and
+ * ranges.  Consecutively set bits are shown as two hyphen-separated
+ * decimal numbers, the smallest and largest bit numbers set in
+ * the range.
+ * Optionally each range can be postfixed to denote that only parts of it
+ * should be set. The range will divided to groups of specific size.
+ * From each group will be used only defined amount of bits.
+ * Syntax: range:used_size/group_size
+ * Example: 0-1023:2/256 ==> 0,1,256,257,512,513,768,769
+ *
+ * Returns: 0 on success, -errno on invalid input strings. Error values:
+ *
+ *   - ``-EINVAL``: wrong region format
+ *   - ``-EINVAL``: invalid character in string
+ *   - ``-ERANGE``: bit number specified too large for mask
+ *   - ``-EOVERFLOW``: integer overflow in the input parameters
+ */ //下面的几个parse接口有些问题
+extern int bitmap_parselist(const char *buf, unsigned long *maskp, int nmaskbits);
+extern int bitmap_parselist_user(const char *ubuf, unsigned int ulen, unsigned long *dst, int nbits);
+extern void bitmap_remap(unsigned long *dst, const unsigned long *src, const unsigned long *old, 
+                            const unsigned long *new, unsigned int nbits);
+extern int bitmap_bitremap(int oldbit, const unsigned long *old, const unsigned long *new, int bits);
+extern void bitmap_onto(unsigned long *dst, const unsigned long *orig, const unsigned long *relmap, unsigned int bits);
+extern void bitmap_fold(unsigned long *dst, const unsigned long *orig, unsigned int sz, unsigned int nbits);
 extern int bitmap_find_free_region(unsigned long *bitmap, unsigned int bits, int order);
 extern void bitmap_release_region(unsigned long *bitmap, unsigned int pos, int order);
 extern int bitmap_allocate_region(unsigned long *bitmap, unsigned int pos, int order);
@@ -224,8 +256,7 @@ static inline void bitmap_fill(unsigned long *dst, unsigned int nbits)
 	memset(dst, 0xff, len);
 }
 
-static inline void bitmap_copy(unsigned long *dst, const unsigned long *src,
-       unsigned int nbits)
+static inline void bitmap_copy(unsigned long *dst, const unsigned long *src, unsigned int nbits)
 {
     unsigned int len = CRTL_BITS_TO_LONGS(nbits) * sizeof(unsigned long);
     memcpy(dst, src, len);
@@ -235,8 +266,7 @@ static inline void bitmap_copy(unsigned long *dst, const unsigned long *src,
 /*
 * Copy bitmap and clear tail bits in last word.
 */
-static inline void bitmap_copy_clear_tail(unsigned long *dst,
-       const unsigned long *src, unsigned int nbits)
+static inline void bitmap_copy_clear_tail(unsigned long *dst, const unsigned long *src, unsigned int nbits)
 {
    bitmap_copy(dst, src, nbits);
    if (nbits % CRTL_BITS_PER_LONG)

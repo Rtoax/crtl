@@ -280,7 +280,7 @@ Author:  Dave Hale, Colorado School of Mines, 04/27/89
 #define PI  (3.141592653)
 
 #define NTAB 240
-static struct {
+const static struct {
 int n;  float c;
 } _unused nctab[NTAB] = {
 {       1, 0.000052 },

@@ -2,11 +2,13 @@
 #include <errno.h>
 #include <ctype.h>
 #include <crtl/easy/compare.h>
+#include <crtl/crtl_log.h>
 
 #include "crtl/bits/crtl_bitmap.h"
 
 #include <crtl/bits/crtl_types_ctype.h>
 
+#include "crtl_mute_dbg.h"
 
 #define IS_ERR(ptr) (!ptr)
 #define PTR_ERR(ptr) ((long)ptr)
@@ -211,6 +213,7 @@ void bitmap_cut(unsigned long *dst, const unsigned long *src,
 	if (first % CRTL_BITS_PER_LONG) {
 		keep = src[first / CRTL_BITS_PER_LONG] &
 		       (~0UL >> (CRTL_BITS_PER_LONG - first % CRTL_BITS_PER_LONG));
+        __crtl_dbg("keep = %d\n", keep);
 	}
 
 	while (cut--) {
@@ -221,9 +224,10 @@ void bitmap_cut(unsigned long *dst, const unsigned long *src,
 				carry = 0;
 
 			dst[i] = (dst[i] >> 1) | (carry << (CRTL_BITS_PER_LONG - 1));
+            __crtl_dbg("dst[%d] = %x\n", i, (unsigned long)dst[i]);
 		}
 	}
-
+    __crtl_dbg("first / CRTL_BITS_PER_LONG = %d\n", first / CRTL_BITS_PER_LONG);
 	dst[first / CRTL_BITS_PER_LONG] &= ~0UL << (first % CRTL_BITS_PER_LONG);
 	dst[first / CRTL_BITS_PER_LONG] |= keep;
 }
@@ -1324,21 +1328,10 @@ void bitmap_copy_le(unsigned long *dst, const unsigned long *src, unsigned int n
 	}
 }
 #endif
-static inline void *kmalloc_array(unsigned n, size_t s)
-{
-//	return kmalloc(n * s, gfp);
-	return malloc(n * s);
-}
 
 unsigned long *bitmap_alloc(unsigned int nbits)
 {
-	return kmalloc_array(CRTL_BITS_TO_LONGS(nbits), sizeof(unsigned long));
-}
-
-unsigned long *bitmap_zalloc(unsigned int nbits)
-{
-//	return bitmap_alloc(nbits, flags | __GFP_ZERO);
-	return bitmap_alloc(nbits);
+	return malloc(CRTL_BITS_TO_LONGS(nbits) * sizeof(unsigned long));
 }
 
 void bitmap_free( unsigned long *bitmap)

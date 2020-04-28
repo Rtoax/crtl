@@ -4,6 +4,7 @@
 
 #include "crtl/bits/crtl_math_sqrt.h"
 #include "crtl/bits/crtl_math_gauss.h"
+#include "crtl/bits/crtl_math_fft.h"
 
 
 
