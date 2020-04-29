@@ -6,7 +6,7 @@
 /* crypto API */
 #define __assert_prefix     "assert."
 
-inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, const char *__func, const int __line)
+_api inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, const char *__func, const int __line)
 {
     if(!fp)
     {
@@ -37,7 +37,7 @@ inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *_
 }
 
 /* backtrace */
-inline void _unused __crtl_assert_backtrace(FILE *fp)
+_api inline void _unused __crtl_assert_backtrace(FILE *fp)
 {
     if(fp == NULL)
     {

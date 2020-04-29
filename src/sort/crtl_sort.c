@@ -6,9 +6,11 @@
 #include "crtl/crtl_string.h"
 #include "crtl/easy/macro.h"
 
+#include "crtl/bits/crtl_types_fn.h"
 
 
-void crtl_sort_cocktailshaker(void *base, size_t num, size_t size, int (*cmp)(const void *, const void *))
+
+_api void crtl_sort_cocktailshaker(void *base, size_t num, size_t size, int (*cmp)(const void *, const void *))
 {
     crtl_byte *pbBase = (crtl_byte *)base;
     size_t i;
@@ -36,7 +38,7 @@ void crtl_sort_cocktailshaker(void *base, size_t num, size_t size, int (*cmp)(co
 }
 
 
-void crtl_sort_heap(void *base, size_t num,size_t size, int (*cmp)(const void *, const void *))
+_api void crtl_sort_heap(void *base, size_t num,size_t size, int (*cmp)(const void *, const void *))
 {
     crtl_byte *pbBase = (crtl_byte *)base;
     int i = (num / 2 - 1) * size;
@@ -67,7 +69,7 @@ void crtl_sort_heap(void *base, size_t num,size_t size, int (*cmp)(const void *,
 
 
 
-void crtl_sort_insertion(void *base, size_t num, size_t size, int (*cmp)(const void *, const void *))
+_api void crtl_sort_insertion(void *base, size_t num, size_t size, int (*cmp)(const void *, const void *))
 {
     crtl_byte *pbBase = (crtl_byte *)base;
     size_t i, j;
@@ -79,7 +81,7 @@ void crtl_sort_insertion(void *base, size_t num, size_t size, int (*cmp)(const v
 }
 
 
-void crtl_sort_qsort3way(void *base, size_t n, size_t size, int (*cmp)(const void *, const void *))
+_api void crtl_sort_qsort3way(void *base, size_t n, size_t size, int (*cmp)(const void *, const void *))
 {
     crtl_byte *ptr = (crtl_byte *)base;
 
@@ -138,7 +140,7 @@ static size_t __partition(void *base, size_t lo,size_t hi,size_t size,int (*cmp)
     return j;
 }
 
-void crtl_sort_qsortH(void *base,size_t lo,size_t hi,size_t size,int (*cmp)(const void *, const void *))
+_api void crtl_sort_qsortH(void *base,size_t lo,size_t hi,size_t size,int (*cmp)(const void *, const void *))
 {
     size_t p;
 
@@ -173,7 +175,7 @@ static size_t __LomutoPartition(void *base,size_t lo,size_t hi,size_t size,int (
   return i + 1;
 }
 
-void crtl_sort_qsortL(void *base,size_t lo,size_t hi,size_t size,int (*cmp)(const void *, const void *))
+_api void crtl_sort_qsortL(void *base,size_t lo,size_t hi,size_t size,int (*cmp)(const void *, const void *))
 {
     size_t p;
 
@@ -187,7 +189,7 @@ void crtl_sort_qsortL(void *base,size_t lo,size_t hi,size_t size,int (*cmp)(cons
 }
 
 
-void crtl_sort_selection(void *base,size_t num,size_t size,int (*cmp)(const void *, const void *))
+_api void crtl_sort_selection(void *base,size_t num,size_t size,int (*cmp)(const void *, const void *))
 {
     crtl_byte *pvBase = (crtl_byte *)base;
     size_t i, j;
@@ -207,7 +209,7 @@ void crtl_sort_selection(void *base,size_t num,size_t size,int (*cmp)(const void
 }
 
 
-void crtl_sort_shell(void *base,size_t num,size_t size,int (*cmp)(const void *, const void *))
+_api void crtl_sort_shell(void *base,size_t num,size_t size,int (*cmp)(const void *, const void *))
 {
     crtl_byte *pbBase = (crtl_byte *)base;
     size_t i, j;
@@ -244,7 +246,7 @@ void crtl_sort_shell(void *base,size_t num,size_t size,int (*cmp)(const void *, 
 #define pr_fmt(fmt) ": " fmt
 
 /**
- * is_aligned - is this pointer & size okay for word-wide copying?
+ * __is_aligned - is this pointer & size okay for word-wide copying?
  * @base: pointer to data
  * @size: size of each element
  * @align: required alignment (typically 4 or 8)
@@ -256,7 +258,7 @@ void crtl_sort_shell(void *base,size_t num,size_t size,int (*cmp)(const void *, 
  * For some reason, gcc doesn't know to optimize "if (a & mask || b & mask)"
  * to "if ((a | b) & mask)", so we do that by hand.
  */
-inline static bool is_aligned(const void *base, size_t size, unsigned char align)
+inline static bool __is_aligned(const void *base, size_t size, unsigned char align)
 {
 	unsigned char lsbits = (unsigned char)size;
 
@@ -341,28 +343,26 @@ static void __sort_swap_bytes(void *a, void *b, size_t n)
 	} while (n);
 }
 
-typedef void (*swap_func_t)(void *a, void *b, int size);
-
 /*
  * The values are arbitrary as long as they can't be confused with
  * a pointer, but small integers make for the smallest compare
  * instructions.
  */
-#define SWAP_WORDS_64 (swap_func_t)0
-#define SWAP_WORDS_32 (swap_func_t)1
-#define SWAP_BYTES    (swap_func_t)2
+#define __SWAP_WORDS_64 (crtl_swap_fn_t)0
+#define __SWAP_WORDS_32 (crtl_swap_fn_t)1
+#define __SWAP_BYTES    (crtl_swap_fn_t)2
 
 /*
  * The function pointer is last to make tail calls most efficient if the
  * compiler decides not to inline this function.
  */
-static void __sort_do_swap(void *a, void *b, size_t size, swap_func_t swap_func)
+static void __sort_do_swap(void *a, void *b, size_t size, crtl_swap_fn_t swap_func)
 {
-	if (swap_func == SWAP_WORDS_64)
+	if (swap_func == __SWAP_WORDS_64)
 		__sort_swap_words_64(a, b, size);
-	else if (swap_func == SWAP_WORDS_32)
+	else if (swap_func == __SWAP_WORDS_32)
 		__sort_swap_words_32(a, b, size);
-	else if (swap_func == SWAP_BYTES)
+	else if (swap_func == __SWAP_BYTES)
 		__sort_swap_bytes(a, b, size);
 	else
 		swap_func(a, b, (int)size);
@@ -411,7 +411,7 @@ inline static size_t __sort_parent(size_t i, unsigned int lsbit, size_t size)
  * O(n*n) worst-case behavior and extra memory requirements that make
  * it less suitable for kernel use.
  */
-void crtl_sort(void *base, size_t num, size_t size, int (*cmp_func)(const void *, const void *), void (*swap_func)(void *, void *, int size))
+_api void crtl_sort(void *base, size_t num, size_t size, int (*cmp_func)(const void *, const void *), void (*swap_func)(void *, void *, int size))
 {
 	/* pre-scale counters for performance */
 	size_t n = num * size, a = (num/2) * size;
@@ -421,12 +421,12 @@ void crtl_sort(void *base, size_t num, size_t size, int (*cmp_func)(const void *
 		return;
 
 	if (!swap_func) {
-		if (is_aligned(base, size, 8))
-			swap_func = SWAP_WORDS_64;
-		else if (is_aligned(base, size, 4))
-			swap_func = SWAP_WORDS_32;
+		if (__is_aligned(base, size, 8))
+			swap_func = __SWAP_WORDS_64;
+		else if (__is_aligned(base, size, 4))
+			swap_func = __SWAP_WORDS_32;
 		else
-			swap_func = SWAP_BYTES;
+			swap_func = __SWAP_BYTES;
 	}
 
 	/*

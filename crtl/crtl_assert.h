@@ -4,6 +4,8 @@
 #include <errno.h>
 #include <string.h>
 
+#include "crtl/easy/attribute.h"
+
 #include "crtl/bits/crtl_assert_backtrace.h"
 
 
@@ -22,7 +24,7 @@
 
 
 /* crypto API */
-inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, const char *__func, const int __line);
+_api inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, const char *__func, const int __line);
 
 
 #endif /*<__CRTL_BITS_ASSERT_H>*/

@@ -47,16 +47,16 @@ _api int crtl_strcasecmp(const char *s1, const char *s2);
 
 
 /* string to numeric conversion with error checking */
-short crtl_eatoh(char *s);
-unsigned short crtl_eatou(char *s);
-int crtl_eatoi(char *s);
-unsigned int crtl_eatop(char *s);
-long crtl_eatol(char *s);
-unsigned long crtl_eatov(char *s);
-float crtl_eatof(char *s);
-double crtl_eatod(char *s);
+_api short crtl_eatoh(char *s);
+_api unsigned short crtl_eatou(char *s);
+_api int crtl_eatoi(char *s);
+_api unsigned int crtl_eatop(char *s);
+_api long crtl_eatol(char *s);
+_api unsigned long crtl_eatov(char *s);
+_api float crtl_eatof(char *s);
+_api double crtl_eatod(char *s);
 
-bool crtl_glob_match(char const *pat, char const *str);
+_api bool crtl_glob_match(char const *pat, char const *str);
 
 
 #endif /*<__CRTL_STRING_H>*/

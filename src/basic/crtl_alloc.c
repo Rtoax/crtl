@@ -6,7 +6,7 @@
  *  
  */
 /* allocate a 1-d array */
-void *crtl_malloc1 (int n1, int size)
+_api void *crtl_malloc1 (int n1, int size)
 {
 	void *p;
 
@@ -14,7 +14,7 @@ void *crtl_malloc1 (int n1, int size)
 		return NULL;
 	return p;
 }
-void *crtl_remalloc1(void *v, int n1, int size)
+_api void *crtl_remalloc1(void *v, int n1, int size)
 {
 	void *p;
 
@@ -24,13 +24,13 @@ void *crtl_remalloc1(void *v, int n1, int size)
 }
 
 /* free a 1-d array */
-void crtl_mfree1 (void *p)
+_api void crtl_mfree1 (void *p)
 {
 	free(p);
 }
 
 /* allocate a 2-d array */
-void **crtl_malloc2 (int n1, int n2, int size)
+_api void **crtl_malloc2 (int n1, int n2, int size)
 {
 	int i2;
 	void **p;
@@ -46,7 +46,7 @@ void **crtl_malloc2 (int n1, int n2, int size)
 	return p;
 }
 
-void **crtl_remalloc2(void **v, int n1, int n2, int size)
+_api void **crtl_remalloc2(void **v, int n1, int n2, int size)
 {
 	int i2;
 	void **p;
@@ -63,13 +63,13 @@ void **crtl_remalloc2(void **v, int n1, int n2, int size)
 }
 
 /* free a 2-d array */
-void crtl_mfree2 (void **p)
+_api void crtl_mfree2 (void **p)
 {
 	free(p[0]);
 	free(p);
 }
 
-void ***crtl_malloc3 (int n1, int n2, int n3, int size)
+_api void ***crtl_malloc3 (int n1, int n2, int n3, int size)
 {
     int i3,i2;
     void ***p;
@@ -95,7 +95,7 @@ void ***crtl_malloc3 (int n1, int n2, int n3, int size)
 }
 
 
-void ***crtl_remalloc3 (void ***v, int n1, int n2, int n3, int size)
+_api void ***crtl_remalloc3 (void ***v, int n1, int n2, int n3, int size)
 {
     int i3,i2;
     void ***p;
@@ -121,14 +121,14 @@ void ***crtl_remalloc3 (void ***v, int n1, int n2, int n3, int size)
 }
 
 
-void crtl_mfree3 (void ***p)
+_api void crtl_mfree3 (void ***p)
 {
 	free(p[0][0]);
 	free(p[0]);
 	free(p);
 }
 /* allocate a 4-d array */
-void ****crtl_malloc4 (int n1, int n2, int n3, int n4, int size)
+_api void ****crtl_malloc4 (int n1, int n2, int n3, int n4, int size)
 {
 	int i4,i3,i2;
 	void ****p;
@@ -163,7 +163,7 @@ void ****crtl_malloc4 (int n1, int n2, int n3, int n4, int size)
 }
 
 
-void ****crtl_remalloc4 (void ****v, int n1, int n2, int n3, int n4, int size)
+_api void ****crtl_remalloc4 (void ****v, int n1, int n2, int n3, int n4, int size)
 {
 	int i4,i3,i2;
 	void ****p;
@@ -199,7 +199,7 @@ void ****crtl_remalloc4 (void ****v, int n1, int n2, int n3, int n4, int size)
 
 
 /* free a 4-d array */
-void crtl_mfree4 (void ****p)
+_api void crtl_mfree4 (void ****p)
 {
 	free(p[0][0][0]);
 	free(p[0][0]);
@@ -209,7 +209,7 @@ void crtl_mfree4 (void ****p)
 
 /* The following two functions were added by Zhaobo Meng, Jan. 1997*/
 /* allocate a 5-d array */
-void *****crtl_malloc5 (int n1, int n2, int n3, int n4, int n5, int size)
+_api void *****crtl_malloc5 (int n1, int n2, int n3, int n4, int n5, int size)
 {
 	int i5,i4,i3,i2;
 	void *****p;
@@ -254,7 +254,7 @@ void *****crtl_malloc5 (int n1, int n2, int n3, int n4, int n5, int size)
 }
 
 
-void *****crtl_remalloc5 (void *****v, int n1, int n2, int n3, int n4, int n5, int size)
+_api void *****crtl_remalloc5 (void *****v, int n1, int n2, int n3, int n4, int n5, int size)
 {
 	int i5,i4,i3,i2;
 	void *****p;
@@ -300,7 +300,7 @@ void *****crtl_remalloc5 (void *****v, int n1, int n2, int n3, int n4, int n5, i
 
 
 /* free a 5-d array */
-void crtl_mfree5 (void *****p)
+_api void crtl_mfree5 (void *****p)
 {
 	free(p[0][0][0][0]);
 	free(p[0][0][0]);
@@ -311,7 +311,7 @@ void crtl_mfree5 (void *****p)
 
 /* The following two functions were added by Zhaobo Meng, Jan. 1997*/
 /* allocate a 6-d array */
-void ******crtl_malloc6 (int n1, int n2, int n3, int n4, int n5, int n6, int size)
+_api void ******crtl_malloc6 (int n1, int n2, int n3, int n4, int n5, int n6, int size)
 {
 	int i6,i5,i4,i3,i2;
 	void ******p;
@@ -371,7 +371,7 @@ void ******crtl_malloc6 (int n1, int n2, int n3, int n4, int n5, int n6, int siz
 	return p;
 }
 
-void ******crtl_remalloc6 (void ******v, int n1, int n2, int n3, int n4, int n5, int n6, int size)
+_api void ******crtl_remalloc6 (void ******v, int n1, int n2, int n3, int n4, int n5, int n6, int size)
 {
 	int i6,i5,i4,i3,i2;
 	void ******p;
@@ -432,7 +432,7 @@ void ******crtl_remalloc6 (void ******v, int n1, int n2, int n3, int n4, int n5,
 }
 
 /* free a 6-d array */
-void crtl_mfree6 (void ******p)
+_api void crtl_mfree6 (void ******p)
 {
     free(p[0][0][0][0][0]);
 	free(p[0][0][0][0]);

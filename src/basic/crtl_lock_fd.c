@@ -2,7 +2,7 @@
 #include "crtl/bits/crtl_types_basic.h"
 
 
-void crtl_fd_lock(int fd)
+_api void crtl_fd_lock(int fd)
 {
     struct flock    lock;
 
@@ -14,7 +14,7 @@ void crtl_fd_lock(int fd)
     fcntl(fd, F_SETLKW, &lock);
 }
 
-void crtl_fd_unlock(int fd)
+_api void crtl_fd_unlock(int fd)
 {
     struct flock    lock;
 
@@ -26,7 +26,7 @@ void crtl_fd_unlock(int fd)
     fcntl(fd, F_SETLK, &lock);
 }
 
-int crtl_lock_reg(int fd, int cmd, int type, off_t offset, int whence, off_t len)
+_api int crtl_lock_reg(int fd, int cmd, int type, off_t offset, int whence, off_t len)
 {
 	struct flock	lock;
 
@@ -38,7 +38,7 @@ int crtl_lock_reg(int fd, int cmd, int type, off_t offset, int whence, off_t len
 	return( fcntl(fd, cmd, &lock) );	/* -1 upon error */
 }
 
-pid_t crtl_lock_test(int fd, int type, off_t offset, int whence, off_t len)
+_api pid_t crtl_lock_test(int fd, int type, off_t offset, int whence, off_t len)
 {
 	struct flock	lock;
 

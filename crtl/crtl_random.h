@@ -8,8 +8,10 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include "crtl/easy/attribute.h"
 
-int crtl_random_int(int min, int max);
+
+_api int crtl_random_int(int min, int max);
 
 
 #endif /*<__CRTL_RANDOM_H>*/

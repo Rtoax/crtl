@@ -510,18 +510,18 @@ static struct crtl_rbtree_struct* __crtl_rbtree_init(int (*cmp)(const void *, co
     return rbtree;
 }
 
-struct crtl_rbtree_struct* crtl_rbtree_init(int (*cmp)(const void *, const void *), int (*display)(const void *))
+_api struct crtl_rbtree_struct* crtl_rbtree_init(int (*cmp)(const void *, const void *), int (*display)(const void *))
 {
     return __crtl_rbtree_init(cmp, display, crtl_false);
 }
-struct crtl_rbtree_struct* crtl_rbtree_init_alloc(int (*cmp)(const void *, const void *), int (*display)(const void *))
+_api struct crtl_rbtree_struct* crtl_rbtree_init_alloc(int (*cmp)(const void *, const void *), int (*display)(const void *))
 {
     return __crtl_rbtree_init(cmp, display, crtl_true);
 }
 
 
 /* insert */
-int crtl_rbtree_insert(struct crtl_rbtree_struct* rbtree, void *data, unsigned int data_size)
+_api int crtl_rbtree_insert(struct crtl_rbtree_struct* rbtree, void *data, unsigned int data_size)
 {
     crtl_assert_fp(stderr, rbtree);
     if(!data || data_size<=0)
@@ -569,7 +569,7 @@ int crtl_rbtree_insert(struct crtl_rbtree_struct* rbtree, void *data, unsigned i
 
 
 /* search */
-struct crtl_rbtree_node_struct *crtl_rbtree_search(struct crtl_rbtree_struct* rbtree, const void *data)
+_api struct crtl_rbtree_node_struct *crtl_rbtree_search(struct crtl_rbtree_struct* rbtree, const void *data)
 {
     crtl_assert_fp(stderr, rbtree);
     if(!data)
@@ -602,7 +602,7 @@ struct crtl_rbtree_node_struct *crtl_rbtree_search(struct crtl_rbtree_struct* rb
 
 
 /* delete */
-int crtl_rbtree_delete(struct crtl_rbtree_struct* rbtree, const void *data)
+_api int crtl_rbtree_delete(struct crtl_rbtree_struct* rbtree, const void *data)
 {
     if(unlikely(!data) || unlikely(!rbtree))
     {
@@ -630,7 +630,7 @@ int crtl_rbtree_delete(struct crtl_rbtree_struct* rbtree, const void *data)
 }
 
 
-int crtl_rbtree_nnode(const struct crtl_rbtree_struct* rbtree)
+_api int crtl_rbtree_nnode(const struct crtl_rbtree_struct* rbtree)
 {
     if(unlikely(!rbtree))
     {
@@ -642,14 +642,14 @@ int crtl_rbtree_nnode(const struct crtl_rbtree_struct* rbtree)
     return rbtree->nnode;
 }
 
-int crtl_rbtree_is_empty(const struct crtl_rbtree_struct* rbtree)
+_api int crtl_rbtree_is_empty(const struct crtl_rbtree_struct* rbtree)
 {
     return crtl_rbtree_nnode(rbtree)==0?CRTL_SUCCESS:CRTL_ERROR;
 }
 
 
 /* getfirst */
-struct crtl_rbtree_node_struct* crtl_rbtree_getfirst(struct crtl_rbtree_struct* rbtree)
+_api struct crtl_rbtree_node_struct* crtl_rbtree_getfirst(struct crtl_rbtree_struct* rbtree)
 {
     crtl_assert_fp(stderr, rbtree);
     
@@ -664,7 +664,7 @@ struct crtl_rbtree_node_struct* crtl_rbtree_getfirst(struct crtl_rbtree_struct* 
     return NULL;
 }
 /* getfirst */
-struct crtl_rbtree_node_struct* crtl_rbtree_getlast(struct crtl_rbtree_struct* rbtree)
+_api struct crtl_rbtree_node_struct* crtl_rbtree_getlast(struct crtl_rbtree_struct* rbtree)
 {
     crtl_assert_fp(stderr, rbtree);
     
@@ -680,7 +680,7 @@ struct crtl_rbtree_node_struct* crtl_rbtree_getlast(struct crtl_rbtree_struct* r
 }
 
 /* getnext */
-struct crtl_rbtree_node_struct* crtl_rbtree_getnext(struct crtl_rbtree_node_struct* node)
+_api struct crtl_rbtree_node_struct* crtl_rbtree_getnext(struct crtl_rbtree_node_struct* node)
 {   
     crtl_assert_fp(stderr, node);
     
@@ -695,7 +695,7 @@ struct crtl_rbtree_node_struct* crtl_rbtree_getnext(struct crtl_rbtree_node_stru
     return NULL;
 }
 /* getnext */
-struct crtl_rbtree_node_struct* crtl_rbtree_getprev(struct crtl_rbtree_node_struct* node)
+_api struct crtl_rbtree_node_struct* crtl_rbtree_getprev(struct crtl_rbtree_node_struct* node)
 {   
     crtl_assert_fp(stderr, node);
     
@@ -711,7 +711,7 @@ struct crtl_rbtree_node_struct* crtl_rbtree_getprev(struct crtl_rbtree_node_stru
 }
 
 /* destroy */
-int crtl_rbtree_destroy(struct crtl_rbtree_struct* rbtree)
+_api int crtl_rbtree_destroy(struct crtl_rbtree_struct* rbtree)
 {
     crtl_assert_fp(stderr, rbtree);
     
@@ -728,7 +728,7 @@ int crtl_rbtree_destroy(struct crtl_rbtree_struct* rbtree)
     return CRTL_SUCCESS;
 }
 
-struct crtl_rbtree_iterator_struct* crtl_rbtree_iterator(struct crtl_rbtree_struct* rbtree)
+_api struct crtl_rbtree_iterator_struct* crtl_rbtree_iterator(struct crtl_rbtree_struct* rbtree)
 {
     crtl_assert_fp(stderr, rbtree);
     return &(rbtree->iter);

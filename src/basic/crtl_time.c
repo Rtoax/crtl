@@ -14,7 +14,7 @@
 
 
 /* double second sleep */
-inline int crtl_dsleep (double sleep_sec)
+_api inline int crtl_dsleep (double sleep_sec)
 {
     t_timespec tv;
     /* Construct the timespec from the number of whole seconds... */
@@ -39,7 +39,7 @@ inline int crtl_dsleep (double sleep_sec)
     return 0;
 }
 
-inline int crtl_delayed_exit_thread(int seconds)
+_api inline int crtl_delayed_exit_thread(int seconds)
 {
   struct timespec delay = { seconds, 0 };
   struct timespec remaining = { 0 };
@@ -49,7 +49,7 @@ inline int crtl_delayed_exit_thread(int seconds)
   exit (0);
 }
 
-inline int crtl_timeval_subtract(struct timeval *result, struct timeval *x, struct timeval *y)
+_api inline int crtl_timeval_subtract(struct timeval *result, struct timeval *x, struct timeval *y)
 {
 	if (x->tv_usec < y->tv_usec) 
 	{
@@ -72,7 +72,7 @@ inline int crtl_timeval_subtract(struct timeval *result, struct timeval *x, stru
 
 
 /* 两个timeval时间间隔 */
-inline long crtl_timeval_interval_usec(t_timeval *t1, t_timeval *t2)
+_api inline long crtl_timeval_interval_usec(t_timeval *t1, t_timeval *t2)
 {
     long _t1uSec = t1->tv_sec*1000000000 + t1->tv_usec;
     long _t2uSec = t2->tv_sec*1000000000 + t2->tv_usec;
@@ -80,7 +80,7 @@ inline long crtl_timeval_interval_usec(t_timeval *t1, t_timeval *t2)
     return labs(_t1uSec-_t2uSec);
 }
 
-inline void crtl_gettimeofday_timespec(struct timespec *time)
+_api inline void crtl_gettimeofday_timespec(struct timespec *time)
 {
     struct timeval __currenttv;
     /* 获取当前时间TV */
@@ -91,13 +91,13 @@ inline void crtl_gettimeofday_timespec(struct timespec *time)
 }
 
 
-inline void crtl_gettimeofday_timeval(struct timeval *time)
+_api inline void crtl_gettimeofday_timeval(struct timeval *time)
 {
     gettimeofday(time,NULL);
 }
 
 
-inline int crtl_timeval_cmp(struct timeval *in, struct timeval *in2)
+_api inline int crtl_timeval_cmp(struct timeval *in, struct timeval *in2)
 {
     if(in->tv_sec > in2->tv_sec) {
         return CRTL_GT;
@@ -116,7 +116,7 @@ inline int crtl_timeval_cmp(struct timeval *in, struct timeval *in2)
 }
 
 
-inline int crtl_timespec_cmp(struct timespec *in, struct timespec *in2)
+_api inline int crtl_timespec_cmp(struct timespec *in, struct timespec *in2)
 {
     if(in->tv_sec > in2->tv_sec) {
         return CRTL_GT;
@@ -134,7 +134,7 @@ inline int crtl_timespec_cmp(struct timespec *in, struct timespec *in2)
     return CRTL_EQ;
 }
 
-inline void crtl_timespec_add(struct timespec *in, struct timespec *in2, struct timespec *out)
+_api inline void crtl_timespec_add(struct timespec *in, struct timespec *in2, struct timespec *out)
 {
     out->tv_sec = in->tv_sec + in2->tv_sec + (in->tv_nsec+in2->tv_nsec)/1000000000;
 	out->tv_nsec = (in->tv_nsec+in2->tv_nsec)%1000000000;
@@ -145,7 +145,7 @@ inline void crtl_timespec_add(struct timespec *in, struct timespec *in2, struct 
 
 
 
-long long crtl_timespec_sub_nsec(struct timespec a, struct timespec b)
+_api long long crtl_timespec_sub_nsec(struct timespec a, struct timespec b)
 {
 	long long ret = __CRTL_NSEC_PER_SEC * b.tv_sec + b.tv_nsec;
 
@@ -153,7 +153,7 @@ long long crtl_timespec_sub_nsec(struct timespec a, struct timespec b)
 	return ret;
 }
 
-struct timespec crtl_timespec_add_timespec(struct timespec ts, unsigned long long ns)
+_api struct timespec crtl_timespec_add_timespec(struct timespec ts, unsigned long long ns)
 {
 	ts.tv_nsec += ns;
 	while (ts.tv_nsec >= __CRTL_NSEC_PER_SEC) {
@@ -165,13 +165,13 @@ struct timespec crtl_timespec_add_timespec(struct timespec ts, unsigned long lon
 
 
 
-inline void crtl_timeval_add(struct timeval *in, struct timeval *in2, struct timeval *out)
+_api inline void crtl_timeval_add(struct timeval *in, struct timeval *in2, struct timeval *out)
 {
     out->tv_sec = in->tv_sec + in2->tv_sec + (in->tv_usec+in2->tv_usec)/1000000;
 	out->tv_usec = (in->tv_usec+in2->tv_usec)%1000000;
 }
 
-inline int crtl_timespec_subabs(struct timespec *in1, struct timespec *in2, struct timespec *out)
+_api inline int crtl_timespec_subabs(struct timespec *in1, struct timespec *in2, struct timespec *out)
 {
     time_t in1Sec = in1->tv_sec;
     time_t in2Sec = in2->tv_sec;
@@ -193,7 +193,7 @@ inline int crtl_timespec_subabs(struct timespec *in1, struct timespec *in2, stru
     return cmp;
 }
 
-inline int crtl_timeval_subabs(struct timeval *in1, struct timeval *in2, struct timeval *out)
+_api inline int crtl_timeval_subabs(struct timeval *in1, struct timeval *in2, struct timeval *out)
 {
     time_t in1Sec = in1->tv_sec;
     time_t in2Sec = in2->tv_sec;
@@ -216,19 +216,19 @@ inline int crtl_timeval_subabs(struct timeval *in1, struct timeval *in2, struct 
 }
 
 
-inline void crtl_timespec_generate(struct timespec *in, long sec, long nanosec)
+_api inline void crtl_timespec_generate(struct timespec *in, long sec, long nanosec)
 {
     in->tv_sec    = sec + nanosec/1000000000;
     in->tv_nsec   = nanosec%1000000000;
 }
-inline void crtl_timeval_generate(struct timeval *in, long sec, long microsec)
+_api inline void crtl_timeval_generate(struct timeval *in, long sec, long microsec)
 {
     in->tv_sec    = sec + microsec/1000000;
     in->tv_usec   = microsec%1000000;
 }
 
 
-float crtl_cpusecond()
+_api float crtl_cpusecond()
 /*****************************************************************************
 return cpu time (UNIX user time) in seconds
 ******************************************************************************
@@ -263,7 +263,7 @@ Author:  Dave Hale, Colorado School of Mines, 04/29/89
  #define CLOCK_UNIT	CLK_TCK
 #endif
 
-float crtl_cputime()
+_api float crtl_cputime()
 /*****************************************************************************
 return cpu time (UNIX user time) in seconds using ANSI C built-ins
 ******************************************************************************
@@ -283,7 +283,7 @@ Author:		Jack K. Cohen, Colorado School of Mines, 07/27/90
 
 
 
-inline uint64_t crtl_asm_rdtsc(void)
+_api inline uint64_t crtl_asm_rdtsc(void)
 {/*   <RT comment: 2019.09.29>*/
     union {
         uint64_t tsc_64;

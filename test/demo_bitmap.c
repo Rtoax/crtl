@@ -37,29 +37,29 @@ static void demo_bitmap_test1()
     crtl_memshow(bm2, nbits/byte);
 
     
-    crtl_print_warning("__bitmap_and\n");
+    crtl_print_warning("bitmap_and\n");
     unsigned long * bm5 = bitmap_alloc(nbits);
-    __bitmap_and(bm5, bm2, bm, nbits);
+    bitmap_and(bm5, bm2, bm, nbits);
     crtl_memshow(bm2, nbits/byte);
     crtl_memshow(bm, nbits/byte);
     crtl_memshow(bm5, nbits/byte);
 
-    crtl_print_warning("__bitmap_or\n");
+    crtl_print_warning("bitmap_or\n");
     unsigned long * bm6 = bitmap_alloc(nbits);
-    __bitmap_or(bm6, bm2, bm, nbits);
+    bitmap_or(bm6, bm2, bm, nbits);
     crtl_memshow(bm2, nbits/byte);
     crtl_memshow(bm, nbits/byte);
     crtl_memshow(bm6, nbits/byte);
     
-    crtl_print_warning("__bitmap_xor\n");
-    __bitmap_xor(bm6, bm3, bm, nbits);
+    crtl_print_warning("bitmap_xor\n");
+    bitmap_xor(bm6, bm3, bm, nbits);
     crtl_memshow(bm3, nbits/byte);
     crtl_memshow(bm, nbits/byte);
     crtl_memshow(bm6, nbits/byte);
 
     
-    crtl_print_warning("__bitmap_andnot\n");
-    __bitmap_andnot(bm6, bm2, bm, nbits);
+    crtl_print_warning("bitmap_andnot\n");
+    bitmap_andnot(bm6, bm2, bm, nbits);
     crtl_memshow(bm2, nbits/byte);
     crtl_memshow(bm, nbits/byte);
     crtl_memshow(bm6, nbits/byte);
@@ -79,10 +79,10 @@ static void demo_bitmap_test2_equal()
     bitmap_set(bm1, 0, 200);
     bitmap_set(bm2, 0, 200);
 
-    if(__bitmap_equal(bm1, bm2, 200)) {
-        crtl_print_info("__bitmap_equal equal.\n");
+    if(bitmap_equal(bm1, bm2, 200)) {
+        crtl_print_info("bitmap_equal equal.\n");
     } else {
-        crtl_print_info("__bitmap_equal not equal.\n");
+        crtl_print_info("bitmap_equal not equal.\n");
     
 }
 
@@ -98,10 +98,10 @@ static void demo_bitmap_test2_equal()
     bitmap_set(bm4, 100, 200);
     bitmap_set(bm5, 0, 200);
 
-    if(__bitmap_or_equal(bm1, bm2,bm5, 200)) {
-        crtl_print_info("__bitmap_or_equal equal.\n");
+    if(bitmap_or_equal(bm1, bm2,bm5, 200)) {
+        crtl_print_info("bitmap_or_equal equal.\n");
     } else {
-        crtl_print_info("__bitmap_or_equal not equal.\n");
+        crtl_print_info("bitmap_or_equal not equal.\n");
     
 }
 
@@ -112,10 +112,10 @@ static void demo_bitmap_test2_equal()
 
     bitmap_set(bm6, 0, 100);
     bitmap_set(bm7, 99, 200);
-    if(__bitmap_intersects(bm6, bm7, 200)) {
-        crtl_print_info("__bitmap_intersects ok.\n");
+    if(bitmap_intersects(bm6, bm7, 200)) {
+        crtl_print_info("bitmap_intersects ok.\n");
     } else {
-        crtl_print_info("__bitmap_intersects not ok.\n");
+        crtl_print_info("bitmap_intersects not ok.\n");
     
 }
 
@@ -123,22 +123,22 @@ static void demo_bitmap_test2_equal()
     crtl_memshow(bm7, nbits/8);
 
     
-    crtl_print_warning("__bitmap_subset\n");
+    crtl_print_warning("bitmap_subset\n");
     unsigned long * bm9 = bitmap_alloc(nbits);
     unsigned long * bm10 = bitmap_alloc(nbits);
     bitmap_set(bm9, 3, 200);
     bitmap_set(bm10, 3, 100);
     crtl_memshow(bm9, nbits/8);
     crtl_memshow(bm10, nbits/8);
-    if(__bitmap_subset(bm10, bm9, nbits)) {
-        crtl_print_info("__bitmap_subset ok.\n");
+    if(bitmap_subset(bm10, bm9, nbits)) {
+        crtl_print_info("bitmap_subset ok.\n");
     } else {
-        crtl_print_info("__bitmap_subset not ok.\n");
+        crtl_print_info("bitmap_subset not ok.\n");
     
 }
 
     
-    int w = __bitmap_weight(bm9, nbits);
+    int w = bitmap_weight(bm9, nbits);
     crtl_print_info("__bitmap_weight %d.\n", w);
     crtl_memshow(bm9, nbits/8);
 
@@ -155,15 +155,15 @@ static void demo_bitmap_test3_complement()
     
     bitmap_set(bm1, 0, 200);
     
-    __bitmap_complement(bm2, bm1, nbits);
+    bitmap_complement(bm2, bm1, nbits);
     
     crtl_memshow(bm1, nbits/32);
     crtl_memshow(bm2, nbits/32);
     
-    if(__bitmap_equal(bm1, bm2, 200)) {
-        crtl_print_info("__bitmap_equal equal.\n");
+    if(bitmap_equal(bm1, bm2, 200)) {
+        crtl_print_info("bitmap_equal equal.\n");
     } else {
-        crtl_print_info("__bitmap_equal not equal.\n");
+        crtl_print_info("bitmap_equal not equal.\n");
     
 }
     
@@ -180,10 +180,10 @@ static void demo_bitmap_test_shift()
     bitmap_set(bm1, 0, 200);
     crtl_memshow(bm1, nbits/8);
     
-    __bitmap_shift_right(bm2, bm1, 50, nbits);
+    bitmap_shift_right(bm2, bm1, 50, nbits);
     crtl_memshow(bm2, nbits/8);
     
-    __bitmap_shift_left(bm2, bm1, 50, nbits);
+    bitmap_shift_left(bm2, bm1, 50, nbits);
     crtl_memshow(bm2, nbits/8);
     
 }
@@ -213,7 +213,7 @@ static void demo_bitmap_test_replace()
     bitmap_set(bm2, 90, 100);
     bitmap_set(bm3, 10, 200);
 
-    __bitmap_replace(bm4, bm1, bm2, bm3, nbits);
+    bitmap_replace(bm4, bm1, bm2, bm3, nbits);
 
     //old   ff ff ff ff ff ff ff ff ff ff ff ff 0f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
     //new   00 00 00 00 00 00 00 00 00 00 00 fc ff ff ff ff ff ff ff ff ff ff ff 3f 00 00 00 00 00 00 00 00 
@@ -307,3 +307,4 @@ int main()
 
     return 0;
 }
+

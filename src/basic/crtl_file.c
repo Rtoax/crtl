@@ -12,7 +12,7 @@
 
 
 /* create dir */
-int crtl_mkdir(const char *dir, mode_t mode)
+_api int crtl_mkdir(const char *dir, mode_t mode)
 {
     if(dir == NULL || strlen(dir) <= 0)
     {
@@ -57,7 +57,7 @@ int crtl_mkdir(const char *dir, mode_t mode)
 }
 
 /* remove dir */
-int crtl_rmdir(const char *dir)
+_api int crtl_rmdir(const char *dir)
 {
     if(dir == NULL)
     {
@@ -125,7 +125,7 @@ int crtl_rmdir(const char *dir)
  *	Author: Rong Tao
  *	Time:	2018.12.16
  */
-int crtl_is_exist(const char *dirname)
+_api int crtl_is_exist(const char *dirname)
 {
     if(dirname == NULL)
     {
@@ -140,7 +140,7 @@ int crtl_is_exist(const char *dirname)
  *	Author: Rong Tao
  *	Time:	2018.12.16
  */
-int crtl_is_readable(const char *dirname)
+_api int crtl_is_readable(const char *dirname)
 {
     if(dirname == NULL)
     {
@@ -155,7 +155,7 @@ int crtl_is_readable(const char *dirname)
  *	Author: Rong Tao
  *	Time:	2018.12.16
  */
-int crtl_is_writeable(const char *dirname)
+_api int crtl_is_writeable(const char *dirname)
 {
     if(dirname == NULL)
     {
@@ -170,7 +170,7 @@ int crtl_is_writeable(const char *dirname)
  *	Author: Rong Tao
  *	Time:	2018.12.16
  */
-int crtl_is_executable(const char *dirname)
+_api int crtl_is_executable(const char *dirname)
 {
     if(dirname == NULL)
     {
@@ -182,7 +182,7 @@ int crtl_is_executable(const char *dirname)
 
 
 /* file is directory */
-int crtl_is_directory(const char *file)
+_api int crtl_is_directory(const char *file)
 {
     if(file == NULL)
     {
@@ -215,7 +215,7 @@ int crtl_is_directory(const char *file)
 }
 
 /* file is regular file */
-int crtl_is_regular_file(const char *file)
+_api int crtl_is_regular_file(const char *file)
 {
     if(file == NULL)
     {
@@ -256,7 +256,7 @@ int crtl_is_regular_file(const char *file)
  *	Author: Rong Tao
  *	Time:	2018.12.16
  */
-int crtl_add_read_permission(const char *dirname)
+_api int crtl_add_read_permission(const char *dirname)
 {
     if(dirname == NULL)
     {
@@ -275,7 +275,7 @@ int crtl_add_read_permission(const char *dirname)
  *	Author: Rong Tao
  *	Time:	2018.12.16
  */
-int crtl_add_write_permission(const char *dirname)
+_api int crtl_add_write_permission(const char *dirname)
 {
     if(dirname == NULL)
     {
@@ -295,7 +295,7 @@ int crtl_add_write_permission(const char *dirname)
  *	Author: Rong Tao
  *	Time:	2018.12.16
  */
-int crtl_add_execute_permission(const char *dirname)
+_api int crtl_add_execute_permission(const char *dirname)
 {
     if(dirname == NULL)
     {
@@ -315,7 +315,7 @@ int crtl_add_execute_permission(const char *dirname)
  *	Author: Rong Tao
  *	Time:	2018.12.16
  */
-int crtl_add_usr_permission(const char *dirname)
+_api int crtl_add_usr_permission(const char *dirname)
 {
     if(dirname == NULL)
     {
@@ -335,7 +335,7 @@ int crtl_add_usr_permission(const char *dirname)
  *	Author: Rong Tao
  *	Time:	2018.12.16
  */
-int crtl_add_grp_permission(const char *dirname)
+_api int crtl_add_grp_permission(const char *dirname)
 {
     if(dirname == NULL)
     {
@@ -355,7 +355,7 @@ int crtl_add_grp_permission(const char *dirname)
  *	Author: Rong Tao
  *	Time:	2018.12.16
  */
-int crtl_add_oth_permission(const char *dirname)
+_api int crtl_add_oth_permission(const char *dirname)
 {
     if(dirname == NULL)
     {
@@ -375,7 +375,7 @@ int crtl_add_oth_permission(const char *dirname)
  *	Author: Rong Tao
  *	Time:	2018.12.16
  */
-int crtl_add_all_permission(const char *dirname)
+_api int crtl_add_all_permission(const char *dirname)
 {
     if(dirname == NULL)
     {
@@ -391,7 +391,7 @@ int crtl_add_all_permission(const char *dirname)
 
 
 
-char *crtl_mktemp_string(char * const tempfile_out, const char *path, const char *fileprefix) 
+_api char *crtl_mktemp_string(char * const tempfile_out, const char *path, const char *fileprefix) 
 {
     if(!tempfile_out)
     {
@@ -468,7 +468,7 @@ struct stat {
 
 
 
-FILE *crtl_efopen(const char *file, const char *mode)
+_api FILE *crtl_efopen(const char *file, const char *mode)
 {
 	FILE *stream;
 
@@ -479,7 +479,7 @@ FILE *crtl_efopen(const char *file, const char *mode)
 }
 
 
-FILE *crtl_efreopen(const char *file, const char *mode, FILE *stream1)
+_api FILE *crtl_efreopen(const char *file, const char *mode, FILE *stream1)
 {
 	FILE *stream2;
 
@@ -489,7 +489,7 @@ FILE *crtl_efreopen(const char *file, const char *mode, FILE *stream1)
 	return stream2;
 }
 
-FILE *crtl_efdopen(int fd, const char *mode)
+_api FILE *crtl_efdopen(int fd, const char *mode)
 {
 	FILE *stream;
 
@@ -500,7 +500,7 @@ FILE *crtl_efdopen(int fd, const char *mode)
 }
 
 
-FILE *crtl_epopen(char *command, char *type)
+_api FILE *crtl_epopen(char *command, char *type)
 {
 	FILE *stream;
 
@@ -511,7 +511,7 @@ FILE *crtl_epopen(char *command, char *type)
 }
 
 
-int crtl_efclose(FILE *stream)
+_api int crtl_efclose(FILE *stream)
 {
 	int status;
 
@@ -522,7 +522,7 @@ int crtl_efclose(FILE *stream)
 }
 
 
-int crtl_epclose(FILE *stream)
+_api int crtl_epclose(FILE *stream)
 {
 	int status;
 
@@ -532,7 +532,7 @@ int crtl_epclose(FILE *stream)
 	return status;
 }
 
-int crtl_efflush(FILE *stream)
+_api int crtl_efflush(FILE *stream)
 {
 	int status;
 
@@ -543,7 +543,7 @@ int crtl_efflush(FILE *stream)
 }
 
 
-int crtl_eremove(const char *file)
+_api int crtl_eremove(const char *file)
 {
 	int status;
 
@@ -554,7 +554,7 @@ int crtl_eremove(const char *file)
 }
 
 
-int crtl_erename(const char *oldfile, const char *newfile)
+_api int crtl_erename(const char *oldfile, const char *newfile)
 {
 	int status;
 
@@ -565,7 +565,7 @@ int crtl_erename(const char *oldfile, const char *newfile)
 }
 
 
-int crtl_efseek(FILE *stream, off_t offset, int origin)
+_api int crtl_efseek(FILE *stream, off_t offset, int origin)
 {
 	if (fseek(stream, offset, origin))  /* non-zero => error */
 		      crtl_print_err("efseek: fseek failed\n");
@@ -575,14 +575,14 @@ int crtl_efseek(FILE *stream, off_t offset, int origin)
 
 
 
-void crtl_erewind(FILE *stream)	/* dummy function */
+_api void crtl_erewind(FILE *stream)	/* dummy function */
 {
 	rewind(stream);
 	return;
 }
 
 
-long crtl_eftell(FILE *stream)
+_api long crtl_eftell(FILE *stream)
 {
 	long position;
 
@@ -592,7 +592,7 @@ long crtl_eftell(FILE *stream)
 	return position;
 }
 
-int crtl_efseeko(FILE *stream, off_t offset, int origin)
+_api int crtl_efseeko(FILE *stream, off_t offset, int origin)
 {
 
 	/* non-zero => error */
@@ -602,7 +602,7 @@ int crtl_efseeko(FILE *stream, off_t offset, int origin)
 	return 0;
 }
 
-off_t crtl_eftello(FILE *streem)
+_api off_t crtl_eftello(FILE *streem)
 {
 	off_t eposition;
 	off_t test=-1;
@@ -628,7 +628,7 @@ off_t crtl_eftello(FILE *streem)
 //   	return stream;
 //}
 
-FILE *crtl_etmpfile(void)
+_api FILE *crtl_etmpfile(void)
 {
 	FILE *stream;
 
@@ -639,7 +639,7 @@ FILE *crtl_etmpfile(void)
 }
 
 
-void *crtl_emalloc(size_t size)
+_api void *crtl_emalloc(size_t size)
 {
 	void *memptr;
 
@@ -651,7 +651,7 @@ void *crtl_emalloc(size_t size)
 
 
 
-void *crtl_erealloc(void *memptr, size_t size)
+_api void *crtl_erealloc(void *memptr, size_t size)
 {
 	void *newptr;
 
@@ -662,7 +662,7 @@ void *crtl_erealloc(void *memptr, size_t size)
 }
 
 
-void *crtl_ecalloc(size_t count, size_t size)
+_api void *crtl_ecalloc(size_t count, size_t size)
 {
 	void *memptr;
 
@@ -678,7 +678,7 @@ void *crtl_ecalloc(size_t count, size_t size)
 /* beginning of fgetpos  and fsetpos block */
 
 
-int crtl_efgetpos(FILE *stream, fpos_t *position)
+_api int crtl_efgetpos(FILE *stream, fpos_t *position)
 {
 	int status;
 
@@ -689,7 +689,7 @@ int crtl_efgetpos(FILE *stream, fpos_t *position)
 }
 
 
-int crtl_efsetpos(FILE *stream, const fpos_t *position)
+_api int crtl_efsetpos(FILE *stream, const fpos_t *position)
 {
 	int status;
 
@@ -700,7 +700,7 @@ int crtl_efsetpos(FILE *stream, const fpos_t *position)
 }
 
 
-size_t crtl_efread(void *bufptr, size_t size, size_t count, FILE *stream)
+_api size_t crtl_efread(void *bufptr, size_t size, size_t count, FILE *stream)
 {
 	size_t nread;
 
@@ -719,7 +719,7 @@ size_t crtl_efread(void *bufptr, size_t size, size_t count, FILE *stream)
 }
 
 
-size_t crtl_efwrite(void *bufptr, size_t size, size_t count, FILE *stream)
+_api size_t crtl_efwrite(void *bufptr, size_t size, size_t count, FILE *stream)
 {
 	size_t nwrite;
 

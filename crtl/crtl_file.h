@@ -10,6 +10,8 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
+#include "crtl/easy/attribute.h"
+
 #include "crtl/bits/crtl_types_basic.h"
 
 //当前目录
@@ -66,56 +68,56 @@
 
 
 /* 创建文件夹 */
-int crtl_mkdir(const char *dir, mode_t mode);
-int crtl_rmdir(const char *dir); /* 删除文件夹 */
+_api int crtl_mkdir(const char *dir, mode_t mode);
+_api int crtl_rmdir(const char *dir); /* 删除文件夹 */
 
 /* 文件选项 */
-int crtl_is_exist(const char *dirname);
-int crtl_is_readable(const char *dirname);
-int crtl_is_writeable(const char *dirname);
-int crtl_is_executable(const char *dirname);
+_api int crtl_is_exist(const char *dirname);
+_api int crtl_is_readable(const char *dirname);
+_api int crtl_is_writeable(const char *dirname);
+_api int crtl_is_executable(const char *dirname);
 
-int crtl_is_directory(const char *file);
-int crtl_is_regular_file(const char *file);
+_api int crtl_is_directory(const char *file);
+_api int crtl_is_regular_file(const char *file);
 
 /* 更改文件权限 */
-int crtl_add_read_permission(const char *dirname);
-int crtl_add_write_permission(const char *dirname);
-int crtl_add_execute_permission(const char *dirname);
-int crtl_add_usr_permission(const char *dirname);
-int crtl_add_grp_permission(const char *dirname);
-int crtl_add_oth_permission(const char *dirname);
-int crtl_add_oth_permission(const char *dirname);
+_api int crtl_add_read_permission(const char *dirname);
+_api int crtl_add_write_permission(const char *dirname);
+_api int crtl_add_execute_permission(const char *dirname);
+_api int crtl_add_usr_permission(const char *dirname);
+_api int crtl_add_grp_permission(const char *dirname);
+_api int crtl_add_oth_permission(const char *dirname);
+_api int crtl_add_oth_permission(const char *dirname);
 
 
-char *crtl_mktemp_string(char * const tempfile_out, const char *path, const char *fileprefix);
+_api char *crtl_mktemp_string(char * const tempfile_out, const char *path, const char *fileprefix);
 
 
 
 
-FILE *crtl_efopen(const char *file, const char *mode);
-FILE *crtl_efreopen(const char *file, const char *mode, FILE *stream1);
-FILE *crtl_efdopen(int fd, const char *mode);
-FILE *crtl_epopen(char *command, char *type);
-int crtl_efclose(FILE *stream);
-int crtl_epclose(FILE *stream);
-int crtl_efflush(FILE *stream);
-int crtl_eremove(const char *file);
-int crtl_erename(const char *oldfile, const char *newfile);
-int crtl_efseek(FILE *stream, off_t offset, int origin);
-void crtl_erewind(FILE *stream)	/* dummy function */;
-long crtl_eftell(FILE *stream);
-int crtl_efseeko(FILE *stream, off_t offset, int origin);
-off_t crtl_eftello(FILE *streem);
+_api FILE *crtl_efopen(const char *file, const char *mode);
+_api FILE *crtl_efreopen(const char *file, const char *mode, FILE *stream1);
+_api FILE *crtl_efdopen(int fd, const char *mode);
+_api FILE *crtl_epopen(char *command, char *type);
+_api int crtl_efclose(FILE *stream);
+_api int crtl_epclose(FILE *stream);
+_api int crtl_efflush(FILE *stream);
+_api int crtl_eremove(const char *file);
+_api int crtl_erename(const char *oldfile, const char *newfile);
+_api int crtl_efseek(FILE *stream, off_t offset, int origin);
+_api void crtl_erewind(FILE *stream)	/* dummy function */;
+_api long crtl_eftell(FILE *stream);
+_api int crtl_efseeko(FILE *stream, off_t offset, int origin);
+_api off_t crtl_eftello(FILE *streem);
 //FILE *crtl_etmpstream(char * prefix);
-FILE *crtl_etmpfile(void);
-void *crtl_emalloc(size_t size);
-void *crtl_erealloc(void *memptr, size_t size);
-void *crtl_ecalloc(size_t count, size_t size);
-int crtl_efgetpos(FILE *stream, fpos_t *position);
-int crtl_efsetpos(FILE *stream, const fpos_t *position);
-size_t crtl_efwrite(void *bufptr, size_t size, size_t count, FILE *stream);
-size_t crtl_efread(void *bufptr, size_t size, size_t count, FILE *stream);
+_api FILE *crtl_etmpfile(void);
+_api void *crtl_emalloc(size_t size);
+_api void *crtl_erealloc(void *memptr, size_t size);
+_api void *crtl_ecalloc(size_t count, size_t size);
+_api int crtl_efgetpos(FILE *stream, fpos_t *position);
+_api int crtl_efsetpos(FILE *stream, const fpos_t *position);
+_api size_t crtl_efwrite(void *bufptr, size_t size, size_t count, FILE *stream);
+_api size_t crtl_efread(void *bufptr, size_t size, size_t count, FILE *stream);
 
 
 

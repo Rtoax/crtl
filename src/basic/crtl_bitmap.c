@@ -43,8 +43,7 @@
  * for the best explanations of this ordering.
  */
 
-int __bitmap_equal(const unsigned long *bitmap1,
-		const unsigned long *bitmap2, unsigned int bits)
+static int __bitmap_equal(const unsigned long *bitmap1, const unsigned long *bitmap2, unsigned int bits)
 {
 	unsigned int k, lim = bits/CRTL_BITS_PER_LONG;
 	for (k = 0; k < lim; ++k)
@@ -58,7 +57,17 @@ int __bitmap_equal(const unsigned long *bitmap1,
 	return 1;
 }
 
-bool __bitmap_or_equal(const unsigned long *bitmap1,
+inline int bitmap_equal(const unsigned long *src1, const unsigned long *src2, unsigned int nbits)
+{
+    if (small_const_nbits(nbits))
+        return !((*src1 ^ *src2) & CRTL_BITMAP_LAST_WORD_MASK(nbits));
+    if (__builtin_constant_p(nbits & BITMAP_MEM_MASK) &&
+        IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
+        return !memcmp(src1, src2, nbits / 8);
+    return __bitmap_equal(src1, src2, nbits);
+}
+
+_hidden bool __bitmap_or_equal(const unsigned long *bitmap1,
 		       const unsigned long *bitmap2,
 		       const unsigned long *bitmap3,
 		       unsigned int bits)
@@ -77,13 +86,34 @@ bool __bitmap_or_equal(const unsigned long *bitmap1,
 	tmp = (bitmap1[k] | bitmap2[k]) ^ bitmap3[k];
 	return (tmp & CRTL_BITMAP_LAST_WORD_MASK(bits)) == 0;
 }
+               
+inline bool bitmap_or_equal(const unsigned long *src1,
+                  const unsigned long *src2,
+                  const unsigned long *src3,
+                  unsigned int nbits)
+{
+   if (!small_const_nbits(nbits))
+       return __bitmap_or_equal(src1, src2, src3, nbits);
 
-void __bitmap_complement(unsigned long *dst, const unsigned long *src, unsigned int bits)
+   return !(((*src1 | *src2) ^ *src3) & CRTL_BITMAP_LAST_WORD_MASK(nbits));
+}
+
+_hidden void __bitmap_complement(unsigned long *dst, const unsigned long *src, unsigned int bits)
 {
 	unsigned int k, lim = CRTL_BITS_TO_LONGS(bits);
 	for (k = 0; k < lim; ++k)
 		dst[k] = ~src[k];
 }
+
+inline void bitmap_complement(unsigned long *dst, const unsigned long *src,
+			unsigned int nbits)
+{
+	if (small_const_nbits(nbits))
+		*dst = ~(*src);
+	else
+		__bitmap_complement(dst, src, nbits);
+}
+
 
 /**
  * __bitmap_shift_right - logical right shift of the bits in a bitmap
@@ -96,7 +126,7 @@ void __bitmap_complement(unsigned long *dst, const unsigned long *src, unsigned 
  * direction.  Zeros are fed into the vacated MS positions and the
  * LS bits shifted off the bottom are lost.
  */
-void __bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+_hidden void __bitmap_shift_right(unsigned long *dst, const unsigned long *src,
 			unsigned shift, unsigned nbits)
 {
 	unsigned k, lim = CRTL_BITS_TO_LONGS(nbits);
@@ -127,6 +157,14 @@ void __bitmap_shift_right(unsigned long *dst, const unsigned long *src,
 		memset(&dst[lim - off], 0, off*sizeof(unsigned long));
 }
 
+inline void bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+                unsigned int shift, unsigned int nbits)
+{
+    if (small_const_nbits(nbits))
+        *dst = (*src & CRTL_BITMAP_LAST_WORD_MASK(nbits)) >> shift;
+    else
+        __bitmap_shift_right(dst, src, shift, nbits);
+}
 
 /**
  * __bitmap_shift_left - logical left shift of the bits in a bitmap
@@ -140,7 +178,7 @@ void __bitmap_shift_right(unsigned long *dst, const unsigned long *src,
  * and those MS bits shifted off the top are lost.
  */
 
-void __bitmap_shift_left(unsigned long *dst, const unsigned long *src,
+_hidden void __bitmap_shift_left(unsigned long *dst, const unsigned long *src,
 			unsigned int shift, unsigned int nbits)
 {
 	int k;
@@ -162,6 +200,15 @@ void __bitmap_shift_left(unsigned long *dst, const unsigned long *src,
 	}
 	if (off)
 		memset(dst, 0, off*sizeof(unsigned long));
+}
+            
+inline void bitmap_shift_left(unsigned long *dst, const unsigned long *src,
+                unsigned int shift, unsigned int nbits)
+{
+    if (small_const_nbits(nbits))
+        *dst = (*src << shift) & CRTL_BITMAP_LAST_WORD_MASK(nbits);
+    else
+        __bitmap_shift_left(dst, src, shift, nbits);
 }
 
 
@@ -232,7 +279,7 @@ void bitmap_cut(unsigned long *dst, const unsigned long *src,
 	dst[first / CRTL_BITS_PER_LONG] |= keep;
 }
 
-int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
+_hidden int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
 				const unsigned long *bitmap2, unsigned int bits)
 {
 	unsigned int k;
@@ -246,8 +293,16 @@ int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
 			   CRTL_BITMAP_LAST_WORD_MASK(bits));
 	return result != 0;
 }
+                
+inline int bitmap_and(unsigned long *dst, const unsigned long *src1,
+            const unsigned long *src2, unsigned int nbits)
+{
+    if (small_const_nbits(nbits))
+        return (*dst = *src1 & *src2 & CRTL_BITMAP_LAST_WORD_MASK(nbits)) != 0;
+    return __bitmap_and(dst, src1, src2, nbits);
+}
 
-void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
+_hidden void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
 				const unsigned long *bitmap2, unsigned int bits)
 {
 	unsigned int k;
@@ -256,8 +311,16 @@ void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
 	for (k = 0; k < nr; k++)
 		dst[k] = bitmap1[k] | bitmap2[k];
 }
+inline void bitmap_or(unsigned long *dst, const unsigned long *src1,
+            const unsigned long *src2, unsigned int nbits)
+{
+    if (small_const_nbits(nbits))
+        *dst = *src1 | *src2;
+    else
+        __bitmap_or(dst, src1, src2, nbits);
+}
 
-void __bitmap_xor(unsigned long *dst, const unsigned long *bitmap1,
+_hidden void __bitmap_xor(unsigned long *dst, const unsigned long *bitmap1,
 				const unsigned long *bitmap2, unsigned int bits)
 {
 	unsigned int k;
@@ -266,8 +329,16 @@ void __bitmap_xor(unsigned long *dst, const unsigned long *bitmap1,
 	for (k = 0; k < nr; k++)
 		dst[k] = bitmap1[k] ^ bitmap2[k];
 }
+inline void bitmap_xor(unsigned long *dst, const unsigned long *src1,
+            const unsigned long *src2, unsigned int nbits)
+{
+    if (small_const_nbits(nbits))
+        *dst = *src1 ^ *src2;
+    else
+        __bitmap_xor(dst, src1, src2, nbits);
+}
 
-int __bitmap_andnot(unsigned long *dst, const unsigned long *bitmap1,
+_hidden int __bitmap_andnot(unsigned long *dst, const unsigned long *bitmap1,
 				const unsigned long *bitmap2, unsigned int bits)
 {
 	unsigned int k;
@@ -281,8 +352,15 @@ int __bitmap_andnot(unsigned long *dst, const unsigned long *bitmap1,
 			   CRTL_BITMAP_LAST_WORD_MASK(bits));
 	return result != 0;
 }
+inline int bitmap_andnot(unsigned long *dst, const unsigned long *src1,
+            const unsigned long *src2, unsigned int nbits)
+{
+    if (small_const_nbits(nbits))
+        return (*dst = *src1 & ~(*src2) & CRTL_BITMAP_LAST_WORD_MASK(nbits)) != 0;
+    return __bitmap_andnot(dst, src1, src2, nbits);
+}
 
-void __bitmap_replace(unsigned long *dst,
+_hidden void __bitmap_replace(unsigned long *dst,
 		      const unsigned long *old, const unsigned long *new,
 		      const unsigned long *mask, unsigned int nbits)
 {
@@ -292,8 +370,88 @@ void __bitmap_replace(unsigned long *dst,
 	for (k = 0; k < nr; k++)
 		dst[k] = (old[k] & ~mask[k]) | (new[k] & mask[k]);
 }
+inline void bitmap_replace(unsigned long *dst,
+                const unsigned long *old,
+                const unsigned long *new,
+                const unsigned long *mask,
+                unsigned int nbits)
+{
+  if (small_const_nbits(nbits))
+      *dst = (*old & ~(*mask)) | (*new & *mask);
+  else
+      __bitmap_replace(dst, old, new, mask, nbits);
+}
 
-int __bitmap_intersects(const unsigned long *bitmap1,
+inline void bitmap_next_clear_region(unsigned long *bitmap,
+                        unsigned int *rs, unsigned int *re,
+                        unsigned int end)
+{
+    *rs = crtl_find_next_zero_bit(bitmap, end, *rs);
+    *re = crtl_find_next_bit(bitmap, end, *rs + 1);
+}
+
+inline void bitmap_next_set_region(unsigned long *bitmap,
+                      unsigned int *rs, unsigned int *re,
+                      unsigned int end)
+{
+    *rs = crtl_find_next_bit(bitmap, end, *rs);
+    *re = crtl_find_next_zero_bit(bitmap, end, *rs + 1);
+}
+
+
+/**
+* bitmap_from_u64 - Check and swap words within uint64_t.
+*  @mask: source bitmap
+*  @dst:  destination bitmap
+*
+* In 32-bit Big Endian kernel, when using ``(u32 *)(&val)[*]``
+* to read uint64_t mask, we will get the wrong word.
+* That is ``(u32 *)(&val)[0]`` gets the upper 32 bits,
+* but we expect the lower 32-bits of uint64_t.
+*/
+inline void bitmap_from_u64(unsigned long *dst, uint64_t mask)
+{
+  dst[0] = mask & ULONG_MAX;
+
+  if (sizeof(mask) > sizeof(unsigned long))
+      dst[1] = mask >> 32;
+}
+
+
+/**
+* bitmap_get_value8 - get an 8-bit value within a memory region
+* @map: address to the bitmap memory region
+* @start: bit offset of the 8-bit value; must be a multiple of 8
+*
+* Returns the 8-bit value located at the @start bit offset within the @src
+* memory region.
+*/
+inline unsigned long bitmap_get_value8(const unsigned long *map,
+                        unsigned long start)
+{
+  const size_t index = CRTL_BIT_WORD(start);
+  const unsigned long offset = start % CRTL_BITS_PER_LONG;
+
+  return (map[index] >> offset) & 0xFF;
+}
+
+/**
+* bitmap_set_value8 - set an 8-bit value within a memory region
+* @map: address to the bitmap memory region
+* @value: the 8-bit value; values wider than 8 bits may clobber bitmap
+* @start: bit offset of the 8-bit value; must be a multiple of 8
+*/
+inline void bitmap_set_value8(unsigned long *map, unsigned long value,
+                 unsigned long start)
+{
+const size_t index = CRTL_BIT_WORD(start);
+const unsigned long offset = start % CRTL_BITS_PER_LONG;
+
+map[index] &= ~(0xFFUL << offset);
+map[index] |= value << offset;
+}
+
+_hidden int __bitmap_intersects(const unsigned long *bitmap1,
 			const unsigned long *bitmap2, unsigned int bits)
 {
 	unsigned int k, lim = bits/CRTL_BITS_PER_LONG;
@@ -306,8 +464,16 @@ int __bitmap_intersects(const unsigned long *bitmap1,
 			return 1;
 	return 0;
 }
+inline int bitmap_intersects(const unsigned long *src1,
+            const unsigned long *src2, unsigned int nbits)
+{
+    if (small_const_nbits(nbits))
+        return ((*src1 & *src2) & CRTL_BITMAP_LAST_WORD_MASK(nbits)) != 0;
+    else
+        return __bitmap_intersects(src1, src2, nbits);
+}
 
-int __bitmap_subset(const unsigned long *bitmap1,
+_hidden int __bitmap_subset(const unsigned long *bitmap1,
 		    const unsigned long *bitmap2, unsigned int bits)
 {
 	unsigned int k, lim = bits/CRTL_BITS_PER_LONG;
@@ -320,8 +486,16 @@ int __bitmap_subset(const unsigned long *bitmap1,
 			return 0;
 	return 1;
 }
+inline int bitmap_subset(const unsigned long *src1,
+            const unsigned long *src2, unsigned int nbits)
+{
+    if (small_const_nbits(nbits))
+        return ! ((*src1 & ~(*src2)) & CRTL_BITMAP_LAST_WORD_MASK(nbits));
+    else
+        return __bitmap_subset(src1, src2, nbits);
+}
 
-int __bitmap_weight(const unsigned long *bitmap, unsigned int bits)
+_hidden int __bitmap_weight(const unsigned long *bitmap, unsigned int bits)
 {
 	unsigned int k, lim = bits/CRTL_BITS_PER_LONG;
 	int w = 0;
@@ -334,8 +508,31 @@ int __bitmap_weight(const unsigned long *bitmap, unsigned int bits)
 
 	return w;
 }
+inline int bitmap_empty(const unsigned long *src, unsigned nbits)
+{
+    if (small_const_nbits(nbits))
+        return ! (*src & CRTL_BITMAP_LAST_WORD_MASK(nbits));
 
-void __bitmap_set(unsigned long *map, unsigned int start, int len)
+    return crtl_find_first_bit(src, nbits) == nbits;
+}
+
+inline int bitmap_full(const unsigned long *src, unsigned int nbits)
+{
+    if (small_const_nbits(nbits))
+        return ! (~(*src) & CRTL_BITMAP_LAST_WORD_MASK(nbits));
+
+    return crtl_find_first_zero_bit(src, nbits) == nbits;
+}
+
+
+inline int bitmap_weight(const unsigned long *src, unsigned int nbits)
+{
+    if (small_const_nbits(nbits))
+        return hweight_long(*src & CRTL_BITMAP_LAST_WORD_MASK(nbits));
+    return __bitmap_weight(src, nbits);
+}
+
+_hidden void __bitmap_set(unsigned long *map, unsigned int start, int len)
 {
 	unsigned long *p = map + CRTL_BIT_WORD(start);
 	const unsigned int size = start + len;
@@ -354,8 +551,21 @@ void __bitmap_set(unsigned long *map, unsigned int start, int len)
 		*p |= mask_to_set;
 	}
 }
+inline void bitmap_set(unsigned long *map, unsigned int start,
+        unsigned int nbits)
+{
+    if (__builtin_constant_p(nbits) && nbits == 1)
+        __crtl_set_bit(start, map);
+    else if (__builtin_constant_p(start & BITMAP_MEM_MASK) &&
+         IS_ALIGNED(start, BITMAP_MEM_ALIGNMENT) &&
+         __builtin_constant_p(nbits & BITMAP_MEM_MASK) &&
+         IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
+        memset((char *)map + start / 8, 0xff, nbits / 8);
+    else
+        __bitmap_set(map, start, nbits);
+}
 
-void __bitmap_clear(unsigned long *map, unsigned int start, int len)
+_hidden void __bitmap_clear(unsigned long *map, unsigned int start, int len)
 {
 	unsigned long *p = map + CRTL_BIT_WORD(start);
 	const unsigned int size = start + len;
@@ -374,6 +584,21 @@ void __bitmap_clear(unsigned long *map, unsigned int start, int len)
 		*p &= ~mask_to_clear;
 	}
 }
+
+inline void bitmap_clear(unsigned long *map, unsigned int start,
+        unsigned int nbits)
+{
+    if (__builtin_constant_p(nbits) && nbits == 1)
+        __crtl_clear_bit(start, map);
+    else if (__builtin_constant_p(start & BITMAP_MEM_MASK) &&
+         IS_ALIGNED(start, BITMAP_MEM_ALIGNMENT) &&
+         __builtin_constant_p(nbits & BITMAP_MEM_MASK) &&
+         IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
+        memset((char *)map + start / 8, 0, nbits / 8);
+    else
+        __bitmap_clear(map, start, nbits);
+}
+
 
 /**
  * bitmap_find_next_zero_area_off - find a contiguous aligned zero area
@@ -412,6 +637,18 @@ again:
 	}
 	return index;
 }
+
+                         
+inline unsigned long bitmap_find_next_zero_area(unsigned long *map,
+                                unsigned long size,
+                                unsigned long start,
+                                unsigned int nr,
+                                unsigned long align_mask)
+{
+ return bitmap_find_next_zero_area_off(map, size, start, nr,
+                       align_mask, 0);
+}
+
 
 /*
  * Bitmap printing & parsing functions: first version by Nadia Yvette Chambers,
@@ -1340,6 +1577,38 @@ void bitmap_free( unsigned long *bitmap)
 {
 	free(bitmap);
 }
+
+
+inline void bitmap_zero(unsigned long *dst, unsigned int nbits)
+{
+	unsigned int len = CRTL_BITS_TO_LONGS(nbits) * sizeof(unsigned long);
+	memset(dst, 0, len);
+}
+
+inline void bitmap_fill(unsigned long *dst, unsigned int nbits)
+{
+	unsigned int len = CRTL_BITS_TO_LONGS(nbits) * sizeof(unsigned long);
+//    printf("len = %d\n", len);
+	memset(dst, 0xff, len);
+}
+
+inline void bitmap_copy(unsigned long *dst, const unsigned long *src, unsigned int nbits)
+{
+    unsigned int len = CRTL_BITS_TO_LONGS(nbits) * sizeof(unsigned long);
+    memcpy(dst, src, len);
+}
+
+
+/*
+* Copy bitmap and clear tail bits in last word.
+*/
+inline void bitmap_copy_clear_tail(unsigned long *dst, const unsigned long *src, unsigned int nbits)
+{
+   bitmap_copy(dst, src, nbits);
+   if (nbits % CRTL_BITS_PER_LONG)
+       dst[nbits / CRTL_BITS_PER_LONG] &= CRTL_BITMAP_LAST_WORD_MASK(nbits);
+}
+
 
 #if CRTL_BITS_PER_LONG == 64
 /**

@@ -28,7 +28,7 @@ const static struct {
 
 
 /* debug common function */
-inline int 
+_api inline int 
 crtl_printfp(FILE *fp, crtl_log_level_t level, int prefix, int _unused colorful,
                 char *_file, const char *_func, const unsigned int _line, const char *fmt, ...)
 {
@@ -63,7 +63,7 @@ crtl_printfp(FILE *fp, crtl_log_level_t level, int prefix, int _unused colorful,
 }
 
 
-inline int crtl_memprint(FILE* fp, void *const addr, unsigned int size)
+_api inline int crtl_memprint(FILE* fp, void *const addr, unsigned int size)
 {
     if(!addr || size==0)
     {
@@ -100,7 +100,7 @@ static inline void __crtl_print_failure(const char *file, int line, const char *
 }
 
 
-inline int crtl_print_failure(const char *file, int line, const char *format, ...)
+_api inline int crtl_print_failure(const char *file, int line, const char *format, ...)
 {
     va_list ap;
     va_start (ap, format);
@@ -109,7 +109,7 @@ inline int crtl_print_failure(const char *file, int line, const char *format, ..
     return 1;
 }
 
-inline void crtl_print_exit_failure(int status, const char *file, int line, const char *format, ...)
+_api inline void crtl_print_exit_failure(int status, const char *file, int line, const char *format, ...)
 {
     va_list ap;
     va_start (ap, format);

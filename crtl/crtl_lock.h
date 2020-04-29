@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <pthread.h>
 
+#include "crtl/easy/attribute.h"
+
 #include "crtl/bits/crtl_lock_semaphore.h"
 #include "crtl/bits/crtl_lock_mutex.h"
 #include "crtl/bits/crtl_lock_spin.h"
@@ -30,12 +32,12 @@
 
 
 /* file descripter lock/unlock */
-void crtl_fd_lock(int fd);
-void crtl_fd_unlock(int fd);
+_api void crtl_fd_lock(int fd);
+_api void crtl_fd_unlock(int fd);
 
 
-int  crtl_lock_reg(int fd, int cmd, int type, off_t offset, int whence, off_t len);
-pid_t crtl_lock_test(int fd, int type, off_t offset, int whence, off_t len);
+_api int  crtl_lock_reg(int fd, int cmd, int type, off_t offset, int whence, off_t len);
+_api pid_t crtl_lock_test(int fd, int type, off_t offset, int whence, off_t len);
 
 
 

@@ -321,7 +321,7 @@ _api int crtl_strcasecmp(const char *s1, const char *s2)
 #ifndef SUN_A
 
 /* eatoh - convert string s to short integer {SHRT_MIN:SHRT_MAX} */
-short crtl_eatoh(char *s)
+_api short crtl_eatoh(char *s)
 {
 	long n = strtol(s, NULL, 10);
 	
@@ -333,7 +333,7 @@ short crtl_eatoh(char *s)
 
 
 /* eatou - convert string s to unsigned short integer {0:USHRT_MAX} */
-unsigned short crtl_eatou(char *s)
+_api unsigned short crtl_eatou(char *s)
 {
 	unsigned long n = strtoul(s, NULL, 10);
 
@@ -345,7 +345,7 @@ unsigned short crtl_eatou(char *s)
 
 
 /* eatoi - convert string s to integer {INT_MIN:INT_MAX} */
-int crtl_eatoi(char *s)
+_api int crtl_eatoi(char *s)
 {
 	long n = strtol(s, NULL, 10);
 
@@ -357,7 +357,7 @@ int crtl_eatoi(char *s)
 
 
 /* eatop - convert string s to unsigned integer {0:UINT_MAX} */
-unsigned int crtl_eatop(char *s)
+_api unsigned int crtl_eatop(char *s)
 {
 	unsigned long n = strtoul(s, NULL, 10);
 
@@ -369,7 +369,7 @@ unsigned int crtl_eatop(char *s)
 
 
 /* eatol - convert string s to long integer {LONG_MIN:LONG_MAX} */
-long crtl_eatol(char *s)
+_api long crtl_eatol(char *s)
 {
 	long n = strtol(s, NULL, 10);
 
@@ -381,7 +381,7 @@ long crtl_eatol(char *s)
 
 
 /* eatov - convert string s to unsigned long {0:ULONG_MAX} */
-unsigned long crtl_eatov(char *s)
+_api unsigned long crtl_eatov(char *s)
 {
 	unsigned long n = strtoul(s, NULL, 10);
 
@@ -393,7 +393,7 @@ unsigned long crtl_eatov(char *s)
 
 
 /* eatof - convert string s to float {-FLT_MAX:FLT_MAX} */
-float crtl_eatof(char *s)
+_api float crtl_eatof(char *s)
 {
 	float x = strtod(s, NULL);
 
@@ -405,7 +405,7 @@ float crtl_eatof(char *s)
 
 
 /* eatod - convert string s to double {-DBL_MAX:DBL_MAX} */
-double crtl_eatod(char *s)
+_api double crtl_eatod(char *s)
 {
 	double x = strtod(s, NULL);
 
@@ -495,7 +495,7 @@ double crtl_eatod(char *s)
 /* eatoh - convert string s to short integer {SHRT_MIN:SHRT_MAX}    *
  * We store the absolute value of the converted string in an        *
  * unsigned long so we can test it for overflow.                    */
-short crtl_eatoh(char *s)
+_api short crtl_eatoh(char *s)
 {
 	unsigned long n;
 	int i;
@@ -525,7 +525,7 @@ short crtl_eatoh(char *s)
  * number in an unsigned long with room to check for overflow       *
  * condition.  If not, we forward the string to the unsigned long   *
  * routine.                                                         */
-unsigned short crtl_eatou(char *s)
+_api unsigned short crtl_eatou(char *s)
 {
 	unsigned long n;
 	int i;
@@ -551,7 +551,7 @@ unsigned short crtl_eatou(char *s)
 /* eatoi - convert string s to short integer {INT_MIN:INT_MAX}    *
  * The logic is the same as for eatou with INT_MAX replacing      *
  * SHRT_MAX and INT_MIN replacing SHRT_MIN.                       */
-int crtl_eatoi(char *s)
+_api int crtl_eatoi(char *s)
 {
 	unsigned long n;
 	int i;
@@ -581,7 +581,7 @@ int crtl_eatoi(char *s)
 /* eatop - convert string s to unsigned integer {0:UINT_MAX}        *
  * The logic is the same as for eatou with UINT_MAX replacing       *
  * USHRT_MAX.                                                       */
-unsigned int crtl_eatop(char *s)
+_api unsigned int crtl_eatop(char *s)
 {
 	unsigned long n;
 	int i;
@@ -607,7 +607,7 @@ unsigned int crtl_eatop(char *s)
 /* eatol - convert string s to long integer {LONG_MIN:LONG_MAX}     *
  * We store the absolute value of the converted string in an        *
  * unsigned long so we can test it for overflow.                    */
-long crtl_eatol(char *s)
+_api long crtl_eatol(char *s)
 {
 	unsigned long n;
 	int i;
@@ -633,7 +633,7 @@ long crtl_eatol(char *s)
 
 /* eatov - convert string s to unsigned long {0:ULONG_MAX}          *
  * Here, we check for overflow by seeing whether n decreases.       */
-unsigned long crtl_eatov(char *s)
+_api unsigned long crtl_eatov(char *s)
 {
 	unsigned long n;
 	unsigned long n_old;
@@ -655,13 +655,13 @@ unsigned long crtl_eatov(char *s)
 }
 
 /* Dummy atof, atod routines until the ANSI police get here */
-float crtl_eatof(char *s)
+_api float crtl_eatof(char *s)
 {
 	return (float) atof(s);
 }
 
 
-double crtl_eatod(char *s)
+_api double crtl_eatod(char *s)
 {
 	return atof(s);
 }
@@ -700,7 +700,7 @@ double crtl_eatod(char *s)
  *
  * An opening bracket without a matching close is matched literally.
  */
-bool crtl_glob_match(char const *pat, char const *str)
+_api bool crtl_glob_match(char const *pat, char const *str)
 {
 	/*
 	 * Backtrack to previous * on mismatch and retry starting one
