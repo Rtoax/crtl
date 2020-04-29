@@ -5,6 +5,8 @@
 #include <limits.h>
 
 #include <crtl/easy/align.h>
+#include <crtl/easy/attribute.h>
+
 
 #include "crtl/bits/crtl_bitops.h"
 #include "crtl/bits/crtl_bits_find.h"
@@ -102,7 +104,7 @@ extern void bitmap_free(unsigned long *bitmap);
 //extern int __bitmap_full(const unsigned long *bitmap, unsigned int nbits);
 extern int __bitmap_equal(const unsigned long *bitmap1, const unsigned long *bitmap2, unsigned int nbits);
 extern bool __bitmap_or_equal(const unsigned long *src1, const unsigned long *src2, const unsigned long *src3,unsigned int nbits);
-extern void __bitmap_complement(unsigned long *dst, const unsigned long *src, unsigned int nbits); //补充-取反
+extern void __bitmap_complement(unsigned long *dst, const unsigned long *src, unsigned int nbits); //琛ュ厖-鍙栧弽
 extern void __bitmap_shift_right(unsigned long *dst, const unsigned long *src, unsigned int shift, unsigned int nbits);
 extern void __bitmap_shift_left(unsigned long *dst, const unsigned long *src, 	unsigned int shift, unsigned int nbits);
 extern void bitmap_cut(unsigned long *dst, const unsigned long *src, unsigned int first, unsigned int cut, unsigned int nbits);
@@ -205,11 +207,71 @@ extern int bitmap_parse_user(const char *ubuf, unsigned int ulen, unsigned long 
  *   - ``-EINVAL``: invalid character in string
  *   - ``-ERANGE``: bit number specified too large for mask
  *   - ``-EOVERFLOW``: integer overflow in the input parameters
- */ //下面的几个parse接口有些问题
+ */ //涓嬮潰鐨勫嚑涓猵arse鎺ュ彛鏈変簺闂
 extern int bitmap_parselist(const char *buf, unsigned long *maskp, int nmaskbits);
 extern int bitmap_parselist_user(const char *ubuf, unsigned int ulen, unsigned long *dst, int nbits);
-extern void bitmap_remap(unsigned long *dst, const unsigned long *src, const unsigned long *old, 
+
+/**
+ * bitmap_remap - Apply map defined by a pair of bitmaps to another bitmap
+ *	@dst: remapped result
+ *	@src: subset to be remapped
+ *	@old: defines domain of map
+ *	@new: defines range of map
+ *	@nbits: number of bits in each of these bitmaps
+ *
+ * Let @old and @new define a mapping of bit positions, such that
+ * whatever position is held by the n-th set bit in @old is mapped
+ * to the n-th set bit in @new.  In the more general case, allowing
+ * for the possibility that the weight 'w' of @new is less than the
+ * weight of @old, map the position of the n-th set bit in @old to
+ * the position of the m-th set bit in @new, where m == n % w.
+ *
+ * If either of the @old and @new bitmaps are empty, or if @src and
+ * @dst point to the same location, then this routine copies @src
+ * to @dst.
+ *
+ * The positions of unset bits in @old are mapped to themselves
+ * (the identify map).
+ *
+ * Apply the above specified mapping to @src, placing the result in
+ * @dst, clearing any bits previously set in @dst.
+ *
+ * For example, lets say that @old has bits 4 through 7 set, and
+ * @new has bits 12 through 15 set.  This defines the mapping of bit
+ * position 4 to 12, 5 to 13, 6 to 14 and 7 to 15, and of all other
+ * bit positions unchanged.  So if say @src comes into this routine
+ * with bits 1, 5 and 7 set, then @dst should leave with bits 1,
+ * 13 and 15 set.
+ */
+_api void bitmap_remap(unsigned long *dst, const unsigned long *src, const unsigned long *old, 
                             const unsigned long *new, unsigned int nbits);
+
+/**
+ * bitmap_bitremap - Apply map defined by a pair of bitmaps to a single bit
+ *  @oldbit: bit position to be mapped
+ *  @old: defines domain of map
+ *  @new: defines range of map
+ *  @bits: number of bits in each of these bitmaps
+ *
+ * Let @old and @new define a mapping of bit positions, such that
+ * whatever position is held by the n-th set bit in @old is mapped
+ * to the n-th set bit in @new.  In the more general case, allowing
+ * for the possibility that the weight 'w' of @new is less than the
+ * weight of @old, map the position of the n-th set bit in @old to
+ * the position of the m-th set bit in @new, where m == n % w.
+ *
+ * The positions of unset bits in @old are mapped to themselves
+ * (the identify map).
+ *
+ * Apply the above specified mapping to bit position @oldbit, returning
+ * the new bit position.
+ *
+ * For example, lets say that @old has bits 4 through 7 set, and
+ * @new has bits 12 through 15 set.  This defines the mapping of bit
+ * position 4 to 12, 5 to 13, 6 to 14 and 7 to 15, and of all other
+ * bit positions unchanged.  So if say @oldbit is 5, then this routine
+ * returns 13.
+ */
 extern int bitmap_bitremap(int oldbit, const unsigned long *old, const unsigned long *new, int bits);
 extern void bitmap_onto(unsigned long *dst, const unsigned long *orig, const unsigned long *relmap, unsigned int bits);
 extern void bitmap_fold(unsigned long *dst, const unsigned long *orig, unsigned int sz, unsigned int nbits);

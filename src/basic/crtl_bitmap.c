@@ -860,8 +860,10 @@ int bitmap_parse(const char *start, unsigned int buflen,
 	return 0;
 }
 
+        
+//#ifdef CONFIG_NUMA
+#if 1
 
-#ifdef CONFIG_NUMA
 /**
  * bitmap_pos_to_ord - find ordinal of set bit at given position in bitmap
  *	@buf: pointer to a bitmap
@@ -950,7 +952,7 @@ unsigned int bitmap_ord_to_pos(const unsigned long *buf, unsigned int ord, unsig
  * with bits 1, 5 and 7 set, then @dst should leave with bits 1,
  * 13 and 15 set.
  */
-void bitmap_remap(unsigned long *dst, const unsigned long *src,
+_api void bitmap_remap(unsigned long *dst, const unsigned long *src,
 		const unsigned long *old, const unsigned long *new,
 		unsigned int nbits)
 {

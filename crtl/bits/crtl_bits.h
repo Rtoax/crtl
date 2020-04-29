@@ -62,9 +62,7 @@
  *                                      (*addr1 & *addr2)
  *
  */
-
-
-
+#if 0
 static inline void crtl_set_bit(int nr, volatile void *addr)
 {
 	int	mask;
@@ -106,6 +104,25 @@ static inline void crtl_clear_bit(int nr, volatile void *addr)
 		: "t", "memory"
 	);
 }
+
+#else
+
+/* How many bits in an unsigned long */
+#define ____BITS_PER_LONG (8 * sizeof(unsigned long))
+
+static inline void crtl_set_bit(int nr, volatile void *addr)
+{
+    volatile unsigned long *laddr = addr;
+	laddr[nr / ____BITS_PER_LONG] |= 1UL << (nr % ____BITS_PER_LONG);
+}
+
+static inline void crtl_clear_bit(int nr, volatile void *addr)
+{
+    volatile unsigned long *laddr = addr;
+	laddr[nr / ____BITS_PER_LONG] &= ~(1UL << (nr % ____BITS_PER_LONG));
+}
+
+#endif
 
 static inline void crtl_change_bit(int nr, volatile void *addr)
 {

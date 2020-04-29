@@ -241,19 +241,42 @@ static void demo_bitmap_test_parse()
     crtl_print_info("%s\n", buf);
 
     unsigned long * bm2 = bitmap_alloc(nbits);
-    bitmap_set(bm2, 0, 1);
     crtl_memshow(bm2, nbits/8);
-    char buf2[256] = {"0-1023:2/256"};
-    if(bitmap_parselist(buf2, bm2, nbits)) {
-        crtl_print_info("bitmap_parselist ok, %s\n", buf2);
+    char buf2[256] = {"0-128:2/12"};
+    int ret;
+    if((ret = bitmap_parselist(buf2, bm2, nbits))==0) {
+        crtl_print_info("bitmap_parselist ok, %s, %d\n", buf2, ret);
     } else {
         crtl_print_info("bitmap_parselist not ok, %s\n", buf2);
     }
+    crtl_memshow(bm2, nbits/8);
 
     
 }
 
 
+static void demo_bitmap_test_map()
+{
+    int nbits= 32;
+    unsigned long * src1 = bitmap_alloc(nbits);
+    unsigned long * dst1 = bitmap_alloc(nbits);
+    unsigned long * old1 = bitmap_alloc(nbits);
+    unsigned long * new1 = bitmap_alloc(nbits);
+    
+    bitmap_set(src1, 1, 1);
+    bitmap_set(src1, 5, 1);
+    bitmap_set(src1, 7, 1);
+    bitmap_set(old1, 4, 3);
+    bitmap_set(new1, 12, 3);
+
+    bitmap_remap(dst1, src1, old1, new1, nbits);
+
+    
+    crtl_memshow(dst1, nbits/8);
+    crtl_memshow(src1, nbits/8);
+    crtl_memshow(old1, nbits/8);
+    crtl_memshow(new1, nbits/8);
+}
 
 
 int main()
@@ -264,8 +287,8 @@ int main()
 //    demo_bitmap_test_shift();
 //    demo_bitmap_test_cut();
 //    demo_bitmap_test_replace();
-    demo_bitmap_test_parse();
-
+//    demo_bitmap_test_parse();
+    demo_bitmap_test_map();
 
 
     return 0;
