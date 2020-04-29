@@ -269,13 +269,27 @@ static void demo_bitmap_test_map()
     bitmap_set(old1, 4, 3);
     bitmap_set(new1, 12, 3);
 
-    bitmap_remap(dst1, src1, old1, new1, nbits);
-
-    
+    crtl_print_info("bitmap_remap\n");
+    bitmap_remap(dst1, src1, old1, new1, nbits);    
     crtl_memshow(dst1, nbits/8);
     crtl_memshow(src1, nbits/8);
     crtl_memshow(old1, nbits/8);
     crtl_memshow(new1, nbits/8);
+
+    crtl_print_info("bitmap_bitremap\n");
+    bitmap_bitremap(8, old1, new1, 200);
+    crtl_memshow(old1, nbits/8);
+    crtl_memshow(new1, nbits/8);
+    
+}
+
+
+static void demo_bitmap_test_onto()
+{
+    int nbits= 32;
+    unsigned long * src1 = bitmap_alloc(nbits);
+    unsigned long * dst1 = bitmap_alloc(nbits);
+
 }
 
 
