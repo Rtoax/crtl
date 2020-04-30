@@ -3,8 +3,8 @@
 
 CONFIG_FILE=config.h
 CONFIG_LIB_NAME=LibCRTL
-CONFIG_LIB_CHK_FILE=configlibchk.txt
-CONFIG_HDR_CHK_FILE=confighdrchk.txt
+CONFIG_LIB_CHK_FILE=config/configlibchk.txt
+CONFIG_HDR_CHK_FILE=config/confighdrchk.txt
 
 CONFIG_USR_INCLUDE=/usr/include
 CONFIG_USR_LOCAL_INCLUDE=/usr/local/include
