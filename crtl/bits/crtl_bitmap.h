@@ -93,8 +93,8 @@
  * Allocation and deallocation of bitmap.
  * Provided in lib/bitmap.c to avoid circular dependency.
  */
-extern unsigned long *bitmap_alloc(unsigned int nbits);
-extern void bitmap_free(unsigned long *bitmap);
+_api unsigned long *bitmap_alloc(unsigned int nbits);
+_api void bitmap_free(unsigned long *bitmap);
 
 
 /**
@@ -133,7 +133,7 @@ extern void bitmap_free(unsigned long *bitmap);
  * step for each moved bit. Optimisation is left as an exercise
  * for the compiler.
  */
-extern void bitmap_cut(unsigned long *dst, const unsigned long *src, unsigned int first, unsigned int cut, unsigned int nbits);
+_api void bitmap_cut(unsigned long *dst, const unsigned long *src, unsigned int first, unsigned int cut, unsigned int nbits);
 
 
 
@@ -150,7 +150,7 @@ extern void bitmap_cut(unsigned long *dst, const unsigned long *src, unsigned in
  * the bit offset of all zero areas this function finds plus @align_offset
  * is multiple of that power of 2.
  */
-extern unsigned long bitmap_find_next_zero_area_off(unsigned long *map, unsigned long size,
+_api unsigned long bitmap_find_next_zero_area_off(unsigned long *map, unsigned long size,
                     						    unsigned long start, unsigned int nr, unsigned long align_mask,
                     						    unsigned long align_offset);
 
@@ -166,7 +166,7 @@ extern unsigned long bitmap_find_next_zero_area_off(unsigned long *map, unsigned
  * the bit offset of all zero areas this function finds is multiples of that
  * power of 2. A @align_mask of 0 means no alignment is required.
  */
-inline unsigned long bitmap_find_next_zero_area(unsigned long *map, unsigned long size,
+_api inline unsigned long bitmap_find_next_zero_area(unsigned long *map, unsigned long size,
                      			    unsigned long start, unsigned int nr, unsigned long align_mask);
 
 /**
@@ -185,7 +185,7 @@ inline unsigned long bitmap_find_next_zero_area(unsigned long *map, unsigned lon
  * characters. Grouping such as "1,,5", ",44", "," or "" is allowed.
  * Leading, embedded and trailing whitespace accepted.
  */
-extern int bitmap_parse(const char *buf, unsigned int buflen, unsigned long *dst, int nbits);
+_api int bitmap_parse(const char *buf, unsigned int buflen, unsigned long *dst, int nbits);
 
 /*
  * Bitmap printing & parsing functions: first version by Nadia Yvette Chambers,
@@ -201,7 +201,7 @@ extern int bitmap_parse(const char *buf, unsigned int buflen, unsigned long *dst
  * @maskp: pointer to bitmap array that will contain result.
  * @nmaskbits: size of bitmap, in bits.
  */
-extern int bitmap_parse_user(const char *ubuf, unsigned int ulen, unsigned long *dst, int nbits);
+_api int bitmap_parse_user(const char *ubuf, unsigned int ulen, unsigned long *dst, int nbits);
 
 /**
  * bitmap_parselist - convert list format ASCII string to bitmap
@@ -227,7 +227,7 @@ extern int bitmap_parse_user(const char *ubuf, unsigned int ulen, unsigned long 
  *   - ``-ERANGE``: bit number specified too large for mask
  *   - ``-EOVERFLOW``: integer overflow in the input parameters
  */ 
-extern int bitmap_parselist(const char *buf, unsigned long *maskp, int nmaskbits);
+_api int bitmap_parselist(const char *buf, unsigned long *maskp, int nmaskbits);
 
 /**
  * bitmap_parselist_user()
@@ -240,7 +240,7 @@ extern int bitmap_parselist(const char *buf, unsigned long *maskp, int nmaskbits
  *
  * Wrapper for bitmap_parselist(), providing it with user buffer.
  */
-extern int bitmap_parselist_user(const char *ubuf, unsigned int ulen, unsigned long *dst, int nbits);
+_api int bitmap_parselist_user(const char *ubuf, unsigned int ulen, unsigned long *dst, int nbits);
 
 /**
  * bitmap_remap - Apply map defined by a pair of bitmaps to another bitmap
@@ -303,7 +303,7 @@ _api void bitmap_remap(unsigned long *dst, const unsigned long *src, const unsig
  * bit positions unchanged.  So if say @oldbit is 5, then this routine
  * returns 13.
  */
-extern int bitmap_bitremap(int oldbit, const unsigned long *old, const unsigned long *new, int bits);
+_api int bitmap_bitremap(int oldbit, const unsigned long *old, const unsigned long *new, int bits);
 
 
 /**
@@ -412,7 +412,7 @@ extern int bitmap_bitremap(int oldbit, const unsigned long *old, const unsigned 
  *
  * All bits in @dst not set by the above rule are cleared.
  */
-extern void bitmap_onto(unsigned long *dst, const unsigned long *orig, const unsigned long *relmap, unsigned int bits);
+_api void bitmap_onto(unsigned long *dst, const unsigned long *orig, const unsigned long *relmap, unsigned int bits);
 
 /**
  * bitmap_fold - fold larger bitmap into smaller, modulo specified size
@@ -425,7 +425,7 @@ extern void bitmap_onto(unsigned long *dst, const unsigned long *orig, const uns
  * Clear all other bits in @dst.  See further the comment and
  * Example [2] for bitmap_onto() for why and how to use this.
  */
-extern void bitmap_fold(unsigned long *dst, const unsigned long *orig, unsigned int sz, unsigned int nbits);
+_api void bitmap_fold(unsigned long *dst, const unsigned long *orig, unsigned int sz, unsigned int nbits);
 
 /**
  * bitmap_find_free_region - find a contiguous aligned mem region
@@ -441,7 +441,7 @@ extern void bitmap_fold(unsigned long *dst, const unsigned long *orig, unsigned 
  * Return the bit offset in bitmap of the allocated region,
  * or -errno on failure.
  */
-extern int bitmap_find_free_region(unsigned long *bitmap, unsigned int bits, int order);
+_api int bitmap_find_free_region(unsigned long *bitmap, unsigned int bits, int order);
 
 /**
  * bitmap_release_region - release allocated bitmap region
@@ -454,7 +454,7 @@ extern int bitmap_find_free_region(unsigned long *bitmap, unsigned int bits, int
  *
  * No return value.
  */
-extern void bitmap_release_region(unsigned long *bitmap, unsigned int pos, int order);
+_api void bitmap_release_region(unsigned long *bitmap, unsigned int pos, int order);
 
 /**
  * bitmap_allocate_region - allocate bitmap region
@@ -467,17 +467,18 @@ extern void bitmap_release_region(unsigned long *bitmap, unsigned int pos, int o
  * Return 0 on success, or %-EBUSY if specified region wasn't
  * free (not all bits were zero).
  */
-extern int bitmap_allocate_region(unsigned long *bitmap, unsigned int pos, int order);
+_api int bitmap_allocate_region(unsigned long *bitmap, unsigned int pos, int order);
 
 
 
 #ifdef __BIG_ENDIAN
-extern void bitmap_copy_le(unsigned long *dst, const unsigned long *src, unsigned int nbits);
+_api void bitmap_copy_le(unsigned long *dst, const unsigned long *src, unsigned int nbits);
 #else
 #define bitmap_copy_le bitmap_copy
 #endif
-extern unsigned int bitmap_ord_to_pos(const unsigned long *bitmap, unsigned int ord, unsigned int nbits);
-extern int bitmap_print_to_pagebuf(bool list, char *buf, const unsigned long *maskp, int nmaskbits);
+
+_api unsigned int bitmap_ord_to_pos(const unsigned long *bitmap, unsigned int ord, unsigned int nbits);
+_api int bitmap_print_to_pagebuf(bool list, char *buf, const unsigned long *maskp, int nmaskbits);
 
 
 
@@ -494,17 +495,17 @@ extern int bitmap_print_to_pagebuf(bool list, char *buf, const unsigned long *ma
 #define small_const_nbits(nbits) \
 	(__builtin_constant_p(nbits) && (nbits) <= CRTL_BITS_PER_LONG && (nbits) > 0)
 
-inline void bitmap_zero(unsigned long *dst, unsigned int nbits);
+_api inline void bitmap_zero(unsigned long *dst, unsigned int nbits);
 
-inline void bitmap_fill(unsigned long *dst, unsigned int nbits);
+_api inline void bitmap_fill(unsigned long *dst, unsigned int nbits);
 
-inline void bitmap_copy(unsigned long *dst, const unsigned long *src, unsigned int nbits);
+_api inline void bitmap_copy(unsigned long *dst, const unsigned long *src, unsigned int nbits);
 
 
 /*
 * Copy bitmap and clear tail bits in last word.
 */
-inline void bitmap_copy_clear_tail(unsigned long *dst, const unsigned long *src, unsigned int nbits);
+_api inline void bitmap_copy_clear_tail(unsigned long *dst, const unsigned long *src, unsigned int nbits);
 
 
        
@@ -513,9 +514,9 @@ inline void bitmap_copy_clear_tail(unsigned long *dst, const unsigned long *src,
 * therefore conversion is not needed when copying data from/to arrays of u32.
 */
 #if CRTL_BITS_PER_LONG == 64
-extern void bitmap_from_arr32(unsigned long *bitmap, const uint32_t *buf,
+_api  void bitmap_from_arr32(unsigned long *bitmap, const uint32_t *buf,
                            unsigned int nbits);
-extern void bitmap_to_arr32(uint32_t *buf, const unsigned long *bitmap,
+_api  void bitmap_to_arr32(uint32_t *buf, const unsigned long *bitmap,
                            unsigned int nbits);
 #else
 #define bitmap_from_arr32(bitmap, buf, nbits)			\
@@ -528,15 +529,15 @@ extern void bitmap_to_arr32(uint32_t *buf, const unsigned long *bitmap,
 
 
 
-inline int bitmap_and(unsigned long *dst, const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
+_api inline int bitmap_and(unsigned long *dst, const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
 
-inline void bitmap_or(unsigned long *dst, const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
+_api inline void bitmap_or(unsigned long *dst, const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
 
-inline void bitmap_xor(unsigned long *dst, const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
+_api inline void bitmap_xor(unsigned long *dst, const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
 
-inline int bitmap_andnot(unsigned long *dst, const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
+_api inline int bitmap_andnot(unsigned long *dst, const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
 
-inline void bitmap_complement(unsigned long *dst, const unsigned long *src, unsigned int nbits);
+_api inline void bitmap_complement(unsigned long *dst, const unsigned long *src, unsigned int nbits);
 
 
             
@@ -547,7 +548,7 @@ inline void bitmap_complement(unsigned long *dst, const unsigned long *src, unsi
 #endif
 #define BITMAP_MEM_MASK (BITMAP_MEM_ALIGNMENT - 1)
 
-inline int bitmap_equal(const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
+_api inline int bitmap_equal(const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
 
 /**
  * bitmap_or_equal - Check whether the or of two bitmaps is equal to a third
@@ -558,22 +559,22 @@ inline int bitmap_equal(const unsigned long *src1, const unsigned long *src2, un
  *
  * Returns: True if (*@src1 | *@src2) == *@src3, false otherwise
  */
-inline bool bitmap_or_equal(const unsigned long *src1, const unsigned long *src2,
+_api inline bool bitmap_or_equal(const unsigned long *src1, const unsigned long *src2,
                                 const unsigned long *src3, unsigned int nbits);
 
-inline int bitmap_intersects(const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
+_api inline int bitmap_intersects(const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
 
-inline int bitmap_subset(const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
+_api inline int bitmap_subset(const unsigned long *src1, const unsigned long *src2, unsigned int nbits);
 
-inline int bitmap_empty(const unsigned long *src, unsigned nbits);
+_api inline int bitmap_empty(const unsigned long *src, unsigned nbits);
 
-inline int bitmap_full(const unsigned long *src, unsigned int nbits);
+_api inline int bitmap_full(const unsigned long *src, unsigned int nbits);
 
-inline int bitmap_weight(const unsigned long *src, unsigned int nbits);
+_api inline int bitmap_weight(const unsigned long *src, unsigned int nbits);
 
-inline void bitmap_set(unsigned long *map, unsigned int start, unsigned int nbits);
+_api inline void bitmap_set(unsigned long *map, unsigned int start, unsigned int nbits);
 
-inline void bitmap_clear(unsigned long *map, unsigned int start, unsigned int nbits);
+_api inline void bitmap_clear(unsigned long *map, unsigned int start, unsigned int nbits);
 
 /**
  * bitmap_shift_right - logical right shift of the bits in a bitmap
@@ -586,8 +587,8 @@ inline void bitmap_clear(unsigned long *map, unsigned int start, unsigned int nb
  * direction.  Zeros are fed into the vacated MS positions and the
  * LS bits shifted off the bottom are lost.
  */
-inline void bitmap_shift_right(unsigned long *dst, const unsigned long *src,
-                                unsigned int shift, unsigned int nbits);
+_api inline void bitmap_shift_right(unsigned long *dst, const unsigned long *src,
+                                    unsigned int shift, unsigned int nbits);
 
 /**
  * __bitmap_shift_left - logical left shift of the bits in a bitmap
@@ -600,17 +601,17 @@ inline void bitmap_shift_right(unsigned long *dst, const unsigned long *src,
  * direction.  Zeros are fed into the vacated LS bit positions
  * and those MS bits shifted off the top are lost.
  */
-inline void bitmap_shift_left(unsigned long *dst, const unsigned long *src, unsigned int shift, unsigned int nbits);
+_api inline void bitmap_shift_left(unsigned long *dst, const unsigned long *src, unsigned int shift, unsigned int nbits);
 
-inline void bitmap_replace(unsigned long *dst, const unsigned long *old,
+_api inline void bitmap_replace(unsigned long *dst, const unsigned long *old,
                               const unsigned long *new, const unsigned long *mask,
                               unsigned int nbits);
 
-inline void bitmap_next_clear_region(unsigned long *bitmap,
+_api inline void bitmap_next_clear_region(unsigned long *bitmap,
                                         unsigned int *rs, unsigned int *re,
                                         unsigned int end);
 
-inline void bitmap_next_set_region(unsigned long *bitmap,
+_api inline void bitmap_next_set_region(unsigned long *bitmap,
                                       unsigned int *rs, unsigned int *re,
                                       unsigned int end);
 
@@ -678,7 +679,7 @@ inline void bitmap_next_set_region(unsigned long *bitmap,
  * That is ``(u32 *)(&val)[0]`` gets the upper 32 bits,
  * but we expect the lower 32-bits of uint64_t.
  */
-inline void bitmap_from_u64(unsigned long *dst, uint64_t mask);
+_api inline void bitmap_from_u64(unsigned long *dst, uint64_t mask);
 
 
 /**
@@ -689,7 +690,7 @@ inline void bitmap_from_u64(unsigned long *dst, uint64_t mask);
  * Returns the 8-bit value located at the @start bit offset within the @src
  * memory region.
  */
-inline unsigned long bitmap_get_value8(const unsigned long *map, unsigned long start);
+_api inline unsigned long bitmap_get_value8(const unsigned long *map, unsigned long start);
 
 /**
 * bitmap_set_value8 - set an 8-bit value within a memory region
@@ -697,7 +698,7 @@ inline unsigned long bitmap_get_value8(const unsigned long *map, unsigned long s
 * @value: the 8-bit value; values wider than 8 bits may clobber bitmap
 * @start: bit offset of the 8-bit value; must be a multiple of 8
 */
-inline void bitmap_set_value8(unsigned long *map, unsigned long value, unsigned long start);
+_api inline void bitmap_set_value8(unsigned long *map, unsigned long value, unsigned long start);
 
 
 #endif /*__CRTL_BITS_BITMAP_H */
