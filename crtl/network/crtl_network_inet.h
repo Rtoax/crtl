@@ -69,4 +69,16 @@ int crtl_if_nameexist(const char *if_name);
 #endif /*<_T_SYS_NETOWRK_IF_H_>*/
 
 
+
+int crtl_inet_ntop4(const unsigned char *src, char *dst, size_t size);
+int crtl_inet_ntop6(const unsigned char *src, char *dst, size_t size);
+int crtl_inet_pton4(const char *src, unsigned char *dst);
+int crtl_inet_pton6(const char *src, unsigned char *dst);
+
+
+int crtl_inet_ntop(int af, const void* src, char* dst, size_t size);
+int crtl_inet_pton(int af, const char* src, void* dst);
+
+
+
 #endif /*<__CRTL_NETWORK_INET_H>*/

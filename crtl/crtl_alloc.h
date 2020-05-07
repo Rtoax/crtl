@@ -3,6 +3,17 @@
 
 #include <malloc.h>
 #include "crtl/easy/attribute.h"
+#include "crtl/bits/crtl_types_fn.h"
+
+
+void* crtl_malloc(size_t size);
+void crtl_free(void* ptr);
+void* crtl_calloc(size_t count, size_t size);
+void* crtl_realloc(void* ptr, size_t size);
+
+int crtl_replace_allocator(crtl_malloc_fn_t malloc_func, crtl_realloc_fn_t realloc_func,
+                              crtl_calloc_fn_t calloc_func, crtl_free_fn_t free_func);
+
 
 /**
  *  分配内存 一维、二维、三维...，分配后可以通过数组形式访问

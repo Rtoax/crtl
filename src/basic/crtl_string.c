@@ -1,5 +1,6 @@
-#include "crtl/crtl_string.h"
+#include <limits.h>  /* SSIZE_MAX */
 
+#include "crtl/crtl_string.h"
 #include "crtl/bits/crtl_types_basic.h"
 
 
@@ -70,6 +71,25 @@ _api void crtl_strchop(char *s, char *t)
     }
     *t='\0';
 }
+
+
+
+_api ssize_t crtl_strscpy(char* d, const char* s, size_t n) 
+{
+  size_t i;
+
+  for (i = 0; i < n; i++)
+    if ('\0' == (d[i] = s[i]))
+      return i > SSIZE_MAX ? CRTL_ERROR : (ssize_t) i;
+
+  if (i == 0)
+    return 0;
+
+  d[--i] = '\0';
+
+  return CRTL_ERROR;
+}
+
 
 /* estrtoh - convert string s to short integer {SHRT_MIN:SHRT_MAX} */
 _api short crtl_estrtoh(char *s)

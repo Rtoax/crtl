@@ -25,6 +25,7 @@ _api char *crtl_skip_spaces(const char *str);
 _api int crtl_strstripc(char *str, const char ch);
 _api int crtl_strccount (char c, char *s);
 _api void crtl_strchop(char *s, char *t);
+_api ssize_t crtl_strscpy(char* d, const char* s, size_t n);
 _api short crtl_estrtoh(char *s);
 _api unsigned short crtl_estrtous(char *s);
 _api int crtl_estrtoi(char *s);
