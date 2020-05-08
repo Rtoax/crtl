@@ -110,7 +110,7 @@ unsigned long crtl_find_next_clump8(unsigned long *clump, const unsigned long *a
         return size;
 
     offset = round_down(offset, 8);
-    *clump = bitmap_get_value8(addr, offset);
+    *clump = crtl_bitmap_get_value8(addr, offset);
 
     return offset;
 }

@@ -65,7 +65,7 @@ int crtl_bitmask_parselist(const char *buf, struct crtl_bitmask *bmp);
  * ranges.  Consecutively set bits are shown as two hyphen-separated
  * decimal numbers, the smallest and largest bit numbers set in
  * the range.  Output format is compatible with the format
- * accepted as input by bitmap_parselist().
+ * accepted as input by crtl_bitmap_parselist().
  *
  * The return value is the number of characters which would be
  * generated for the given input, excluding the trailing '\0', as
