@@ -70,6 +70,10 @@
 /* 创建文件夹 */
 _api int crtl_mkdir(const char *dir, mode_t mode);
 _api int crtl_rmdir(const char *dir); /* 删除文件夹 */
+_api int crtl_chdir(const char* dir);
+_api int crtl_cwd(char* buffer, size_t* size);
+_api int crtl_tmpdir(char* buffer, size_t* size);
+
 
 /* 文件选项 */
 _api int crtl_is_exist(const char *dirname);
