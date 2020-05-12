@@ -16,6 +16,7 @@ aux_source_directory(./src/sort  DIR_SRCS)
 aux_source_directory(./src/linux  DIR_SRCS)
 aux_source_directory(./src/thread  DIR_SRCS)
 aux_source_directory(./src/tcp-ip  DIR_SRCS)
+aux_source_directory(./src/hpc  DIR_SRCS)
 
 #设置编译参数 
 set(CMAKE_C_FLAGS "-g -Wall")
@@ -34,7 +35,7 @@ find_library(PTHREAD pthread /usr/lib64)
 link_libraries(${DL} ${RT} ${MATH} ${CRYPT} ${PTHREAD})
 
 #定义 
-add_definitions(-g3 -MD -Wall)
+add_definitions(-g3 -MD -Wall -fopenmp)
 
 #生成动态库和静态库 
 add_library(acc_lib_shared  SHARED ${DIR_SRCS}) 
@@ -59,6 +60,7 @@ install(TARGETS acc_lib_shared DESTINATION /usr/lib64 PERMISSIONS OWNER_EXECUTE 
 file(GLOB crtl_hdrs ./crtl/*.h)
 file(GLOB crtl_hdrs_easy ./crtl/easy/*.h)
 file(GLOB crtl_hdrs_bits ./crtl/bits/*.h)
+file(GLOB crtl_hdrs_hpc ./crtl/hpc/*.h)
 file(GLOB crtl_hdrs_network ./crtl/network/*.h)
 file(GLOB crtl_hdrs_linux ./crtl/linux/*.h)
 file(GLOB crtl_hdrs_tcpip ./crtl/tcp-ip/*.h)
@@ -67,6 +69,7 @@ file(GLOB crtl_hdrs_tcpip_bits ./crtl/tcp-ip/bits/*.h)
 install(FILES ${crtl_hdrs} DESTINATION /usr/local/include/crtl/)
 install(FILES ${crtl_hdrs_easy} DESTINATION /usr/local/include/crtl/easy)
 install(FILES ${crtl_hdrs_bits} DESTINATION /usr/local/include/crtl/bits)
+install(FILES ${crtl_hdrs_hpc} DESTINATION /usr/local/include/crtl/hpc)
 install(FILES ${crtl_hdrs_network} DESTINATION /usr/local/include/crtl/network)
 install(FILES ${crtl_hdrs_linux} DESTINATION /usr/local/include/crtl/linux)
 install(FILES ${crtl_hdrs_tcpip} DESTINATION /usr/local/include/crtl/tcp-ip)
