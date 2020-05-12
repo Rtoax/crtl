@@ -105,5 +105,15 @@ int crtl_getrusage(crtl_rusage_t* rusage);
 
 ssize_t crtl_recvmsg(int fd, struct msghdr* msg, int flags);
 
+/* close() on macos has the "interesting" quirk that it fails with EINTR
+ * without closing the file descriptor when a thread is in the cancel state.
+ * That's why libuv calls close$NOCANCEL() instead.
+ *
+ * glibc on linux has a similar issue: close() is a cancellation point and
+ * will unwind the thread when it's in the cancel state. Work around that
+ * by making the system call directly. Musl libc is unaffected.
+ */
+int crtl_close_nocancel(int fd);
+
 
 #endif /*<__CRTL_BITS_CORE_H>*/

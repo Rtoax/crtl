@@ -116,7 +116,76 @@ _api int crtl_rmdir(const char *dir)
     return CRTL_SUCCESS;
 }
 
+_api int crtl_scandir_filter_default(const struct dirent* dent)
+{
+    return strcmp(dent->d_name, ".") != 0 && strcmp(dent->d_name, "..") != 0;
+}
 
+
+_api int crtl_scandir_sort_default(const struct dirent** a, const struct dirent** b)
+{
+    return strcmp((*a)->d_name, (*b)->d_name);
+}
+
+
+
+_api int crtl_scandir(const char* maindir, struct dirent*** namelist,
+                            int (*filter)(const struct dirent*),
+                            int (*compar)(const struct dirent**, const struct dirent **))
+{
+  struct dirent** nl;
+  struct dirent** nl_copy;
+  struct dirent* dirent;
+  unsigned count;
+//  size_t allocated;
+  DIR* mdir;
+
+  nl = NULL;
+  count = 0;
+//  allocated = 0;
+  mdir = opendir(maindir);
+  if (!mdir)
+    return -1;
+
+  while (1) {
+    dirent = readdir(mdir);
+    if (!dirent)
+      break;
+    if (!filter || filter(dirent)) {
+      struct dirent* copy;
+      copy = malloc(sizeof(*copy));
+      if (!copy)
+        goto error;
+      memcpy(copy, dirent, sizeof(*copy));
+
+      nl_copy = realloc(nl, sizeof(*copy) * (count + 1));
+      if (nl_copy == NULL) {
+        free(copy);
+        goto error;
+      }
+
+      nl = nl_copy;
+      nl[count++] = copy;
+    }
+  }
+
+  qsort(nl, count, sizeof(struct dirent *), (int (*)(const void *, const void *)) compar);
+
+  closedir(mdir);
+
+  *namelist = nl;
+  return count;
+
+error:
+  while (count > 0) {
+    dirent = nl[--count];
+    free(dirent);
+  }
+  free(nl);
+  closedir(mdir);
+  errno = ENOMEM;
+  return -1;
+}
 
 
 

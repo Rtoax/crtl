@@ -31,11 +31,25 @@ void demo_file_fd()
 }
 
 
+void demo_scandir_test()
+{
+    struct dirent **dirs;
+    int ndirs = crtl_scandir("../../", &dirs, crtl_scandir_filter_default, crtl_scandir_sort_default);
+
+    int i;
+    for(i=0;i<ndirs;i++) {
+        printf("%s\n", dirs[i]->d_name);
+    }
+    
+}
+
 int main()
 {
     demo_mkdir_rmdir();
     demo_tempfile();
     demo_file_fd();
+
+    demo_scandir_test();
     
     return 0;
 }

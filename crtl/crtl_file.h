@@ -62,6 +62,23 @@
 
 
 
+typedef enum {
+    CRTL_DIRENT_UNKNOWN,
+    CRTL_DIRENT_FILE,
+    CRTL_DIRENT_DIR,
+    CRTL_DIRENT_LINK,
+    CRTL_DIRENT_FIFO,
+    CRTL_DIRENT_SOCKET,
+    CRTL_DIRENT_CHAR,
+    CRTL_DIRENT_BLOCK
+} crtl_dirent_type_t;
+
+struct crtl_dirent_struct {
+    const char* name;
+    crtl_dirent_type_t type;
+};
+
+
 //#define CRTL_FD_Available(fd) ({crtl_boolean __Available = crtl_chk_fd(fd)==CRTL_SUCCESS?true:false;__Available;})
 //
 //int crtl_chk_fd(int fd);
@@ -73,6 +90,12 @@ _api int crtl_rmdir(const char *dir); /* 删除文件夹 */
 _api int crtl_chdir(const char* dir);
 _api int crtl_cwd(char* buffer, size_t* size);
 _api int crtl_tmpdir(char* buffer, size_t* size);
+
+_api int crtl_scandir_filter_default(const struct dirent* dent);
+_api int crtl_scandir_sort_default(const struct dirent** a, const struct dirent** b);
+_api int crtl_scandir(const char* maindir, struct dirent*** namelist,
+                        int (*filter)(const struct dirent*),
+                        int (*compar)(const struct dirent**, const struct dirent **));
 
 
 /* 文件选项 */

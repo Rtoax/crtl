@@ -6,7 +6,7 @@
 #include <sys/resource.h>
 #include <sys/utsname.h>
 #include <sys/ioctl.h>
-
+#include <sys/syscall.h>   /* For SYS_xxx definitions */
 
 #include "crtl/bits/crtl_core.h"
 #include "crtl/bits/crtl_types_basic.h"
@@ -452,4 +452,32 @@ int crtl_dup2_cloexec(int oldfd, int newfd)
 #endif
 }
 
+
+/* close() on macos has the "interesting" quirk that it fails with EINTR
+ * without closing the file descriptor when a thread is in the cancel state.
+ * That's why libuv calls close$NOCANCEL() instead.
+ *
+ * glibc on linux has a similar issue: close() is a cancellation point and
+ * will unwind the thread when it's in the cancel state. Work around that
+ * by making the system call directly. Musl libc is unaffected.
+ */
+int crtl_close_nocancel(int fd)
+{
+#if defined(__APPLE__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdollar-in-identifier-extension"
+#if defined(__LP64__) || TARGET_OS_IPHONE
+  extern int close$NOCANCEL(int);
+  return close$NOCANCEL(fd);
+#else
+  extern int close$NOCANCEL$UNIX2003(int);
+  return close$NOCANCEL$UNIX2003(fd);
+#endif
+#pragma GCC diagnostic pop
+#elif defined(__linux__)
+  return syscall(SYS_close, fd);
+#else
+  return close(fd);
+#endif
+}
 
