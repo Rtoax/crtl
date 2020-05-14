@@ -69,13 +69,13 @@ struct __crtl_getpar_struct * crtl_getpar_init(int argc, char **argv, char Delim
 
 int crtl_getpar_free(struct __crtl_getpar_struct *args_id)
 {
-    __crtl_dbg("---\n");
+//    __crtl_dbg("---\n");
 	crtl_mfree1(args_id->args_string);
-    __crtl_dbg("---\n");
+//    __crtl_dbg("---\n");
 	crtl_mfree1(args_id->arg_per_string);
-    __crtl_dbg("---\n");
+//    __crtl_dbg("---\n");
 	crtl_mfree1(args_id->params_tab);
-    __crtl_dbg("---\n");
+//    __crtl_dbg("---\n");
     crtl_mfree1(args_id);
     
     return CRTL_SUCCESS;
