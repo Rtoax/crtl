@@ -53,8 +53,8 @@ set(LIBRARY_OUTPUT_PATH ../lib)
 #set_target_properties(acc_lib_shared PROPERTIES VERSION 1.0 SOVERSION 1) 
 
 
-#安装库文件
-install(TARGETS acc_lib_shared DESTINATION /usr/lib64 PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE)
+#安装库文件  PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE
+install(TARGETS acc_lib_shared DESTINATION /usr/lib64)
 
 #安装头文件
 file(GLOB crtl_hdrs ./crtl/*.h)
@@ -75,5 +75,5 @@ install(FILES ${crtl_hdrs_linux} DESTINATION /usr/local/include/crtl/linux)
 install(FILES ${crtl_hdrs_tcpip} DESTINATION /usr/local/include/crtl/tcp-ip)
 install(FILES ${crtl_hdrs_tcpip_bits} DESTINATION /usr/local/include/crtl/tcp-ip/bits)
 
-# For pkg-config --libs --cflags libcrtl
+# For pkg-config --libs --cflags libcrtl	FILE_PERMISSIONS "666" 
 install(FILES ${PROJECT_BINARY_DIR}/../libcrtl.pc DESTINATION /usr/lib/pkgconfig)

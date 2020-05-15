@@ -19,6 +19,7 @@
 #define VK_UP 		(119)
 #define VK_RIGHT 	(100)
 #define	VK_DOWN 	(115)
+#define VK_TAB      (9)
 
 _api char crtl_keyboard_syncgetch();
 

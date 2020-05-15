@@ -1,4 +1,4 @@
-/* This is LibCRTL config.h file, 2020年 04月 30日 星期四 08:50:42 CST */
+/* This is LibCRTL config.h file, 2020年 05月 15日 星期五 12:59:01 CST */
 
 
 /* LibCRTL Name */
@@ -81,6 +81,9 @@
 
 /* The netinet/ip_icmp.h header */
 #define HAVE_NETINET_IP_ICMP_H 1
+
+/* The netinet/sctp.h header */
+#define HAVE_NETINET_SCTP_H 1
 
 /* The netpacket/packet.h header */
 #define HAVE_NETPACKET_PACKET_H 1
@@ -168,6 +171,9 @@
 
 /* The LIBCURL library */
 #define HAVE_LIBCURL 1
+
+/* The LIBSCTP library */
+#define HAVE_LIBSCTP 1
 
 /* The LIBSSL library */
 #define HAVE_LIBSSL 1

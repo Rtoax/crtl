@@ -36,8 +36,8 @@ struct crtl_atty_buffer {
 		struct crtl_atty_buffer *next;
 		struct llist_node free;
 	};
-//    char                *char_buf_ptr;
-//    unsigned char       *flag_buf_ptr;
+    char                *char_buf_ptr;
+    unsigned char       *flag_buf_ptr;
     int                 used;
     int                 size;
     int                 commit;

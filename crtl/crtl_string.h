@@ -38,6 +38,16 @@ _api double crtl_estrtod(char *s);
 
 _api int crtl_strtobool(const char *s, bool *res);
 
+/**
+ * Create byte array from hexadecimal string. 
+ * @param str Pointer to the string.
+ * @param buf Pointer to a buffer where the data should be stored. 
+ * @param buflen Length for the data buffer.
+ * @return -1 if string contained illegal charactes of if the buffer did not
+ * contain enough room for data.
+ */
+_api int crtl_strtobyte(const char *str, uint8_t *buf, int buflen);
+
 
 _api char *crtl_strjoint(char *dst, const char *fmt, ...);
 _api int crtl_memshow(const void*in, int len);

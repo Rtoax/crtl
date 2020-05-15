@@ -346,57 +346,57 @@ void run_child(int acceptfd)
     
     c = crtl_cli_register_command(cli, NULL, "show", NULL, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
     crtl_cli_register_command(cli, c, "regular", cmd_show_regular, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
-                            "Show the how many times crtl_cli_regular has run");
+                                                    "Show the how many times crtl_cli_regular has run");
     crtl_cli_register_command(cli, c, "counters", cmd_test, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
-                            "Show the counters that the system uses");
+                                                        "Show the counters that the system uses");
     crtl_cli_register_command(cli, c, "junk", cmd_test, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
     
     crtl_cli_register_command(cli, NULL, "interface", cmd_config_int, LIBCLI_PRIVILEGE_PRIVILEGED, LIBCLI_MODE_CONFIG,
-                            "Configure an interface");
+                                                        "Configure an interface");
     crtl_cli_register_command(cli, NULL, "exit", cmd_config_int_exit, LIBCLI_PRIVILEGE_PRIVILEGED, MODE_CONFIG_INT,
-                            "Exit from interface configuration");
+                                                                "Exit from interface configuration");
     crtl_cli_register_command(cli, NULL, "address", cmd_test, LIBCLI_PRIVILEGE_PRIVILEGED, MODE_CONFIG_INT, 
-                            "Set IP address");
+                                                            "Set IP address");
     
     c = crtl_cli_register_command(cli, NULL, "debug", NULL, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
     crtl_cli_register_command(cli, c, "regular", cmd_debug_regular, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
-                            "Enable crtl_cli_regular() callback debugging");
+                                                                    "Enable crtl_cli_regular() callback debugging");
 
     // Register some commands/subcommands to demonstrate opt/arg and buildmode operations
 
     c = crtl_cli_register_command(cli, NULL, "perimeter", cmd_perimeter, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
-                            "Calculate perimeter of polygon");
+                                                            "Calculate perimeter of polygon");
     crtl_cli_register_optarg(c, "transparent", CLI_CMD_OPTIONAL_FLAG, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
-                            "Set transparent flag", NULL, NULL, NULL);
+                                                            "Set transparent flag", NULL, NULL, NULL);
     crtl_cli_register_optarg(c, "verbose", CLI_CMD_OPTIONAL_FLAG | CLI_CMD_OPTION_MULTIPLE, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
-                            "Set transparent flag", NULL, NULL, NULL);
+                                                        "Set transparent flag", NULL, NULL, NULL);
     crtl_cli_register_optarg(c, "color", CLI_CMD_OPTIONAL_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, "Set color",
-                            color_completor, color_validator, NULL);
+                                                        color_completor, color_validator, NULL);
     crtl_cli_register_optarg(c, "__check1__", CLI_CMD_SPOT_CHECK, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL, NULL,
-                            check1_validator, NULL);
+                                                        check1_validator, NULL);
     crtl_cli_register_optarg(c, "shape", CLI_CMD_ARGUMENT | CLI_CMD_ALLOW_BUILDMODE, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
-                            "Specify shape to calclate perimeter for", shape_completor, shape_validator,
-                            shape_transient_eval);
+                                                        "Specify shape to calclate perimeter for", shape_completor, shape_validator,
+                                                        shape_transient_eval);
     crtl_cli_register_optarg(c, "side_1", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_TRIANGLE,
-                            "Specify side 1 length", NULL, side_length_validator, NULL);
+                                                        "Specify side 1 length", NULL, side_length_validator, NULL);
     crtl_cli_register_optarg(c, "side_1", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_RECTANGLE,
-                            "Specify side 1 length", NULL, side_length_validator, NULL);
+                                                        "Specify side 1 length", NULL, side_length_validator, NULL);
 
     crtl_cli_register_optarg(c, "side_2", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_TRIANGLE,
-                            "Specify side 2 length", NULL, side_length_validator, NULL);
+                                                        "Specify side 2 length", NULL, side_length_validator, NULL);
     crtl_cli_register_optarg(c, "side_2", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_RECTANGLE,
-                            "Specify side 2 length", NULL, side_length_validator, NULL);
+                                                        "Specify side 2 length", NULL, side_length_validator, NULL);
     crtl_cli_register_optarg(c, "side_3", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_TRIANGLE,
-                            "Specify side 3 length", NULL, side_length_validator, NULL);
+                                                        "Specify side 3 length", NULL, side_length_validator, NULL);
     crtl_cli_register_optarg(c, "side_3", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_RECTANGLE,
-                            "Specify side 3 length", NULL, side_length_validator, NULL);
+                                                        "Specify side 3 length", NULL, side_length_validator, NULL);
     crtl_cli_register_optarg(c, "side_4", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_RECTANGLE,
-                            "Specify side 4 length", NULL, side_length_validator, NULL);
+                                                        "Specify side 4 length", NULL, side_length_validator, NULL);
 
     // Set user context and its command
     crtl_cli_set_context(cli, (void *)&myctx);
     crtl_cli_register_command(cli, NULL, "context", cmd_context, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
-                            "Test a user-specified context");
+                                                        "Test a user-specified context");
 
     crtl_cli_set_auth_callback(cli, check_auth);
     crtl_cli_set_enable_callback(cli, check_enable);
@@ -496,7 +496,8 @@ void demo_libcrtl_cli_test2()
     
     while(1)
     {
-        sleep(1);
+        sleep(5);
+        printf("CRTL main rutinue.\n");
     }
 }
 

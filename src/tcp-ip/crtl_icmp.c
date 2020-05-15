@@ -34,7 +34,7 @@
 #include "crtl/crtl_log.h"
 #include "crtl/easy/attribute.h"
 #include "crtl/tcp-ip/crtl_icmp.h"
-#include "crtl/tcp-ip/crtl_tcp_ip_checksum.h"
+#include "crtl/tcp-ip/crtl_checksum.h"
 #include "crtl/crtl_time.h"
 
 

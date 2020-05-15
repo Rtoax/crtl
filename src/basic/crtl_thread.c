@@ -3,9 +3,9 @@
 #include "crtl/crtl_assert.h"
 
 #include "crtl/bits/crtl_types_basic.h"
-
-
 #include "crtl/bits/crtl_types_bits_set.h"
+
+#include "crtl/linux/crtl_linux_user.h"
 
 
 
@@ -31,7 +31,16 @@ int crtl_thread_create(crtl_thread_t * __newthread, int __detachstate, size_t __
 
     crtl_threadattr_setaffinity(&thread_attr, &__cpuset);
     
-    if(0 != pthread_create(__newthread, &thread_attr, __start_routine, __start_arg)) {
+    crtl_threadattr_t *attr = NULL;
+
+    /* 如果为 root 用户，设置属性 */
+    char user[64] = {"rongtao"};
+    crtl_linux_getcurrentusername(user);
+    if(strcmp(user, "root") == 0) {
+        attr = &thread_attr;
+    }
+    
+    if(0 != pthread_create(__newthread, attr, __start_routine, __start_arg)) {
         crtl_print_err("pthread_create error. %s\n", CRTL_SYS_ERROR);
         return CRTL_ERROR;
     }

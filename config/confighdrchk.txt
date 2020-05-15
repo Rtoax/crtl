@@ -21,6 +21,7 @@ netinet/ether.h
 netinet/in.h
 netinet/ip.h
 netinet/ip_icmp.h
+netinet/sctp.h
 netpacket/packet.h
 openssl/opensslv.h
 pthread.h

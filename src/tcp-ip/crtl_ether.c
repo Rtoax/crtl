@@ -20,6 +20,7 @@
 #include "crtl/linux/crtl_linux_user.h"
 
 
+
 inline char * crtl_ether_proto(unsigned short proto)
 {
 	if (proto == CRTL_ETH_P_IP)
@@ -74,6 +75,8 @@ inline int crtl_ether_strtomac(unsigned char mac[CRTL_ETH_ALEN], const char *str
     mac[5] = __mac[5];
     return ret;
 }
+
+
 
 
 inline int crtl_ether_mac(const char *ether, unsigned char mac[CRTL_ETH_ALEN])

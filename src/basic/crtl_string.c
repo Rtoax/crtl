@@ -248,6 +248,61 @@ _api int crtl_strtobool(const char *s, bool *res)
 }
 
 
+/**
+ * Create byte array from hexadecimal string. 
+ * @param str Pointer to the string.
+ * @param buf Pointer to a buffer where the data should be stored. 
+ * @param buflen Length for the data buffer.
+ * @return -1 if string contained illegal charactes of if the buffer did not
+ * contain enough room for data.
+ */
+_api int crtl_strtobyte(const char *str, uint8_t *buf, int buflen)
+{
+        int len = strlen(str), blen,hi;
+        const char *p;
+        uint8_t *b;
+
+        blen = len / 2;
+        if (len % 2 != 0)
+                blen++;
+
+        if (buflen < blen)
+                return -1;
+
+        memset(buf,0,buflen);
+
+        p = str; 
+        b = buf;
+        hi = 1;
+        if (len %2 != 0) {
+                /* Odd number of characters on the string, fill with zero.*/
+                hi = 0;
+        }
+
+        while( *p != '\0') {
+                if ( *p >= '0' && *p <= '9')
+                        *b |= *p - '0';
+                else if (*p >= 'a' && *p <= 'f')
+                        *b |= *p - 'a' +10;
+                else if ( *p >= 'A' && *p <= 'F')
+                        *b |= *p - 'A' + 10;
+                else
+                        return -1;
+
+                if (hi) {
+                        *b = *b << 4;
+                        hi = 0;
+                } else {
+                        b++;
+                        hi = 1;
+                }
+
+                p++;
+        }
+        return 0;
+}
+
+
 _api char *crtl_strjoint(char *dst, const char *fmt, ...)
 {
     if(dst == NULL || fmt == NULL)

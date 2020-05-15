@@ -1,4 +1,5 @@
 libcstl.so
 libcurl.so
+libsctp.so
 libssl.so
 libuv.so

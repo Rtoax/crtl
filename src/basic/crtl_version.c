@@ -61,14 +61,36 @@
 # define CRTL_VERSION_STRING  CRTL_VERSION_PERFIX" "UV_VERSION_STRING_BASE "-" CRTL_VERSION_SUFFIX
 #endif
 
-
+/**
+ * Get LIBCrtl Version Integer
+ * @param void
+ * @return version
+ */
 unsigned int crtl_version(void)
 {
   return CRTL_VERSION_HEX;
 }
 
-
+/**
+ * Get LIBCrtl Version String
+ * @param void
+ * @return string of version
+ */
 const char* crtl_version_string(void)
 {
   return CRTL_VERSION_STRING;
+}
+
+/**
+ * Get LIBCrtl Author String
+ * @param void
+ * @return Author of version
+ */
+const char *crtl_author(void)
+{
+#ifdef LIBCRTL_AUTHOR
+    return LIBCRTL_AUTHOR;
+#else
+    return "unknown, maybe Rong Tao";
+#endif
 }

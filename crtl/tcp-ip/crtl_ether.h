@@ -2,7 +2,7 @@
 #define __CRTL_TCP_IP_ETHER_H 1
 
 
-#include "crtl/tcp-ip/bits/crtl_ether_pkt.h"
+#include <netpacket/packet.h>
 #include "crtl/easy/attribute.h"
 
 
@@ -30,6 +30,22 @@ typedef struct {
 }_packed crtl_ethmsg_t;
 
 
+
+inline char * crtl_ether_proto(unsigned short proto);
+inline void crtl_ether_hwacpy(void *dst, void *src);
+inline void crtl_ether_hwaset(void *dst, int val);
+inline int crtl_ether_hwacmp(void *hwa1, void *hwa2);
+inline int crtl_ether_is_eth_multicast(unsigned char *hwa);
+inline int crtl_ether_is_eth_broadcast(unsigned char *hwa);
+
+inline int crtl_ether_strtomac(unsigned char mac[CRTL_ETH_ALEN], const char *str);
+inline int crtl_ether_mac(const char *ether, unsigned char mac[CRTL_ETH_ALEN]);
+
+/* send to ether: must be root user */
+/**
+ *  crtl_ether_sendto("28:6E:D4:88:C7:2C", "eth0", 0x1204, msg, strlen(msg));
+ */
+int crtl_ether_sendto(char *dst_mac, const char *ether, unsigned short proto, void * _unused msg, unsigned int msg_len);
 
 
 

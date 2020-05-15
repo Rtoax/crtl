@@ -116,6 +116,8 @@ _api int crtl_add_grp_permission(const char *dirname);
 _api int crtl_add_oth_permission(const char *dirname);
 _api int crtl_add_oth_permission(const char *dirname);
 
+_api int crtl_add_all_permission(const char *dirname);
+
 
 _api char *crtl_mktemp_string(char * const tempfile_out, const char *path, const char *fileprefix);
 
