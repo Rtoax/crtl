@@ -85,6 +85,12 @@ struct crtl_dirent_struct {
 
 
 /* 创建文件夹 */
+/**
+ * create directory with mode 
+ * @param dir: directory
+ * @param mode: mode of directory, S_IWUSR,...
+ * @return error number
+ */
 _api int crtl_mkdir(const char *dir, mode_t mode);
 _api int crtl_rmdir(const char *dir); /* 删除文件夹 */
 _api int crtl_chdir(const char* dir);
