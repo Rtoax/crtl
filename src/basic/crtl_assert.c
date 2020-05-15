@@ -37,6 +37,11 @@ _api inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const ch
 }
 
 /* backtrace */
+/**
+ * display backtrace of rutinue
+ * @param fp: FILE* of file (such as stdout, stderr)
+ * @return void
+ */
 _api inline void _unused __crtl_assert_backtrace(FILE *fp)
 {
     if(fp == NULL)
