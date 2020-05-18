@@ -67,7 +67,7 @@ _api inline int crtl_timeval_subtract(struct timeval *result, struct timeval *x,
 	result->tv_sec = x->tv_sec - y->tv_sec;
 	result->tv_usec = x->tv_usec - y->tv_usec;
 	
-	return x->tv_sec < y->tv_sec;
+	return x->tv_sec > y->tv_sec;
 }
 
 
@@ -153,7 +153,7 @@ _api long long crtl_timespec_sub_nsec(struct timespec a, struct timespec b)
 	return ret;
 }
 
-_api struct timespec crtl_timespec_add_timespec(struct timespec ts, unsigned long long ns)
+_api struct timespec crtl_timespec_add_nsec(struct timespec ts, unsigned long long ns)
 {
 	ts.tv_nsec += ns;
 	while (ts.tv_nsec >= __CRTL_NSEC_PER_SEC) {
