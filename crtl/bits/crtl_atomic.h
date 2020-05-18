@@ -20,12 +20,12 @@ typedef struct {
 
 
 /**
- * atomic_cmpxchg() - Atomic compare and exchange
- * @uaddr:	The address of the futex to be modified
- * @oldval:	The expected value of the futex
- * @newval:	The new value to try and assign the futex
+ * crtl_atomic_cmpxchg() - Atomic compare and exchange
+ * @param uaddr:	The address of the futex to be modified
+ * @param oldval:	The expected value of the futex
+ * @param newval:	The new value to try and assign the futex
  *
- * Return the old value of addr->val.
+ * @return the old value of addr->val.
  */
 static inline int _unused crtl_atomic_cmpxchg(crtl_atomic_t *addr, int oldval, int newval)
 {
@@ -33,10 +33,10 @@ static inline int _unused crtl_atomic_cmpxchg(crtl_atomic_t *addr, int oldval, i
 }
 
 /**
- * atomic_inc() - Atomic incrememnt
- * @addr:	Address of the variable to increment
+ * crtl_atomic_inc() - Atomic incrememnt
+ * @param addr:	Address of the variable to increment
  *
- * Return the new value of addr->val.
+ * @return the new value of addr->val.
  */
 static inline int _unused crtl_atomic_inc(crtl_atomic_t *addr)
 {
@@ -44,10 +44,10 @@ static inline int _unused crtl_atomic_inc(crtl_atomic_t *addr)
 }
 
 /**
- * atomic_dec() - Atomic decrement
- * @addr:	Address of the variable to decrement
+ * crtl_atomic_dec() - Atomic decrement
+ * @param addr:	Address of the variable to decrement
  *
- * Return the new value of addr-val.
+ * @return the new value of addr-val.
  */
 static inline int _unused crtl_atomic_dec(crtl_atomic_t *addr)
 {
@@ -55,11 +55,11 @@ static inline int _unused crtl_atomic_dec(crtl_atomic_t *addr)
 }
 
 /**
- * atomic_set() - Atomic set
- * @addr:	Address of the variable to set
- * @newval:	New value for the atomic_t
+ * crtl_atomic_set() - Atomic set
+ * @param addr:	Address of the variable to set
+ * @param newval:	New value for the atomic_t
  *
- * Return the new value of addr->val.
+ * @return the new value of addr->val.
  */
 static inline int _unused crtl_atomic_set(crtl_atomic_t *addr, int newval)
 {

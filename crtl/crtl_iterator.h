@@ -5,7 +5,7 @@
 #include "crtl/easy/attribute.h"
 
 
-
+#if 0
 struct crtl_iterator_struct {
     void *root;
     
@@ -42,7 +42,7 @@ static struct crtl_iterator_struct _unused* crtl_iterator_gen(void *root, int it
     iterator->search = search;
     return iterator;
 }
-
+#endif
 
 #endif /*<__CRTL_ITERATOR_H>*/
 

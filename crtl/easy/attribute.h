@@ -3,6 +3,10 @@
 
 #include "crtl/easy/extern.h"
 
+/**
+ * some useful amcor
+ */
+
 
 #ifdef __GNUC__
 #define _packed             __attribute__((packed))

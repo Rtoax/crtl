@@ -21,6 +21,12 @@
 #define	VK_DOWN 	(115)
 #define VK_TAB      (9)
 
+
+/**
+ * sync get charector from keyboard
+ * @param void
+ * @return -1 if failed, char if success.
+ */
 _api char crtl_keyboard_syncgetch();
 
 

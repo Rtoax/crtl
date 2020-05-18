@@ -92,44 +92,182 @@ struct crtl_dirent_struct {
  * @return error number
  */
 _api int crtl_mkdir(const char *dir, mode_t mode);
+
+
+/**
+ * remove directory
+ * @param dir: directory
+ * @return error number
+ */
 _api int crtl_rmdir(const char *dir); /* 删除文件夹 */
+
+
+/**
+ * change current work directory
+ * @param dir: directory
+ * @return error number
+ */
 _api int crtl_chdir(const char* dir);
+
+
+/**
+ * get current work directory
+ * @param dir: directory
+ * @param size: size of string of directory buffer
+ * @return error number
+ */
 _api int crtl_cwd(char* buffer, size_t* size);
+
+/**
+ * get temperaory directory
+ * @param dir: directory
+ * @param size: size of string of directory buffer
+ * @return error number
+ */
 _api int crtl_tmpdir(char* buffer, size_t* size);
 
+
+/**
+ * scan a directory's filter -> filter '.' and '..'
+ * @param dent: type of struct dirent
+ * @return error number
+ */
 _api int crtl_scandir_filter_default(const struct dirent* dent);
+
+/**
+ * scan a directory's sort 
+ * @param a: type of struct dirent
+ * @param b: type of struct dirent
+ * @return error number
+ */
 _api int crtl_scandir_sort_default(const struct dirent** a, const struct dirent** b);
+
+
+/**
+ * scan a directory
+ * @param maindir: directory string
+ * @param namelist: name list of file in this 'maindir' directory
+ * @param filter: directory
+ * @param compar: directory
+ * @return error number
+ */
 _api int crtl_scandir(const char* maindir, struct dirent*** namelist,
                         int (*filter)(const struct dirent*),
                         int (*compar)(const struct dirent**, const struct dirent **));
 
 
 /* 文件选项 */
+
+/**
+ * file or directory is exist or not
+ * @param dirname: file or directory name
+ * @return error number
+ */
 _api int crtl_is_exist(const char *dirname);
+
+/**
+ * file or directory is readable or not
+ * @param dirname: file or directory name
+ * @return error number
+ */
 _api int crtl_is_readable(const char *dirname);
+
+/**
+ * file or directory is writeable or not
+ * @param dirname: file or directory name
+ * @return error number
+ */
 _api int crtl_is_writeable(const char *dirname);
+
+/**
+ * file or directory is executable or not
+ * @param dirname: file or directory name
+ * @return error number
+ */
 _api int crtl_is_executable(const char *dirname);
 
+
+/**
+ * file is directory or not
+ * @param file: file or directory name
+ * @return error number
+ */
 _api int crtl_is_directory(const char *file);
+
+/**
+ * file is regular file or not
+ * @param file: file or directory name
+ * @return error number
+ */
 _api int crtl_is_regular_file(const char *file);
 
 /* 更改文件权限 */
+
+/**
+ * add read permission of file for all user
+ * @param dirname: file or directory name
+ * @return error number
+ */
 _api int crtl_add_read_permission(const char *dirname);
+
+/**
+ * add write permission of file for all user
+ * @param dirname: file or directory name
+ * @return error number
+ */
 _api int crtl_add_write_permission(const char *dirname);
+
+/**
+ * add execute permission of file for all user
+ * @param dirname: file or directory name
+ * @return error number
+ */
 _api int crtl_add_execute_permission(const char *dirname);
+
+/**
+ * add all permission of file for current user
+ * @param dirname: file or directory name
+ * @return error number
+ */
 _api int crtl_add_usr_permission(const char *dirname);
+
+/**
+ * add all permission of file for current group
+ * @param dirname: file or directory name
+ * @return error number
+ */
 _api int crtl_add_grp_permission(const char *dirname);
-_api int crtl_add_oth_permission(const char *dirname);
+
+/**
+ * add all permission of file for other users
+ * @param dirname: file or directory name
+ * @return error number
+ */
 _api int crtl_add_oth_permission(const char *dirname);
 
+
+/**
+ * add all permission of file for all user
+ * @param dirname: file or directory name
+ * @return error number
+ */
 _api int crtl_add_all_permission(const char *dirname);
 
 
+/**
+ * make tmp string with prefix and path
+ * @param dirname: file or directory name
+ * @return error number
+ */
 _api char *crtl_mktemp_string(char * const tempfile_out, const char *path, const char *fileprefix);
 
 
 
-
+/**
+ * there are some system swap functions with error print
+ * @param 
+ * @return
+ */
 _api FILE *crtl_efopen(const char *file, const char *mode);
 _api FILE *crtl_efreopen(const char *file, const char *mode, FILE *stream1);
 _api FILE *crtl_efdopen(int fd, const char *mode);

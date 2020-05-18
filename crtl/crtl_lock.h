@@ -31,8 +31,18 @@
 
 
 
-/* file descripter lock/unlock */
+/**
+ * file descripter lock write
+ * @param fd: file descripter
+ * @return void
+ */
 _api void crtl_fd_lock(int fd);
+
+/**
+ * file descripter unlock
+ * @param fd: file descripter
+ * @return void
+ */
 _api void crtl_fd_unlock(int fd);
 
 

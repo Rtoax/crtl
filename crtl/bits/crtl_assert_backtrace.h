@@ -13,7 +13,11 @@
 
 #define __CRTL_BACKTRACE_SIZE 1024
 
-/* backtrace */
+/**
+ * print backtrace into file pointer stream
+ * @param fp: file pointer
+ * @return void
+ */
 _api inline void _unused __crtl_assert_backtrace(FILE *fp);
 
 

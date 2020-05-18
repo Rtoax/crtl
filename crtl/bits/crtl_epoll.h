@@ -7,27 +7,51 @@
 
 #define CRTL_EPOLL_CLOEXEC EPOLL_CLOEXEC
 
-
-#define CRTL_EPOLLIN EPOLLIN
-#define CRTL_EPOLLPRI EPOLLPRI
-#define CRTL_EPOLLOUT EPOLLOUT
+/**
+ *  struct epoll_event's events
+ *  
+ *  ```c example
+ *  struct epoll_event ev;
+ *  ev.data.fd = 0; //设置监听描述符
+ *  ev.events = CRTL_EPOLLIN | CRTL_EPOLLET;//设置处理事件类型
+ *  crtl_epoll_ctl(epfd, CRTL_EPOLL_CTL_ADD, 1, &ev);//注册事件
+ *  ```
+ */
+#define CRTL_EPOLLIN EPOLLIN    //The associated file is available for read(2) operations.
+#define CRTL_EPOLLPRI EPOLLPRI  //There is urgent data available for read(2) operations.
+#define CRTL_EPOLLOUT EPOLLOUT  //The associated file is available for write(2) operations.
 #define CRTL_EPOLLRDNORM EPOLLRDNORM
 #define CRTL_EPOLLRDBAND EPOLLRDBAND
 #define CRTL_EPOLLWRNORM EPOLLWRNORM
 #define CRTL_EPOLLWRBAND EPOLLWRBAND
 #define CRTL_EPOLLMSG EPOLLMSG
-#define CRTL_EPOLLERR EPOLLERR
-#define CRTL_EPOLLHUP EPOLLHUP
-#define CRTL_EPOLLRDHUP EPOLLRDHUP
+#define CRTL_EPOLLERR EPOLLERR  //Error  condition happened on the associated file descriptor.  
+                                //epoll_wait(2) will always wait for this event; it is
+                                //not necessary to set it in events.
+#define CRTL_EPOLLHUP EPOLLHUP  //Hang up happened on the associated file descriptor.  
+                                //epoll_wait(2) will always wait for this event; it is not nec‐
+                                //essary to set it in events.
+#define CRTL_EPOLLRDHUP EPOLLRDHUP  //Stream socket peer closed connection, or shut down writing half of connection.  
+                                    //(This flag  is  especially  useful for writing simple code to detect peer 
+                                    //shutdown when using Edge Triggered monitoring.)
 #define CRTL_EPOLLEXCLUSIVE EPOLLEXCLUSIVE
 #define CRTL_EPOLLWAKEUP EPOLLWAKEUP
-#define CRTL_EPOLLONESHOT EPOLLONESHOT
-#define CRTL_EPOLLET EPOLLET
+#define CRTL_EPOLLONESHOT EPOLLONESHOT  //EPOLLONESHOT (since Linux 2.6.2)
+                                        //Sets  the one-shot behavior for the associated file descriptor.  
+                                        //This means that after an event is pulled out with
+                                        //epoll_wait(2) the associated file descriptor is internally disabled 
+                                        //and no other events will be  reported  by  the
+                                        //epoll  interface.  The user must call epoll_ctl() with EPOLL_CTL_MOD 
+                                        //to rearm the file descriptor with a new event mask.
+#define CRTL_EPOLLET EPOLLET    //Sets  the  Edge  Triggered  behavior  for the associated file descriptor.  
+                                //The default behavior for epoll is Level Triggered.  See epoll(7) for more 
+                                //detailed information about Edge and Level Triggered event distribution architectures.
 
 
 #define CRTL_EPOLL_CTL_ADD EPOLL_CTL_ADD	/* Add a file descriptor to the interface.  */
 #define CRTL_EPOLL_CTL_DEL EPOLL_CTL_DEL	/* Remove a file descriptor from the interface.  */
 #define CRTL_EPOLL_CTL_MOD EPOLL_CTL_MOD	/* Change file descriptor epoll_event structure.  */
+
 
 
 /**
@@ -46,6 +70,8 @@
  * @return epoll instance number
  */
 int crtl_epoll_create(int size, int flag);
+
+
 
 /**
  * Manipulate an epoll instance "epfd". Returns 0 in case of success,
@@ -96,6 +122,10 @@ int crtl_epoll_ctl(int epfd, int operate, int fd, struct epoll_event *event);
  * @param epfd: epoll instance, create by crtl_epoll_create
  * @param events: The memory area pointed to by events will contain 
  *                  the events that will be available for the  caller.
+ *                The  data  of  each  returned  structure  will  contain  
+ *                  the   same   data   the   user   set   with   an   epoll_ctl(2)
+*                   (EPOLL_CTL_ADD,EPOLL_CTL_MOD) while the events member 
+*                   will contain the returned event bit field.
  * @param maxevents: Up to maxevents are returned by epoll_wait().
  * @param timeout: The  timeout  argument  specifies the minimum number of 
  *                  milliseconds that epoll_wait() will block.
@@ -106,6 +136,8 @@ int crtl_epoll_ctl(int epfd, int operate, int fd, struct epoll_event *event);
  */
 int crtl_epoll_wait(int epfd, struct epoll_event *events,int maxevents, int timeout, const sigset_t *sigmask);
 
+
+
 /**
  *  Close an epoll instance.  
  *
@@ -113,6 +145,7 @@ int crtl_epoll_wait(int epfd, struct epoll_event *events,int maxevents, int time
  * @return
  */
 int crtl_epoll_close(int epfd);
+
 
 
 #endif /*<__CRTL_BITS_EPOLL_H>*/
