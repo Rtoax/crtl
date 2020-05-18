@@ -18,18 +18,18 @@ _api int crtl_strstripc(char *str, const char ch)
 {    
     if((void*)str == NULL)    
     {        
-        return -1;    
+        return CRTL_ERROR;    
     }    
 
     if(strlen(str) <= 1)
     {
-        return -1; 
+        return CRTL_ERROR; 
     }
 
     if(!crtl_ischar(ch))
     {
         crtl_print_err("Can not strip CHAR from %s\n", (char*)str);
-        return -1; 
+        return CRTL_ERROR; 
     }
     
     int ilen, len = strlen(str);  
@@ -47,7 +47,7 @@ _api int crtl_strstripc(char *str, const char ch)
             len--;
         }    
     }    
-    return 1;
+    return CRTL_SUCCESS;
 }
 
 
@@ -312,6 +312,21 @@ _api char *crtl_strjoint(char *dst, const char *fmt, ...)
     va_start(args, fmt);
 
     vsprintf(dst, fmt, args);
+
+    va_end(args);
+
+    return (char*)dst;
+}
+
+_api char *crtl_strnjoint(char *dst, size_t size, const char *fmt, ...)
+{
+    if(dst == NULL || fmt == NULL)
+        return NULL;
+
+    va_list args;
+    va_start(args, fmt);
+
+    vsnprintf(dst, size, fmt, args);
 
     va_end(args);
 
