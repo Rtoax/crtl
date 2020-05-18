@@ -13,6 +13,7 @@
 
 #include "crtl/easy/macro.h"
 
+#include "crtl_mute_dbg.h" //去除所有debug打印
 
 
 /* 同步消息队列消息中-临时消息队列传递的消息结构 */
@@ -278,7 +279,7 @@ _api int crtl_msgq_sync_send(crtl_mqd_t dst_mqd, const char *m_ptr, const size_t
     }
     
     __crtl_dbg("OPEN: mqd %d, \n", __msgq_sync_msg->__ack_snd_mqd);
-
+    
     /* 创建临时消息队列成功，拷贝需要发送的数据 */
     __msgq_sync_msg->msg_size = m_len;
     memcpy(__msgq_sync_msg->msg_body, m_ptr, m_len);
@@ -291,7 +292,7 @@ _api int crtl_msgq_sync_send(crtl_mqd_t dst_mqd, const char *m_ptr, const size_t
     if(send_size < ready_to_send_len) {
         /* 如果失败，清空消息队列，删除文件，退出 */
         crtl_print_err("send size not equal, need %d, but is %d, error(mqd %d).\n", ready_to_send_len, send_size, dst_mqd);
-        crtl_assert_fp(stderr, 0);
+//        crtl_assert_fp(stderr, 0);
         crtl_mq_close(__msgq_sync_msg->__ack_snd_mqd);
         crtl_mq_unlink(__ack_snd_mq_name);
         crtl_mfree1(__msgq_sync_msg);

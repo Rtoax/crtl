@@ -35,7 +35,7 @@ _api int crtl_terminal_progress_bar(int posx, int posy, const int iTotal, const 
     
     if(term_x < 15)
     {
-        return -1;
+        return CRTL_ERROR;
     }
     else
     {
@@ -81,7 +81,7 @@ _api int crtl_terminal_progress_bar(int posx, int posy, const int iTotal, const 
     
     crtl_fd_unlock(fileno(stdout));
     
-    return 0;
+    return CRTL_SUCCESS;
     
 }
 

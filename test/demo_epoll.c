@@ -17,7 +17,7 @@ void demo_epoll_test1()
 
 	/*设置处理事件类型*/	
 	ev.events = CRTL_EPOLLIN | CRTL_EPOLLET;
-
+    
 	/*注册事件*/
 	crtl_epoll_ctl(epfd, CRTL_EPOLL_CTL_ADD, 1, &ev);
 

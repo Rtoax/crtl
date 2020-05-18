@@ -129,7 +129,7 @@ void demo_msgq_stress_test()
         sleep(1);
         crtl_mqd_t testmqd = crtl_msgq_create(CRTL_MSGQ_MSGS_MAX, CRTL_MSGQ_MSG_MAX_SIZE);
         crtl_print_notice("create mqd %d \n", testmqd);
-        sleep(1);
+        sleep(10);
         crtl_msgq_destroy(&testmqd);
     }
 }
