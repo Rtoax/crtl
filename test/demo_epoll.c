@@ -16,26 +16,25 @@ void demo_epoll_test1()
 	ev.data.fd = 0;
 
 	/*设置处理事件类型*/	
-	ev.events = EPOLLIN | EPOLLET;
+	ev.events = CRTL_EPOLLIN | CRTL_EPOLLET;
 
 	/*注册事件*/
-	crtl_epoll_ctl(epfd, EPOLL_CTL_ADD, 0, &ev);
+	crtl_epoll_ctl(epfd, CRTL_EPOLL_CTL_ADD, 1, &ev);
 
     /*4.进入服务器接收请求死循环*/
 	while(1)
 	{
 		/*等待事情发生*/
-		nfds = crtl_epoll_wait(epfd, events, SIZE, -1, NULL);
-		if(nfds <= 0)
-		{
+		nfds = crtl_epoll_wait(epfd, events, SIZE, 2, NULL);
+		if(nfds <= 0) {
 			continue;
 		}
 
-		printf("nfds = %d\n", nfds);
-
+//		printf("nfds = %d\n", nfds);
+        
 		/*处理发生的事件*/
 		for(i=0; i<nfds; i++) {
-            
+            printf("nfds = %d, events = %x, event.data.fd = %d\n", nfds,events[i].events, events[i].data.fd);
 
         }
     }

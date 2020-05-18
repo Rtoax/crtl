@@ -14,11 +14,17 @@
 #include "crtl/crtl_task.h"
 #include "crtl/crtl_tree.h"
 #include "crtl/bits/crtl_lock_rwlock.h"
+#include "crtl/bits/crtl_lock_cond.h"
 
 #include "crtl/easy/byteswap.h"
+#include "crtl/bits/crtl_epoll.h"
 
 
 #include "crtl_mute_dbg.h"
+
+
+#define __POLLING_WITH_SELECT
+#define __POLLING_WITH_EPOLL
 
 
 /* rb tree of all timers you create */
@@ -27,6 +33,10 @@ static crtl_lock_mutex_t _unused __rt_rbtree_static_timerfds_lock = CRTL_LOCK_MU
 static fd_set _unused __rt_timerfds_fdset;
 static int _unused __rt_timerfd_maxfd = 0;
 static int _unused __rt_timerfds[FD_SETSIZE] = {0};
+
+/* condition to start the schedule thread */
+//static crtl_lock_cond_t _unused __rt_notify_schedule_start = CRTL_LOCK_COND_INITIALIZER;
+//static crtl_lock_mutex_t _unused __rt_notify_schedule_start_lock = CRTL_LOCK_MUTEX_INITIALIZER;
 
 
 /* lock of rb tree of all timers */
@@ -66,9 +76,16 @@ static void __sche_sighandler(int signum)
 _hidden int __crtl_timerfds_destroy();
 
 /* update rbtree of timer */
-static void* __rt_timerfd_polling_thread(void *arg)
+static void* __rt_timerfd_schedule_thread(void *arg)
 {
-    sleep(1); //waiting for first timer
+//    sleep(1); //waiting for first timer
+//    crtl_mutex_lock(&__rt_notify_schedule_start_lock, 0,0,0,0);
+//    crtl_cond_wait(&__rt_notify_schedule_start, &__rt_notify_schedule_start_lock, 0, 0, 0);
+//    crtl_mutex_unlock(&__rt_notify_schedule_start_lock);
+
+    /* 等待创建该定时器的线程释放锁 */
+    __RBTREE_TIMERFD_LOCK;
+    __RBTREE_TIMERFD_UNLOCK;
 
     signal(SIGINT, __sche_sighandler);
     
@@ -88,16 +105,19 @@ static void* __rt_timerfd_polling_thread(void *arg)
 //        __crtl_dbg("polling timerfds nready = %d.\n", nready);
         
         __RBTREE_TIMERFD_LOCK;
-        
+
+        static struct crtl_timer_struct try_find;
         struct crtl_timer_struct *_t = NULL;
         crtl_rbtree_node_t *find_node = NULL;
-        for(find_node=crtl_rbtree_getfirst(__rt_rbtree_static_timerfds); 
-            find_node; find_node = crtl_rbtree_getnext(find_node))
-        {
-            _t = find_node->data;
-            
-            if(FD_ISSET(_t->timer_fd, &readset))
+
+        int fd = -1;
+        for(fd=3;fd<=FD_SETSIZE;fd++) {
+            if(FD_ISSET(fd, &readset))
             {
+                try_find.timer_fd = fd;
+                find_node = crtl_rbtree_search(__rt_rbtree_static_timerfds, &try_find);
+                _t = find_node->data;
+                
 //                __crtl_dbg("polling timerfd %d.\n", _t->timer_fd);
                 
                 int _unused n = read(_t->timer_fd, &exp, sizeof(exp));
@@ -135,6 +155,8 @@ static void* __rt_timerfd_polling_thread(void *arg)
             
         if(crtl_rbtree_is_empty(__rt_rbtree_static_timerfds) == CRTL_SUCCESS) {
             __crtl_dbg("Ready to Terminate Timer Schedule thread.\n");
+//            crtl_mutex_destroy(&__rt_notify_schedule_start_lock);
+//            crtl_cond_destroy(&__rt_notify_schedule_start);
             /* 退出线程 */
             __crtl_timerfds_destroy();
         }
@@ -184,20 +206,24 @@ _api int crtl_timerfd_create(int is_loop, __crtl_timer_cb_fn_t callback, void *a
     __RBTREE_TIMERFD_LOCK;
     if(CAS(&__crtl_timerfds_list_poll_task_init_flag, 0, 1)) {
         __crtl_dbg("__crtl_timerfds_list_poll_task_init_flag = %ld.\n", __crtl_timerfds_list_poll_task_init_flag);
-        
+
+//        crtl_mutex_init(&__rt_notify_schedule_start_lock, NULL);
+//        crtl_cond_init(&__rt_notify_schedule_start, NULL);
+    
         /* 创建线程 */
         int ret = crtl_thread_create(&__rt_timerfd_update_and_execute, PTHREAD_CREATE_DETACHED, 0, 
                                       CRTL_THREAD_SCHED_PRIO_HIGHEST, SCHED_RR, PTHREAD_SCOPE_SYSTEM,
-                                      NULL, 0, 0, __rt_timerfd_polling_thread, arg, NULL, NULL);
+                                      NULL, 0, 0, __rt_timerfd_schedule_thread, arg, NULL, NULL);
         if(ret != CRTL_SUCCESS) {/* 初始化失败 */
             crtl_print_err("crtl_thread_create error.\n");
             crtl_assert_fp(stderr, 0);
             __RBTREE_TIMERFD_UNLOCK;
             return -1;
         }
+        
     }
     //crtl_print_err("timer->%s\n", name);
-    __RBTREE_TIMERFD_UNLOCK;
+//    __RBTREE_TIMERFD_UNLOCK;
     
     
     if(!callback)
@@ -234,7 +260,7 @@ _api int crtl_timerfd_create(int is_loop, __crtl_timer_cb_fn_t callback, void *a
     
     timerfd_settime(new_timer->timer_fd, 0, &new_timer->itimerspec_value, NULL);
 
-    __RBTREE_TIMERFD_LOCK;
+//    __RBTREE_TIMERFD_LOCK;
         
     if(__rt_rbtree_static_timerfds) {
 //        __crtl_dbg("Insert fd %d to tree.\n", new_timer->timer_fd);
@@ -259,6 +285,12 @@ _api int crtl_timerfd_create(int is_loop, __crtl_timer_cb_fn_t callback, void *a
         __rt_timerfd_maxfd = new_timer->timer_fd;
     
     __RBTREE_TIMERFD_UNLOCK;
+
+//    CALL_ONCE(111) {
+//        crtl_mutex_lock(&__rt_notify_schedule_start_lock, 0,0,0,0);
+//        crtl_cond_signal(&__rt_notify_schedule_start);
+//        crtl_mutex_unlock(&__rt_notify_schedule_start_lock);
+//    }
     
     return new_timer->timer_fd;
     

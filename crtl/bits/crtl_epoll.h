@@ -7,6 +7,29 @@
 
 #define CRTL_EPOLL_CLOEXEC EPOLL_CLOEXEC
 
+
+#define CRTL_EPOLLIN EPOLLIN
+#define CRTL_EPOLLPRI EPOLLPRI
+#define CRTL_EPOLLOUT EPOLLOUT
+#define CRTL_EPOLLRDNORM EPOLLRDNORM
+#define CRTL_EPOLLRDBAND EPOLLRDBAND
+#define CRTL_EPOLLWRNORM EPOLLWRNORM
+#define CRTL_EPOLLWRBAND EPOLLWRBAND
+#define CRTL_EPOLLMSG EPOLLMSG
+#define CRTL_EPOLLERR EPOLLERR
+#define CRTL_EPOLLHUP EPOLLHUP
+#define CRTL_EPOLLRDHUP EPOLLRDHUP
+#define CRTL_EPOLLEXCLUSIVE EPOLLEXCLUSIVE
+#define CRTL_EPOLLWAKEUP EPOLLWAKEUP
+#define CRTL_EPOLLONESHOT EPOLLONESHOT
+#define CRTL_EPOLLET EPOLLET
+
+
+#define CRTL_EPOLL_CTL_ADD EPOLL_CTL_ADD	/* Add a file descriptor to the interface.  */
+#define CRTL_EPOLL_CTL_DEL EPOLL_CTL_DEL	/* Remove a file descriptor from the interface.  */
+#define CRTL_EPOLL_CTL_MOD EPOLL_CTL_MOD	/* Change file descriptor epoll_event structure.  */
+
+
 /**
  *  Creates an epoll instance.  Returns an fd for the new instance.
  * The "size" parameter is a hint specifying the number of file

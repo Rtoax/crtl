@@ -269,6 +269,14 @@ void demo_timerfd_create_test_multi_thread()
         sleep(1);
     crtl_thread_normal(&thread4, demo_timerfd_create_test_multi_thread_fn, NULL);
     
+    sleep(13);
+    for(i=0;i<sizeof(timerfd)/sizeof(timerfd[0]);i++) {
+        sleep(1);
+        crtl_timerfd_delete(timerfd[i]);
+        crtl_print_notice("Delete: timerid = %d\n", timerfd[i]);
+    }
+
+    
     while(1) {
         sleep(1);
 //        crtl_print_info(">>>>>>>>>>>>>>>\n");

@@ -45,13 +45,14 @@ int crtl_cond_broadcast(crtl_lock_cond_t *cond)
 
 int crtl_cond_wait(crtl_lock_cond_t *__cond, crtl_lock_mutex_t *__mutex, int timedwait, int seconds, long nanoseconds)
 {
+    int ret = -1;
     if (timedwait) {
         //struct timespec {
         //    time_t tv_sec;      /* Seconds */
         //    long   tv_nsec;     /* Nanoseconds [0 .. 999999999] */
         //};
         struct timespec timespec = {seconds, nanoseconds};
-        if(0 != pthread_cond_timedwait(__cond, __mutex, &timespec)) {
+        if(0 != (ret = pthread_cond_timedwait(__cond, __mutex, &timespec))) {
             crtl_print_err("pthread_cond_timedwait error. %s\n", CRTL_SYS_ERROR);
             return CRTL_ERROR;
         }
