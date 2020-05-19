@@ -299,7 +299,7 @@ __crtl_timer_id_t crtl_timer_create(int is_loop, void (*callback)(void *arg), vo
             return 0;
         }
         __crtl_dbg("create timer schedule thread.\n");
-//        __crtl_timers_tree = crtl_rbtree_init(&__crtl_timer_id_cmp, NULL);
+//        __crtl_timers_tree = crtl_rbtree_init(&__crtl_timer_id_cmp);
     }
 
 //    crtl_rbtree_insert(__crtl_timers_tree, __timer, sizeof(struct crtl_timer_struct));

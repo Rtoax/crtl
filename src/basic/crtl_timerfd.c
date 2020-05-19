@@ -108,7 +108,7 @@ static void* __rt_timerfd_schedule_thread(void *arg)
 
         static struct crtl_timer_struct try_find;
         struct crtl_timer_struct *_t = NULL;
-        crtl_rbtree_node_t *find_node = NULL;
+        crtl_rbtree_node_t find_node = NULL;
 
         int fd = -1;
         for(fd=3;fd<=FD_SETSIZE;fd++) {
@@ -174,7 +174,7 @@ static struct crtl_timer_struct * _unused __find_timer_by_timerfd(int timerfd)
 {
     struct crtl_timer_struct timer;
     timer.timer_fd = timerfd;
-    crtl_rbtree_node_t *find_node = crtl_rbtree_search(__rt_rbtree_static_timerfds, &timer);
+    crtl_rbtree_node_t find_node = crtl_rbtree_search(__rt_rbtree_static_timerfds, &timer);
     if(!find_node) {
         return NULL;
     } else {
@@ -190,7 +190,7 @@ _api int crtl_timerfd_create(int is_loop, __crtl_timer_cb_fn_t callback, void *a
     __RBTREE_TIMERFD_LOCK;
     if(!__rt_rbtree_static_timerfds)
     {
-        __rt_rbtree_static_timerfds = crtl_rbtree_init(&__rt_rbtree_cmp_fn_timerfd, NULL);
+        __rt_rbtree_static_timerfds = crtl_rbtree_init(&__rt_rbtree_cmp_fn_timerfd);
         if(!__rt_rbtree_static_timerfds) 
         {
             __RBTREE_TIMERFD_UNLOCK;
@@ -428,7 +428,7 @@ _api int crtl_timerfd_delete(int timerfd)
         return CRTL_ERROR;
     }
 
-    crtl_rbtree_node_t *find_node = crtl_rbtree_search(__rt_rbtree_static_timerfds, _user_timer);
+    crtl_rbtree_node_t find_node = crtl_rbtree_search(__rt_rbtree_static_timerfds, _user_timer);
     if(!find_node)
     {
         crtl_print_warning("not find timer \n");

@@ -14,8 +14,10 @@
 
 
 
-typedef struct crtl_rbtree_struct*          crtl_rbtree_t;
-typedef struct crtl_rbtree_node_struct      crtl_rbtree_node_t;
+//typedef struct crtl_rbtree_struct*          crtl_rbtree_t;
+typedef void*          crtl_rbtree_t;
+
+typedef struct crtl_rbtree_node_struct*     crtl_rbtree_node_t;
 typedef struct crtl_rbtree_iterator_struct* crtl_rbtree_iterator_t;
 
 /**
@@ -44,7 +46,7 @@ typedef struct crtl_rbtree_iterator_struct* crtl_rbtree_iterator_t;
  * @param display: display function, not support yet
  * @return red black tree HANDLE or NULL
  */
-_api crtl_rbtree_t crtl_rbtree_init(int (*cmp)(const void *, const void *), int (*display)(const void *));
+_api crtl_rbtree_t crtl_rbtree_init(int (*cmp)(const void *, const void *));
 
 /**
  * init a red black tree, the data when insert will be allocation memory
@@ -70,7 +72,7 @@ _api int crtl_rbtree_insert(crtl_rbtree_t rbtree, void *data, unsigned int data_
  * @param data: data
  * @return rb tree node, crtl_rbtree_node_t
  */
-_api crtl_rbtree_node_t *crtl_rbtree_search(crtl_rbtree_t rbtree, const void *data);
+_api crtl_rbtree_node_t crtl_rbtree_search(crtl_rbtree_t rbtree, const void *data);
 
 
 /**
@@ -113,28 +115,28 @@ _api crtl_rbtree_iterator_t crtl_rbtree_iterator(crtl_rbtree_t rbtree);
  * @param rbtree: red black tree HANDLE
  * @return rb tree node, crtl_rbtree_node_t or NULL
  */
-_api crtl_rbtree_node_t* crtl_rbtree_getfirst(crtl_rbtree_t rbtree);
+_api crtl_rbtree_node_t crtl_rbtree_getfirst(crtl_rbtree_t rbtree);
 
 /**
  * get last data from a red black tree
  * @param rbtree: red black tree HANDLE
  * @return rb tree node, crtl_rbtree_node_t or NULL
  */
-_api crtl_rbtree_node_t* crtl_rbtree_getlast(crtl_rbtree_t rbtree);
+_api crtl_rbtree_node_t crtl_rbtree_getlast(crtl_rbtree_t rbtree);
 
 /**
  * get next data from a red black tree
  * @param node: red black node
  * @return rb tree node, crtl_rbtree_node_t or NULL
  */
-_api crtl_rbtree_node_t* crtl_rbtree_getnext(crtl_rbtree_node_t* node);
+_api crtl_rbtree_node_t crtl_rbtree_getnext(crtl_rbtree_node_t node);
 
 /**
  * get last data from a red black tree
  * @param node: red black node
  * @return rb tree node, crtl_rbtree_node_t or NULL
  */
-_api crtl_rbtree_node_t* crtl_rbtree_getprev(crtl_rbtree_node_t* node);
+_api crtl_rbtree_node_t crtl_rbtree_getprev(crtl_rbtree_node_t node);
 
 
 /**

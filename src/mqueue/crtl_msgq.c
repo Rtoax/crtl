@@ -59,7 +59,7 @@ inline static int _unused __crtl_msgq_node_cmp(const void *data1, const void *da
 /* 获取msgq , 线程不安全 */
 static struct __crtl_msgq_tree_node _unused* __crtl_msgq_getmsgqbymqd(crtl_mqd_t mqd)
 {
-    crtl_rbtree_node_t *rbtree_node = NULL;
+    crtl_rbtree_node_t rbtree_node = NULL;
     
     struct __crtl_msgq_tree_node msgq;
     memset(&msgq, 0, sizeof(struct __crtl_msgq_tree_node));
@@ -97,7 +97,7 @@ _api crtl_mqd_t crtl_msgq_create(long mq_maxmsg, long mq_msgsize)
         __crtl_dbg("__crtl_msgqs_tree_init_flag = %ld.\n", __crtl_msgqs_tree_init_flag);
         
         /* 初始化红黑树 */
-        __crtl_msgqs_tree = crtl_rbtree_init(&__crtl_msgq_node_cmp, NULL);
+        __crtl_msgqs_tree = crtl_rbtree_init(&__crtl_msgq_node_cmp);
         crtl_assert_fp(stderr, __crtl_msgqs_tree);
         if(!__crtl_msgqs_tree) {/* 初始化失败 */
             crtl_print_err("crtl_rbtree_init error.\n");

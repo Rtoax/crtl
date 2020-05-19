@@ -479,7 +479,7 @@ inline static void _unused* crtl_rbtree_iterator_next(struct crtl_rbtree_iterato
 inline static void _unused* crtl_rbtree_iterator_prev(struct crtl_rbtree_iterator_struct *iter);
 inline static void _unused* crtl_rbtree_iterator_last(struct crtl_rbtree_iterator_struct *iter);
 
-static struct crtl_rbtree_struct* __crtl_rbtree_init(int (*cmp)(const void *, const void *), int (*display)(const void *), crtl_boolean alloc)
+static struct crtl_rbtree_struct* __crtl_rbtree_init(int (*cmp)(const void *, const void *), crtl_boolean alloc)
 {
     struct crtl_rbtree_struct* rbtree = malloc(sizeof(struct crtl_rbtree_struct));
     if(!rbtree)
@@ -496,7 +496,7 @@ static struct crtl_rbtree_struct* __crtl_rbtree_init(int (*cmp)(const void *, co
 
     rbtree->nnode = 0;
     rbtree->cmp = cmp;
-    rbtree->display = display;
+//    rbtree->display = display;
 
     /* 初始化迭代器 */
     rbtree->iter.rbtree = rbtree;
@@ -510,13 +510,13 @@ static struct crtl_rbtree_struct* __crtl_rbtree_init(int (*cmp)(const void *, co
     return rbtree;
 }
 
-_api struct crtl_rbtree_struct* crtl_rbtree_init(int (*cmp)(const void *, const void *), int (*display)(const void *))
+_api struct crtl_rbtree_struct* crtl_rbtree_init(int (*cmp)(const void *, const void *))
 {
-    return __crtl_rbtree_init(cmp, display, crtl_false);
+    return __crtl_rbtree_init(cmp, crtl_false);
 }
-_api struct crtl_rbtree_struct* crtl_rbtree_init_alloc(int (*cmp)(const void *, const void *), int (*display)(const void *))
+_api struct crtl_rbtree_struct* crtl_rbtree_init_alloc(int (*cmp)(const void *, const void *))
 {
-    return __crtl_rbtree_init(cmp, display, crtl_true);
+    return __crtl_rbtree_init(cmp, crtl_true);
 }
 
 

@@ -47,7 +47,7 @@ inline static int _unused __crtl_app_apps_cmp(const void *data1, const void *dat
 /* 获取应用 , 线程不安全 */
 static struct crtl_application_struct _unused* __crtl_application_getappbyname(const char *app_name)
 {
-    crtl_rbtree_node_t *rbtree_node = NULL;
+    crtl_rbtree_node_t rbtree_node = NULL;
     
     struct crtl_application_struct app;
     memset(&app, 0, sizeof(struct crtl_application_struct));
@@ -128,7 +128,7 @@ _api int crtl_application_create(const char *app_name)
         __crtl_dbg("__crtl_apps_tree_init_flag = %ld.\n", __crtl_apps_tree_init_flag);
         
         /* 初始化红黑树 */
-        __crtl_apps_tree = crtl_rbtree_init(&__crtl_app_apps_cmp, NULL);
+        __crtl_apps_tree = crtl_rbtree_init(&__crtl_app_apps_cmp);
         crtl_assert_fp(stderr, __crtl_apps_tree);
         if(!__crtl_apps_tree) {/* 初始化失败 */
             crtl_print_err("crtl_rbtree_init error.\n");
@@ -155,7 +155,7 @@ _api int crtl_application_create(const char *app_name)
     
     /* 初始化属于该应用的模块存放树 */
     if(CAS(&__app->modules_rbtree_init_flag, 0, 1)) {
-        __app->modules_rbtree = crtl_rbtree_init(&__crtl_app_modules_cmp, NULL);
+        __app->modules_rbtree = crtl_rbtree_init(&__crtl_app_modules_cmp);
     }
     
     strcpy(__app->app_name, app_name);
@@ -254,7 +254,7 @@ _hidden struct crtl_module_struct * _unused __crtl_application_del_module(const 
     }
 
     /* 组装临时模块结构用于查询 */
-    crtl_rbtree_node_t *rbtree_node = NULL;
+    crtl_rbtree_node_t rbtree_node = NULL;
     struct crtl_module_struct *__module = NULL;
 
     
