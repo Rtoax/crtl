@@ -1,16 +1,27 @@
-#include "crtl/bits/crtl_notifier.h"
-#include "crtl/crtl_assert.h"
-#include "crtl/crtl_log.h"
+#include "crtl/assert.h"
+#include "crtl/log.h"
 #include "crtl/easy/macro.h"
 #include "crtl/easy/attribute.h"
 
+#include "crypto/list/list.h"
 
-_api void crtl_notifier_chain_init(crtl_notifier_t *chain_head)
+typedef	int (*crtl_notifier_fn_t)(unsigned long action, int priority, void *data);
+
+
+struct crtl_notifier_block {
+	crtl_notifier_fn_t notifier_call;
+	int priority; 
+    struct list_head list;
+};
+
+
+
+_api void crtl_notifier_chain_init(struct list_head *chain_head)
 {
     INIT_LIST_HEAD(chain_head);
 }
 
-_api void crtl_notifier_register(crtl_notifier_t *chain, crtl_notifier_fn_t fn, int priority)
+_api void crtl_notifier_register(struct list_head *chain, crtl_notifier_fn_t fn, int priority)
 {
     if(unlikely(!chain) || unlikely(!fn)) {
         crtl_assert(0);
@@ -54,7 +65,7 @@ _api void crtl_notifier_register(crtl_notifier_t *chain, crtl_notifier_fn_t fn, 
 
 
 
-_api void crtl_notifier_unregister(crtl_notifier_t *chain, crtl_notifier_fn_t fn)
+_api void crtl_notifier_unregister(struct list_head *chain, crtl_notifier_fn_t fn)
 {
     if(unlikely(!chain) || unlikely(!fn)) {
         crtl_assert(0);
@@ -81,18 +92,18 @@ _api void crtl_notifier_unregister(crtl_notifier_t *chain, crtl_notifier_fn_t fn
 }
 
 
-_api void crtl_notifier_call_chain(crtl_notifier_t *chain, unsigned long action, void *data)
+_api void crtl_notifier_call_chain(struct list_head *chain, unsigned long action, void *data)
 {
     struct crtl_notifier_block *iter_next, *iter;
     list_for_each_entry_safe_reverse(iter,iter_next, chain, list) {
         if(iter->notifier_call) {
-            iter->notifier_call(iter, action, data);
+            iter->notifier_call(action, iter->priority, data);
         }
     }
 }
 
 
-_api void crtl_notifier_chain_destroy(crtl_notifier_t *chain)
+_api void crtl_notifier_chain_destroy(struct list_head *chain)
 {
     if(unlikely(!chain)) {
         crtl_assert(0);

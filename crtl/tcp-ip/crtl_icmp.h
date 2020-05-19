@@ -3,7 +3,7 @@
 #define __CRTL_CRTL_ICMP_H 1
 
 
-#define CRTL_ICMPING(ipv4) crtl_icmp_ping(ipv4, 1, 1, NULL, NULL, NULL, NULL)
+#define CRTL_ICMPING(ipv4) crtl_icmp_ping(ipv4, 1, 1, NULL, 0, NULL, NULL)
 
 
 int crtl_icmp_ping(const char *ipv4, unsigned int timeout, int ntry, void *data, int data_len,

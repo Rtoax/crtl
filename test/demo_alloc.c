@@ -1,6 +1,6 @@
-#include <crtl/crtl_assert.h>
-#include <crtl/crtl_log.h>
-#include <crtl/crtl_alloc.h>
+#include <crtl/assert.h>
+#include <crtl/log.h>
+#include <crtl/alloc.h>
 
 void demo_alloc_test_malloc1()
 {

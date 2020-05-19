@@ -2,8 +2,7 @@
 #define __CRTL_BITS_STRING_TREE_H 1
 
 
-#include "crtl/crtl_tree.h"
-#include "crtl/bits/crtl_list.h"
+#include "crtl/tree.h"
 
 
 

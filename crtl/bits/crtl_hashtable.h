@@ -1,7 +1,6 @@
 #ifndef __CRTL_BITS_CRTL_HASHTABLE_H
 #define __CRTL_BITS_CRTL_HASHTABLE_H 1
 
-#include "crtl/bits/crtl_list.h"
 #include "crtl/easy/macro.h"
 
 

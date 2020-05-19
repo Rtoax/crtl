@@ -1,5 +1,5 @@
-#include "crtl/crtl_terminal.h"
-#include "crtl/crtl_log.h"
+#include "crtl/terminal.h"
+#include "crtl/log.h"
 
 
 void demo_terminal_size()

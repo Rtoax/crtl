@@ -1,5 +1,5 @@
-#include "crtl/crtl_config.h"
-#include "crtl/crtl_log.h"
+#include "crtl/config.h"
+#include "crtl/log.h"
 
 
 #define CONFIGREADFILE "demo_config.conf"
@@ -8,7 +8,7 @@
 
 void demo_config_test1()
 {
-    crtl_config_t *cfg = NULL;
+    crtl_config_t cfg = NULL;
 
 
 	if (crtl_config_readfile(CONFIGREADFILE, &cfg) != CRTL_SUCCESS) {
@@ -23,7 +23,7 @@ void demo_config_test1()
 }
 void demo_config_test2()
 {
-    crtl_config_t *cfg = NULL;
+    crtl_config_t cfg = NULL;
 
 	/* set settings */
 	cfg = crtl_config_new();
@@ -53,7 +53,7 @@ void demo_config_test2()
 void demo_config_test3()
 {
 
-    crtl_config_t *cfg = NULL;
+    crtl_config_t cfg = NULL;
 
 
 	cfg = crtl_config_new();
@@ -78,7 +78,7 @@ void demo_config_test3()
  */
 static void demo_config_test4()
 {
-	crtl_config_t *cfg = NULL;
+	crtl_config_t cfg = NULL;
 	char s[1024];
 	bool b;
 	float f;

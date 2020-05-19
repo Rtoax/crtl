@@ -7,11 +7,12 @@
 
 #include "crtl/bits/crtl_getpar.h"
 #include "crtl/easy/attribute.h"
-#include "crtl/bits/crtl_types_basic.h"
-#include "crtl/crtl_file.h"
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_alloc.h"
-#include "crtl/crtl_string.h"
+#include "crtl/bits/types_basic.h"
+#include "crtl/file.h"
+#include "crtl/log.h"
+#include "crtl/alloc.h"
+#include "crtl/string.h"
+#include "crtl/bits/ctype.h"
 
 struct param_key_value;
 

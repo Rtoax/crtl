@@ -1,5 +1,5 @@
 
-#include <crtl/bits/crtl_types_ctype.h>
+#include <crtl/bits/ctype.h>
 
 
 extern const char __crtl_hex_asc[];

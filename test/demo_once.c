@@ -1,4 +1,4 @@
-#include <crtl/crtl_log.h>
+#include <crtl/log.h>
 #include <crtl/easy/once.h>
 
 DECLARE_ONCE_FUN(rong);

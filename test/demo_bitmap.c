@@ -1,7 +1,7 @@
 
 #include "crtl/bits/crtl_bitmap.h"
-#include <crtl/crtl_string.h>
-#include <crtl/crtl_log.h>
+#include <crtl/string.h>
+#include <crtl/log.h>
 
 static void demo_bitmap_test1()
 {

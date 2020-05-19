@@ -2,7 +2,7 @@
 #define __CRTL_BITS_EPOLL_H 1
 
 #include <sys/epoll.h>
-#include "crtl/bits/crtl_types_basic.h"
+#include "crtl/bits/types_basic.h"
 
 
 #define CRTL_EPOLL_CLOEXEC EPOLL_CLOEXEC

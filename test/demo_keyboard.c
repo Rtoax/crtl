@@ -1,6 +1,5 @@
 #include "crtl/crtl_task.h"
-#include "crtl/bits/crtl_atty.h"
-#include "crtl/crtl_keyboard.h"
+#include "crtl/keyboard.h"
 
 
 void demo_getch_test1()

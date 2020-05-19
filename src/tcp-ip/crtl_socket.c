@@ -6,15 +6,15 @@
 #include <unistd.h>
 
 #include <crtl/crtl_time.h>
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_assert.h"
-#include "crtl/bits/crtl_types_basic.h"
+#include "crtl/log.h"
+#include "crtl/assert.h"
+#include "crtl/bits/types_basic.h"
 #include "crtl/tcp-ip/crtl_socket.h"
 #include "crtl/network/byteorder.h"
 #include "crtl/network/crtl_network_inet.h"
 
 #include "crtl/easy/macro.h"
-#include "crtl/crtl_file.h"
+#include "crtl/file.h"
 
 
 

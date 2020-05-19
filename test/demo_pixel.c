@@ -1,5 +1,5 @@
 #include "crtl/bits/crtl_pixel.h"
-#include "crtl/crtl_log.h"
+#include "crtl/log.h"
 
 void demo_pixel_test1()
 {

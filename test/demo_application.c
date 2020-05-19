@@ -1,8 +1,8 @@
-#include <crtl/crtl_module.h>
+#include <crtl/module.h>
 #include "crtl/crtl_task.h"
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_assert.h"
-#include "crtl/crtl_types.h"
+#include "crtl/log.h"
+#include "crtl/assert.h"
+#include "crtl/types.h"
 
 
 void *demo_module_create_omdu_main_task(void*arg)

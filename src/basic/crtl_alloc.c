@@ -1,8 +1,8 @@
 #include <malloc.h>
 
-#include "crtl/bits/crtl_types_basic.h"
+#include "crtl/bits/types_basic.h"
 
-#include "crtl/crtl_alloc.h"
+#include "crtl/alloc.h"
 
 
 typedef struct {

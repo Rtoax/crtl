@@ -29,9 +29,9 @@
 #include <netinet/ip_icmp.h> //__USE_BSD
 
 
-#include "crtl/bits/crtl_types_basic.h"
+#include "crtl/bits/types_basic.h"
 
-#include "crtl/crtl_log.h"
+#include "crtl/log.h"
 #include "crtl/easy/attribute.h"
 #include "crtl/tcp-ip/crtl_icmp.h"
 #include "crtl/tcp-ip/crtl_checksum.h"

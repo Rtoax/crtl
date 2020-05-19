@@ -1,7 +1,7 @@
-#include "crtl/crtl_log.h"
+#include "crtl/log.h"
 #include "crtl/crtl_task.h"
 
-#include "crtl/bits/crtl_sm.h"
+#include "crtl/sm.h"
 
 enum {
     TEST_STATE_1 = 1,

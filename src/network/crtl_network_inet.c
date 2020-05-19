@@ -14,12 +14,12 @@
 #include <malloc.h>
 #include <string.h>
 
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_string.h"
+#include "crtl/log.h"
+#include "crtl/string.h"
 #include "crtl/easy/macro.h"
 
 
-#include "crtl/bits/crtl_types_basic.h"
+#include "crtl/bits/types_basic.h"
 
 
 /**

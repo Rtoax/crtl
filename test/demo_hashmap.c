@@ -1,6 +1,6 @@
 
 #include "crtl/bits/crtl_hashmap.h"
-#include "crtl/crtl_log.h"
+#include "crtl/log.h"
 
 
 

@@ -2,6 +2,7 @@
 #include <fcntl.h>/* Obtain O_* constant definitions */
 #include <errno.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/utsname.h>
@@ -9,12 +10,12 @@
 #include <sys/syscall.h>   /* For SYS_xxx definitions */
 
 #include "crtl/bits/crtl_core.h"
-#include "crtl/bits/crtl_types_basic.h"
-#include "crtl/crtl_string.h"
-#include "crtl/crtl_log.h"
+#include "crtl/bits/types_basic.h"
+#include "crtl/string.h"
+#include "crtl/log.h"
 
-
-
+#include "crtl/easy/attribute.h"
+#include "crtl/easy/macro.h"
 
 
 int crtl_getpid(void)

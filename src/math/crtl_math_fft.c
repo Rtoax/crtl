@@ -3,7 +3,7 @@
 #include "crtl/crtl_time.h"
 #include "crtl/easy/attribute.h"
 
-#include "crtl/bits/crtl_math_fft.h"
+#include "crtl/fft.h"
 
 
 /* Copyright (c) Colorado School of Mines, 2011.*/

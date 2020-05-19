@@ -1,6 +1,6 @@
 #include "crtl/bits/crtl_shm_posix.h"
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_assert.h"
+#include "crtl/log.h"
+#include "crtl/assert.h"
 #include "crtl/easy/attribute.h"
 
 

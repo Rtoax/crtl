@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "crtl/crtl_tree.h"
+#include "crtl/tree.h"
 
 /* Change this to 0, and this turns into a benchmark program.  */
 #define __AVL_VERIFY 1

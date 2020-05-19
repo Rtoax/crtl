@@ -1,11 +1,70 @@
 #include <malloc.h>
 
-#include "crtl/crtl_log.h"
+#include "crtl/bits/crtl_atomic.h"
+
+#include "crtl/bits/crtl_lock_rwlock.h"
+#include "crtl/bits/crtl_lock_semaphore.h"
+
+
+#include "crtl/tree.h"
+
+#include "crtl/log.h"
 #include "crtl/easy/macro.h"
 #include "crtl/easy/attribute.h"
-#include "crtl/bits/crtl_sm.h"
-#include "crtl/crtl_assert.h"
+#include "crtl/sm.h"
+#include "crtl/assert.h"
 
+#include "crypto/tree/rbtree.h"
+
+#include "crypto/list/list.h"
+
+
+/* 状态机事件处理结构体 */
+struct __crtl_sm_evthandler {
+    
+    crtl_sm_event_t wait_event; /* 等待发生的事件 */
+
+    crtl_sm_handler_fn_t event_handler; /* 事件处理函数 */
+
+    crtl_sm_state_t next_state;   /* 下一个状态 */
+
+    crtl_lock_rw_t event_rwlock; /* 事件处理节点 读写锁 */
+
+    /* 用户参数 */
+    int user_argc;
+    char **user_argv;
+
+    struct crtl_sm_state_node *belongs_to_node;
+    struct rb_node node_of_handler;
+};
+
+
+/* 状态机节点结构体 */
+struct crtl_sm_state_node {
+    
+    crtl_sm_state_t curr_state;   /* 当前状态 */
+
+    crtl_lock_rw_t state_rwlock; /* 状态读写锁 */
+
+    crtl_atomic_t ref_tree_of_handlers; /* 标识“事件-处理函数”树是否被初始化 */
+    
+    struct rb_node node_of_state;   /* 状态 树， 属于一个 rb_root 节点 -> 属于 crtl_sm_t */
+    struct rb_root tree_of_handlers;  /* 消息处理函数 树 */
+    
+};
+
+/* 状态机 */
+struct crtl_sm_struct {
+
+    crtl_sm_state_t current_state;
+
+    crtl_lock_rw_t sm_rwlock; /* 状态机读写锁 */
+    crtl_atomic_t ref_init; /* 标记状态机中的树是否被初始化 */
+    
+    struct rb_root state_tree; /* 状态机中的状态树 */
+    
+    struct list_head all_sm_link; /* 用于底层存贮这个状态机，一面用户忘记删除 */
+};
 
 
 

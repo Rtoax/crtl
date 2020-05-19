@@ -4,23 +4,20 @@
 
 #include "crtl/bits/crtl_time_def.h"
 
-#include "crtl/easy/attribute.h"
-
-
 
 /**
  * double sleep
  * @param sleep_sec: sleep second
  * @return void
  */
-_api inline int crtl_dsleep(double sleep_sec);
+inline int crtl_dsleep(double sleep_sec);
 
 /**
  * sleep and exit
  * @param seconds: sleep second
  * @return void
  */
-_api inline int crtl_delayed_exit_thread(int seconds);
+inline int crtl_delayed_exit_thread(int seconds);
   
 /**
  * Uses system call and include file. See also: cputime() in this library.
@@ -28,7 +25,7 @@ _api inline int crtl_delayed_exit_thread(int seconds);
  * @return cpu time (UNIX user time) in seconds
  * @author Dave Hale, Colorado School of Mines, 04/29/89
  */
-_api float crtl_cpusecond();
+float crtl_cpusecond();
 
 
 /**
@@ -38,7 +35,7 @@ _api float crtl_cpusecond();
  * @param y: another of timeval
  * @return if second x>y, return value greater than zero, else <= 0
  */
-_api inline int crtl_timeval_subtract(struct timeval *result, struct timeval *x, struct timeval *y);
+inline int crtl_timeval_subtract(struct timeval *result, struct timeval *x, struct timeval *y);
 
 /* 两个timeval时间间隔 */
 /**
@@ -47,21 +44,21 @@ _api inline int crtl_timeval_subtract(struct timeval *result, struct timeval *x,
  * @param t2: another of timeval
  * @return useconds of interval
  */
-_api inline long crtl_timeval_interval_usec(struct timeval *t1, struct timeval *t2);
+inline long crtl_timeval_interval_usec(struct timeval *t1, struct timeval *t2);
 
 /**
  * gettimeofday
  * @param time: timespec
  * @return void
  */
-_api inline void crtl_gettimeofday_timespec(struct timespec *time);
+inline void crtl_gettimeofday_timespec(struct timespec *time);
 
 /**
  * gettimeofday
  * @param time: timeval
  * @return void
  */
-_api inline void crtl_gettimeofday_timeval(struct timeval *time);
+inline void crtl_gettimeofday_timeval(struct timeval *time);
 
 
 /**
@@ -72,7 +69,7 @@ _api inline void crtl_gettimeofday_timeval(struct timeval *time);
  * @return if in > in2, return CRTL_GT
  * @return if in < in2, return CRTL_LT
  */
-_api inline int crtl_timespec_cmp(struct timespec *in, struct timespec *in2);
+inline int crtl_timespec_cmp(struct timespec *in, struct timespec *in2);
 
 /**
  * compare timeval
@@ -82,7 +79,7 @@ _api inline int crtl_timespec_cmp(struct timespec *in, struct timespec *in2);
  *         if in > in2, return CRTL_GT
  *         if in < in2, return CRTL_LT
  */
-_api inline int crtl_timeval_cmp(struct timeval *in, struct timeval *in2);
+inline int crtl_timeval_cmp(struct timeval *in, struct timeval *in2);
 
 
 /**
@@ -92,7 +89,7 @@ _api inline int crtl_timeval_cmp(struct timeval *in, struct timeval *in2);
  * @param out: result
  * @return void
  */
-_api inline void crtl_timeval_add(struct timeval *in, struct timeval *in2, struct timeval *out);
+inline void crtl_timeval_add(struct timeval *in, struct timeval *in2, struct timeval *out);
 
 /**
  * subtract timeval into absulute value
@@ -103,7 +100,7 @@ _api inline void crtl_timeval_add(struct timeval *in, struct timeval *in2, struc
  *         if in > in2, return CRTL_GT
  *         if in < in2, return CRTL_LT
  */
-_api inline int crtl_timeval_subabs(struct timeval *in1, struct timeval *in2, struct timeval *out);
+inline int crtl_timeval_subabs(struct timeval *in1, struct timeval *in2, struct timeval *out);
 
 /**
  * generate timeval
@@ -112,7 +109,7 @@ _api inline int crtl_timeval_subabs(struct timeval *in1, struct timeval *in2, st
  * @param microsec: micro second
  * @return void
  */
-_api inline void crtl_timeval_generate(struct timeval *in, long sec, long microsec);
+inline void crtl_timeval_generate(struct timeval *in, long sec, long microsec);
 
 
 
@@ -123,7 +120,7 @@ _api inline void crtl_timeval_generate(struct timeval *in, long sec, long micros
  * @param out: result
  * @return void
  */
-_api inline void crtl_timespec_add(struct timespec *in, struct timespec *in2, struct timespec *out);
+inline void crtl_timespec_add(struct timespec *in, struct timespec *in2, struct timespec *out);
 
 /**
  * subtract timespec into absulute value
@@ -134,7 +131,7 @@ _api inline void crtl_timespec_add(struct timespec *in, struct timespec *in2, st
  *         if in > in2, return CRTL_GT
  *         if in < in2, return CRTL_LT
  */
-_api inline int crtl_timespec_subabs(struct timespec *in1, struct timespec *in2, struct timespec *out);
+inline int crtl_timespec_subabs(struct timespec *in1, struct timespec *in2, struct timespec *out);
 
 /**
  * generate timespec
@@ -143,7 +140,7 @@ _api inline int crtl_timespec_subabs(struct timespec *in1, struct timespec *in2,
  * @param microsec: micro second
  * @return void
  */
-_api inline void crtl_timespec_generate(struct timespec *in, long sec, long nanosec);
+inline void crtl_timespec_generate(struct timespec *in, long sec, long nanosec);
 
 
 /**
@@ -152,7 +149,7 @@ _api inline void crtl_timespec_generate(struct timespec *in, long sec, long nano
  * @param b: timespec
  * @return nano second of subtraction
  */
-_api long long crtl_timespec_sub_nsec(struct timespec a, struct timespec b);
+long long crtl_timespec_sub_nsec(struct timespec a, struct timespec b);
 
 /**
  * add nano second to timespec
@@ -160,7 +157,7 @@ _api long long crtl_timespec_sub_nsec(struct timespec a, struct timespec b);
  * @param b: timespec
  * @return timespec
  */
-_api struct timespec crtl_timespec_add_nsec(struct timespec ts, unsigned long long ns);
+struct timespec crtl_timespec_add_nsec(struct timespec ts, unsigned long long ns);
 
 
 
@@ -169,7 +166,7 @@ _api struct timespec crtl_timespec_add_nsec(struct timespec ts, unsigned long lo
  * @param void
  * @return RDTSC
  */
-_api inline uint64_t crtl_asm_rdtsc(void);
+inline uint64_t crtl_asm_rdtsc(void);
 
 
 #endif /*<__CRTL_TIME_H>*/

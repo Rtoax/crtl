@@ -1,7 +1,7 @@
 #include "crtl/crtl_task.h"
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_assert.h"
-#include "crtl/crtl_types.h"
+#include "crtl/log.h"
+#include "crtl/assert.h"
+#include "crtl/types.h"
 
 //void demo_thread_create_cleanup_fn(void*arg)
 //{

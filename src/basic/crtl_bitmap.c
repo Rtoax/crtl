@@ -2,11 +2,11 @@
 #include <errno.h>
 #include <ctype.h>
 #include <crtl/easy/compare.h>
-#include <crtl/crtl_log.h>
+#include <crtl/log.h>
 
 #include "crtl/bits/crtl_bitmap.h"
 
-#include <crtl/bits/crtl_types_ctype.h>
+#include <crtl/bits/ctype.h>
 
 #include "crtl_mute_dbg.h"
 

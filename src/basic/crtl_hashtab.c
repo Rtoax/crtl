@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include "crtl/bits/crtl_hashtab.h"
-#include "crtl/crtl_log.h"
+#include "crtl/log.h"
 
 
 

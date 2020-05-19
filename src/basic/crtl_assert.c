@@ -1,7 +1,10 @@
-#include "crtl/crtl_assert.h"
-#include "crtl/crtl_lock.h"
+#include <assert.h>
+#include "crtl/assert.h"
 
 
+//extern void assert(int expression);
+extern void crtl_fd_lock(int fd);
+extern void crtl_fd_unlock(int fd);
 
 /* crypto API */
 #define __assert_prefix     "assert."

@@ -1,12 +1,13 @@
 #include <malloc.h>
 #include <string.h>
 
+#include "crtl/bits/types_basic.h"
 
-#include "crtl/bits/crtl_types_basic.h"
+#include "crtl/log.h"
+#include "crtl/assert.h"
 
-#include "crtl/bits/crtl_tree_rbtree.h"
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_assert.h"
+#include "crypto/tree/rbtree.h"
+#include "crtl/easy/attribute.h"
 
 /*
   Red Black Trees
@@ -474,10 +475,10 @@ EXPORT_SYMBOL(rb_replace_node);
 
 
 
-inline static void _unused* crtl_rbtree_iterator_first(struct crtl_rbtree_iterator_struct *iter);
-inline static void _unused* crtl_rbtree_iterator_next(struct crtl_rbtree_iterator_struct *iter);
-inline static void _unused* crtl_rbtree_iterator_prev(struct crtl_rbtree_iterator_struct *iter);
-inline static void _unused* crtl_rbtree_iterator_last(struct crtl_rbtree_iterator_struct *iter);
+//inline static void _unused* crtl_rbtree_iterator_first(struct crtl_rbtree_iterator_struct *iter);
+//inline static void _unused* crtl_rbtree_iterator_next(struct crtl_rbtree_iterator_struct *iter);
+//inline static void _unused* crtl_rbtree_iterator_prev(struct crtl_rbtree_iterator_struct *iter);
+//inline static void _unused* crtl_rbtree_iterator_last(struct crtl_rbtree_iterator_struct *iter);
 
 static struct crtl_rbtree_struct* __crtl_rbtree_init(int (*cmp)(const void *, const void *), crtl_boolean alloc)
 {
@@ -499,13 +500,13 @@ static struct crtl_rbtree_struct* __crtl_rbtree_init(int (*cmp)(const void *, co
 //    rbtree->display = display;
 
     /* 初始化迭代器 */
-    rbtree->iter.rbtree = rbtree;
-    rbtree->iter.curr_node = NULL;
-    
-    rbtree->iter.first = crtl_rbtree_iterator_first;
-    rbtree->iter.next = crtl_rbtree_iterator_next;
-    rbtree->iter.prev = crtl_rbtree_iterator_prev;
-    rbtree->iter.last = crtl_rbtree_iterator_last;
+//    rbtree->iter.rbtree = rbtree;
+//    rbtree->iter.curr_node = NULL;
+//    
+//    rbtree->iter.first = crtl_rbtree_iterator_first;
+//    rbtree->iter.next = crtl_rbtree_iterator_next;
+//    rbtree->iter.prev = crtl_rbtree_iterator_prev;
+//    rbtree->iter.last = crtl_rbtree_iterator_last;
     
     return rbtree;
 }
@@ -710,6 +711,19 @@ _api struct crtl_rbtree_node_struct* crtl_rbtree_getprev(struct crtl_rbtree_node
     return NULL;
 }
 
+
+/**
+ * get data from red black tree node
+ * @param node: red black node
+ * @return node data
+ */
+_api void* crtl_rbtree_node_data(struct crtl_rbtree_node_struct* node)
+{
+    crtl_assert_fp(stderr, node);
+    return node->data;
+}
+
+
 /* destroy */
 _api int crtl_rbtree_destroy(struct crtl_rbtree_struct* rbtree)
 {
@@ -728,79 +742,54 @@ _api int crtl_rbtree_destroy(struct crtl_rbtree_struct* rbtree)
     return CRTL_SUCCESS;
 }
 
-_api struct crtl_rbtree_iterator_struct* crtl_rbtree_iterator(struct crtl_rbtree_struct* rbtree)
-{
-    crtl_assert_fp(stderr, rbtree);
-    return &(rbtree->iter);
-}
+//_api struct crtl_rbtree_iterator_struct* crtl_rbtree_iterator(struct crtl_rbtree_struct* rbtree)
+//{
+//    crtl_assert_fp(stderr, rbtree);
+//    return &(rbtree->iter);
+//}
+//
+//inline static void _unused* crtl_rbtree_iterator_first(struct crtl_rbtree_iterator_struct *iter)
+//{
+//    crtl_assert_fp(stderr, iter);
+////    container_of(ptr, type, member)
+//    iter->curr_node = crtl_rbtree_getfirst(iter->rbtree);
+//    return iter->curr_node?(void*)iter->curr_node->data:NULL;
+//}
+//inline static void _unused* crtl_rbtree_iterator_next(struct crtl_rbtree_iterator_struct *iter)
+//{
+//    crtl_assert_fp(stderr, iter);
+//    
+//    struct crtl_rbtree_node_struct _unused *tmp_node = iter->curr_node;
+//    
+//    iter->curr_node = crtl_rbtree_getnext(iter->curr_node);
+//    
+//    if(iter->curr_node == NULL) {//如果想获取最后一个的下一个，currentnode指向最后一个节点，返回NULL
+//        iter->curr_node = tmp_node;
+//        return NULL;
+//    } else {
+//        return (void*)iter->curr_node->data;
+//    }
+//}
+//inline static void _unused* crtl_rbtree_iterator_prev(struct crtl_rbtree_iterator_struct *iter)
+//{
+//    crtl_assert_fp(stderr, iter);
+//    struct crtl_rbtree_node_struct _unused *tmp_node = iter->curr_node;
+//    
+//    iter->curr_node = crtl_rbtree_getprev(iter->curr_node);
+//    
+//    if(iter->curr_node == NULL) { //如果想获取第一个的上一个，currentnode指向第一个节点，返回NULL
+//        iter->curr_node = tmp_node;
+//        return NULL;
+//    } else {
+//        return (void*)iter->curr_node->data;
+//    }
+//}
+//inline static void _unused* crtl_rbtree_iterator_last(struct crtl_rbtree_iterator_struct *iter)
+//{
+//    crtl_assert_fp(stderr, iter);
+//    iter->curr_node = crtl_rbtree_getlast(iter->rbtree);
+//    return iter->curr_node?(void*)iter->curr_node->data:NULL;
+//}
+//
+//
 
-inline static void _unused* crtl_rbtree_iterator_first(struct crtl_rbtree_iterator_struct *iter)
-{
-    crtl_assert_fp(stderr, iter);
-//    container_of(ptr, type, member)
-    iter->curr_node = crtl_rbtree_getfirst(iter->rbtree);
-    return iter->curr_node?(void*)iter->curr_node->data:NULL;
-}
-inline static void _unused* crtl_rbtree_iterator_next(struct crtl_rbtree_iterator_struct *iter)
-{
-    crtl_assert_fp(stderr, iter);
-    
-    struct crtl_rbtree_node_struct _unused *tmp_node = iter->curr_node;
-    
-    iter->curr_node = crtl_rbtree_getnext(iter->curr_node);
-    
-    if(iter->curr_node == NULL) {//如果想获取最后一个的下一个，currentnode指向最后一个节点，返回NULL
-        iter->curr_node = tmp_node;
-        return NULL;
-    } else {
-        return (void*)iter->curr_node->data;
-    }
-}
-inline static void _unused* crtl_rbtree_iterator_prev(struct crtl_rbtree_iterator_struct *iter)
-{
-    crtl_assert_fp(stderr, iter);
-    struct crtl_rbtree_node_struct _unused *tmp_node = iter->curr_node;
-    
-    iter->curr_node = crtl_rbtree_getprev(iter->curr_node);
-    
-    if(iter->curr_node == NULL) { //如果想获取第一个的上一个，currentnode指向第一个节点，返回NULL
-        iter->curr_node = tmp_node;
-        return NULL;
-    } else {
-        return (void*)iter->curr_node->data;
-    }
-}
-inline static void _unused* crtl_rbtree_iterator_last(struct crtl_rbtree_iterator_struct *iter)
-{
-    crtl_assert_fp(stderr, iter);
-    iter->curr_node = crtl_rbtree_getlast(iter->rbtree);
-    return iter->curr_node?(void*)iter->curr_node->data:NULL;
-}
-
-
-
-
-#ifdef ______cPP___iterator_demo______rongtao
-
-
-#include <iostream>
-#include <vector>
-using namespace std;
-int main()
-{
-    vector<int> v;  //v是存放int类型变量的可变长数组，开始时没有元素
-    for (int n = 0; n<5; ++n)
-        v.push_back(n);  //push_back成员函数在vector容器尾部添加一个元素
-    vector<int>::iterator i;  //定义正向迭代器
-    for (i = v.begin(); i != v.end(); ++i) {  //用迭代器遍历容器
-        cout << *i << " ";  //*i 就是迭代器i指向的元素
-        *i *= 2;  //每个元素变为原来的2倍
-    }
-    cout << endl;
-    //用反向迭代器遍历容器
-    for (vector<int>::reverse_iterator j = v.rbegin(); j != v.rend(); ++j)
-        cout << *j << " ";
-    return 0;
-}
-
-#endif

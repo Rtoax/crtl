@@ -1,5 +1,5 @@
 #include "crtl/bits/crtl_getpar.h"
-#include "crtl/crtl_log.h"
+#include "crtl/log.h"
 
 
 

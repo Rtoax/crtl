@@ -1,6 +1,6 @@
 #include "crtl/bits/crtl_pixel.h"
-#include "crtl/bits/crtl_types_ctype.h"
-#include "crtl/crtl_terminal.h"
+#include "crtl/bits/ctype.h"
+#include "crtl/terminal.h"
 
 
 static const unsigned char _unused __crtl_void_pixel_8x8[] = {

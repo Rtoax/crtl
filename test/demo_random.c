@@ -1,5 +1,5 @@
-#include "crtl/crtl_random.h"
-#include "crtl/crtl_log.h"
+#include "crtl/random.h"
+#include "crtl/log.h"
 
 void demo_random_int()
 {

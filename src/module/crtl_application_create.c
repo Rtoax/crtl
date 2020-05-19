@@ -1,5 +1,5 @@
 
-#include "crtl/bits/crtl_module_types.h"
+#include "crypto/module/types.h"
 
 
 
@@ -58,7 +58,7 @@ static struct crtl_application_struct _unused* __crtl_application_getappbyname(c
         return NULL;
     }
     
-    return rbtree_node->data;    
+    return crtl_rbtree_node_data(rbtree_node);    
 }
 
 
@@ -286,7 +286,7 @@ _hidden struct crtl_module_struct * _unused __crtl_application_del_module(const 
     }
 
     /* 如果该模块在该应用中存在，将模块只想该模块，用于后续释放资源 */
-    __module = rbtree_node->data;
+    __module = crtl_rbtree_node_data(rbtree_node);
     
     /* 删除这个APP中的该模块 */
     crtl_rbtree_delete(__app->modules_rbtree, __module);

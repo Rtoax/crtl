@@ -5,8 +5,8 @@
 #include "crtl/bits/crtl_epoll.h"
 #include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"
-#include "crtl/crtl_assert.h"
-#include "crtl/crtl_log.h"
+#include "crtl/assert.h"
+#include "crtl/log.h"
 
 /**
  *  Creates an epoll instance.  Returns an fd for the new instance.

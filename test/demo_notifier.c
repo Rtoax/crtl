@@ -1,11 +1,11 @@
-#include "crtl/bits/crtl_notifier.h"
-#include "crtl/crtl_log.h"
+#include "crtl/notifier.h"
+#include "crtl/log.h"
 
 
 #define DEFUN_Name(name) notifier_test1##name
 #define DEFUN_NOTIFIER_CALLBACK(name) \
-    int DEFUN_Name(name)(struct crtl_notifier_block *nb, unsigned long action, void *data) {\
-        crtl_print_info("---action %d, %s, prio %d\n", action, #name, nb->priority); \
+    int DEFUN_Name(name)(unsigned long action, int priority, void *data) {\
+        crtl_print_info("---action %d, %s, prio %d\n", action, #name, priority); \
         return 0;\
     }
     

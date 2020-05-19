@@ -1,8 +1,8 @@
 
 #include "crtl/crtl_task.h"
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_assert.h"
-#include "crtl/crtl_types.h"
+#include "crtl/log.h"
+#include "crtl/assert.h"
+#include "crtl/types.h"
 
 
 #define THREAD 32
@@ -29,7 +29,7 @@ static void _unused demo1()
 
     pthread_mutex_init(&lock, NULL);
 
-    assert((pool = crtl_threadpool_create(THREAD, QUEUE, 0)) != NULL);
+    crtl_assert((pool = crtl_threadpool_create(THREAD, QUEUE, 0)) != NULL);
     crtl_print_err("Pool started with %d threads and queue size of %d\n", THREAD, QUEUE);
 
     while(crtl_threadpool_add(pool, &dummy_task, NULL, 0) == 0) {
@@ -43,7 +43,7 @@ static void _unused demo1()
     while((tasks / 2) > done) {
         usleep(10000);
     }
-    assert(crtl_threadpool_destroy(pool, 0) == 0);
+    crtl_assert(crtl_threadpool_destroy(pool, 0) == 0);
     crtl_print_err("Did %d tasks\n", done);
 
 }
@@ -101,19 +101,19 @@ static int shutdown()
     left2 = SIZE;
     pool = crtl_threadpool_create(THREAD, SIZE, 0);
     for(i = 0; i < SIZE; i++) {
-        assert(crtl_threadpool_add(pool, &dummy_task2, NULL, 0) == 0);
+        crtl_assert(crtl_threadpool_add(pool, &dummy_task2, NULL, 0) == 0);
     }
-    assert(crtl_threadpool_destroy(pool, 0) == 0);
-    assert(left2 > 0);
+    crtl_assert(crtl_threadpool_destroy(pool, 0) == 0);
+    crtl_assert(left2 > 0);
 
     /* Testing graceful shutdown */
     left2 = SIZE;
     pool = crtl_threadpool_create(THREAD, SIZE, 0);
     for(i = 0; i < SIZE; i++) {
-        assert(crtl_threadpool_add(pool, &dummy_task2, NULL, 0) == 0);
+        crtl_assert(crtl_threadpool_add(pool, &dummy_task2, NULL, 0) == 0);
     }
-    assert(crtl_threadpool_destroy(pool, crtl_threadpool_graceful) == 0);
-    assert(left2 == 0);
+    crtl_assert(crtl_threadpool_destroy(pool, crtl_threadpool_graceful) == 0);
+    crtl_assert(left2 == 0);
 
     pthread_mutex_destroy(&lock2);
 
@@ -134,7 +134,7 @@ void dummy_task3(void *arg) {
     *pi += 1;
 
     if(*pi < QUEUES) {
-        assert(crtl_threadpool_add(pool3[*pi], &dummy_task3, arg, 0) == 0);
+        crtl_assert(crtl_threadpool_add(pool3[*pi], &dummy_task3, arg, 0) == 0);
     } else {
         pthread_mutex_lock(&lock3);
         left3--;
@@ -151,14 +151,14 @@ static int heavy()
 
     for(i = 0; i < QUEUES; i++) {
         pool3[i] = crtl_threadpool_create(THREAD, SIZE, 0);
-        assert(pool3[i] != NULL);
+        crtl_assert(pool3[i] != NULL);
     }
 
     usleep(10);
 
     for(i = 0; i < SIZE; i++) {
         tasks3[i] = 0;
-        assert(crtl_threadpool_add(pool3[0], &dummy_task3, &(tasks3[i]), 0) == 0);
+        crtl_assert(crtl_threadpool_add(pool3[0], &dummy_task3, &(tasks3[i]), 0) == 0);
     }
 
     while(copy > 0) {
@@ -169,7 +169,7 @@ static int heavy()
     }
 
     for(i = 0; i < QUEUES; i++) {
-        assert(crtl_threadpool_destroy(pool3[i], 0) == 0);
+        crtl_assert(crtl_threadpool_destroy(pool3[i], 0) == 0);
     }
 
     pthread_mutex_destroy(&lock3);

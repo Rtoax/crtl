@@ -1,7 +1,7 @@
 #include "crtl/bits/crtl_lock_semaphore.h"
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_assert.h"
-#include "crtl/bits/crtl_types_basic.h"
+#include "crtl/log.h"
+#include "crtl/assert.h"
+#include "crtl/bits/types_basic.h"
 
 
 int crtl_semaphore_init (crtl_lock_sem_t *__sem, unsigned int value)

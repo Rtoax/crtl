@@ -1,6 +1,6 @@
 
 #include "crtl/bits/crtl_core.h"
-#include "crtl/crtl_log.h"
+#include "crtl/log.h"
 
 static void demo_core_test1()
 {

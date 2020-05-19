@@ -1,7 +1,7 @@
 #include <string.h>
-#include "crtl/crtl_sort.h"
+#include "crtl/sort.h"
 #include <crtl/crtl_mask.h>
-#include <crtl/crtl_log.h>
+#include <crtl/log.h>
 
 
 static int demo_sort_test_cmp(const void *d1, const void *d2)

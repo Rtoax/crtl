@@ -1,8 +1,9 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "crtl/crtl_assert.h"
-#include "crtl/bits/crtl_math_sqrt.h"
+#include "crtl/assert.h"
+#include "crtl/math.h"
+
 
 
 /* 快速平方根取倒数 */

@@ -1,9 +1,9 @@
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_assert.h"
-#include "crtl/crtl_types.h"
-#include "crtl/crtl_alloc.h"
+#include "crtl/log.h"
+#include "crtl/assert.h"
+#include "crtl/types.h"
+#include "crtl/alloc.h"
 
-#include "crtl/crtl_msgq.h"
+#include "crtl/msgq.h"
 
 #include "crtl/easy/macro.h"
 #include "crtl/crtl_task.h"

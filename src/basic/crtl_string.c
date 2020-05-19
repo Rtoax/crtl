@@ -1,7 +1,22 @@
 #include <limits.h>  /* SSIZE_MAX */
 
-#include "crtl/crtl_string.h"
-#include "crtl/bits/crtl_types_basic.h"
+#include <math.h>
+#include <ctype.h>
+#include <limits.h>
+#include <float.h>
+#include <errno.h>
+
+#include "crtl/string.h"
+
+#include "crtl/log.h"
+
+#include "crtl/bits/types_basic.h"
+#include "crtl/bits/ctype.h"
+#include "crtl/bits/crtl_regex.h"
+#include "crtl/bits/types_basic.h"
+
+#include "crtl/easy/attribute.h"
+#include "crtl/easy/macro.h"
 
 
 
@@ -349,10 +364,10 @@ _api int crtl_memshow(const void*in, int len)
 
 
 
-_api void crtl_memswap(crtl_byte *x, crtl_byte *y, size_t size)
+_api void crtl_memswap(unsigned char *x, unsigned char *y, size_t size)
 {
     while(size-- > 0) {
-        crtl_byte tmp = *x;
+        unsigned char tmp = *x;
         *x++ = *y;
         *y++ = tmp;
     }
@@ -361,8 +376,8 @@ _api void crtl_memswap(crtl_byte *x, crtl_byte *y, size_t size)
 _api void crtl_memcopy(void *x, void *y, size_t size)
 {
     while(size-- > 0) {
-        crtl_byte *pbTo = (crtl_byte *)x;
-        crtl_byte *pbFrom = (crtl_byte *)y;
+        unsigned char *pbTo = (unsigned char *)x;
+        unsigned char *pbFrom = (unsigned char *)y;
         *pbTo++ = *pbFrom++;
     }
 }

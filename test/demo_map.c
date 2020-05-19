@@ -1,5 +1,5 @@
 #include <crtl/bits/crtl_map.h>
-#include <crtl/crtl_log.h>
+#include <crtl/log.h>
 
 
 void demo_map_test1()

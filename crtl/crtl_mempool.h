@@ -6,7 +6,7 @@
 
 #include "crtl/easy/attribute.h"
 
-#include "crtl/bits/crtl_types_basic.h"
+#include "crtl/bits/types_basic.h"
 #include "crtl/bits/crtl_lock_spin.h"
 
 

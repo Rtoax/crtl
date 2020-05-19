@@ -1,5 +1,5 @@
 #include "crtl/bits/crtl_errno.h"
-#include <crtl/crtl_log.h>
+#include <crtl/log.h>
 
 int main()
 {

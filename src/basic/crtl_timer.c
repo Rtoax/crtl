@@ -1,15 +1,16 @@
-#include "crtl/crtl_alloc.h"
+#include "crtl/alloc.h"
 #include "crtl/crtl_time.h"
-#include "crtl/crtl_timer.h"
 
-#include "crtl/bits/crtl_types_basic.h"
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_assert.h"
+#include "crtl/bits/types_basic.h"
+#include "crtl/log.h"
+#include "crtl/assert.h"
 #include "crtl/crtl_task.h"
-#include "crtl/crtl_tree.h"
+#include "crtl/tree.h"
 #include "crtl/bits/crtl_lock_rwlock.h"
 
 #include "crtl/easy/byteswap.h"
+#include "crtl/easy/macro.h"
+#include "crypto/timer/types.h"
 
 /* 定时器列表的读写锁 */
 static crtl_lock_rw_t _unused __crtl_timers_list_rwlock = CRTL_LOCK_RWLOCK_INITIALIZER;
@@ -31,8 +32,8 @@ static int _unused __crtl_timer_id_cmp(const void * data1, const void *data2)
     const struct crtl_timer_struct *timer1 = data1;
     const struct crtl_timer_struct *timer2 = data2;
     
-    const __crtl_timer_id_t timerid1 = timer1->timer_id;
-    const __crtl_timer_id_t timerid2 = timer2->timer_id;
+    const crtl_timer_id_t timerid1 = timer1->timer_id;
+    const crtl_timer_id_t timerid2 = timer2->timer_id;
 
     if(timerid1 > timerid2) return CRTL_GT;
     else if(timerid1 == timerid2) return CRTL_EQ;
@@ -42,10 +43,10 @@ static int _unused __crtl_timer_id_cmp(const void * data1, const void *data2)
 }
 
 /* 查找一个定时器-线程不安全 */
-inline static struct crtl_timer_struct * __crtl_timer_getbyid(__crtl_timer_id_t timeid)
+inline static struct crtl_timer_struct * __crtl_timer_getbyid(crtl_timer_id_t timeid)
 {
     /* 入参有误 */
-    if(unlikely((__crtl_timer_id_t)0==(__crtl_timer_id_t)timeid)) {
+    if(unlikely((crtl_timer_id_t)0==(crtl_timer_id_t)timeid)) {
         crtl_print_err("wrong params error. timeid=%ld\n", timeid);
         crtl_assert_fp(stderr, 0);
         return NULL;
@@ -232,7 +233,7 @@ static void _unused *__crtl_timer_schedule_task_fn(void*arg)
 
 
 /* 创建定时器 */
-__crtl_timer_id_t crtl_timer_create(int is_loop, void (*callback)(void *arg), void *arg, long sec, long nanosec)
+crtl_timer_id_t crtl_timer_create(int is_loop, void (*callback)(void *arg), void *arg, long sec, long nanosec)
 {
     /* 入参有误 */
     if(unlikely(!callback) || (unlikely(!sec) && unlikely(!nanosec))) {
@@ -257,7 +258,7 @@ __crtl_timer_id_t crtl_timer_create(int is_loop, void (*callback)(void *arg), vo
     } else {
         __timer->timer_loop = CRTL_TIMER_NONLOOP;
     }
-#define GEN_TIMERID(paddr) ((__crtl_timer_id_t)paddr)
+#define GEN_TIMERID(paddr) ((crtl_timer_id_t)paddr)
     
     __timer->timer_id = GEN_TIMERID(__timer);
     
@@ -307,13 +308,13 @@ __crtl_timer_id_t crtl_timer_create(int is_loop, void (*callback)(void *arg), vo
     __crtl_timers_list_unlock;
     
     /* 获取返回值 */
-//    __crtl_dbg("Create Timer ID: %lx(%lx)(%d)\n", __timer->timer_id, GEN_TIMERID(__timer), sizeof(__crtl_timer_id_t));
+//    __crtl_dbg("Create Timer ID: %lx(%lx)(%d)\n", __timer->timer_id, GEN_TIMERID(__timer), sizeof(crtl_timer_id_t));
 //    crtl_memprint(stdout, &__timer->timer_id, 8);
     return GEN_TIMERID(__timer);
 }
 
 /* 获取定时器时间 */
-_api int crtl_timer_gettime_interval(__crtl_timer_id_t timerid, long *sec, long *nanosec)
+_api int crtl_timer_gettime_interval(crtl_timer_id_t timerid, long *sec, long *nanosec)
 {
     /* 首先找到这个定时器 */
     struct crtl_timer_struct *__this_timer = NULL;
@@ -337,7 +338,7 @@ _api int crtl_timer_gettime_interval(__crtl_timer_id_t timerid, long *sec, long 
 
 
 /* 更新定时器时间 */
-_api int crtl_timer_settime_interval(__crtl_timer_id_t timerid, long sec, long nanosec)
+_api int crtl_timer_settime_interval(crtl_timer_id_t timerid, long sec, long nanosec)
 {
     /* 首先找到这个定时器 */
     struct crtl_timer_struct *__this_timer = NULL;
@@ -358,7 +359,7 @@ _api int crtl_timer_settime_interval(__crtl_timer_id_t timerid, long sec, long n
 }
 
 /* 更新定时器 */
-_api int crtl_timer_set_nonloop(__crtl_timer_id_t timerid)
+_api int crtl_timer_set_nonloop(crtl_timer_id_t timerid)
 {
     /* 首先找到这个定时器 */
     struct crtl_timer_struct *__this_timer = NULL;
@@ -381,7 +382,7 @@ _api int crtl_timer_set_nonloop(__crtl_timer_id_t timerid)
 
 
 /* 删除定时器 */
-_api int crtl_timer_delete(__crtl_timer_id_t timerid)
+_api int crtl_timer_delete(crtl_timer_id_t timerid)
 {
     struct crtl_timer_struct *__this_timer = NULL;
 

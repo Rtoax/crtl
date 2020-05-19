@@ -1,5 +1,5 @@
-#include <crtl/crtl_assert.h>
-#include <crtl/crtl_log.h>
+#include <crtl/assert.h>
+#include <crtl/log.h>
 
 
 

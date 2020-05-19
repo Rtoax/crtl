@@ -7,9 +7,9 @@
 #include <fcntl.h>           /* For O_* constants */
 #include <unistd.h>          /* For truncate */
 
-#include "crtl/crtl_file.h"
+#include "crtl/file.h"
 
-#include "crtl/bits/crtl_types_basic.h"
+#include "crtl/bits/types_basic.h"
 
 #include "crtl/easy/attribute.h"
 

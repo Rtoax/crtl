@@ -21,11 +21,9 @@
  * be too large to inline. See include/linux/plist.h for further
  * information.
  */
-#include "crtl/crtl_log.h"
-#include "crtl/bits/crtl_plist.h"
+#include "crtl/log.h"
 
-//#include <linux/bug.h>
-//#include <linux/plist.h>
+#include "crypto/list/plist.h"
 
 #if 0
 

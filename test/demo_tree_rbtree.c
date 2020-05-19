@@ -1,9 +1,9 @@
 
-#include <crtl/crtl_tree.h>
-#include <crtl/crtl_log.h>
+#include <crtl/tree.h>
+#include <crtl/log.h>
 
 
-
+#if 0
 struct mytype {
 	struct rb_node my_node;
 	int num;
@@ -105,7 +105,7 @@ void demo_rbtree_original()
     print_rbtree(&mytree);
 }
 
-
+#endif
 
 
 
@@ -146,11 +146,11 @@ void demo_crtl_rbtree()
     crtl_print_debug(">>nnode %d. is empty %s\n", 
                                 crtl_rbtree_nnode(rbt), crtl_rbtree_is_empty(rbt)==CRTL_SUCCESS?"YES":"NO");
 
-
+    
     crtl_rbtree_node_t node = NULL;
     for(node=crtl_rbtree_getfirst(rbt); node; node = crtl_rbtree_getnext(node))
     {
-        struct structA *a1 = (struct structA *)(node->data);
+        struct structA *a1 = (struct structA *)(crtl_rbtree_node_data(node));
 //        rbt->display(a1);
     }
     crtl_print_debug(">>nnode %d.\n", crtl_rbtree_nnode(rbt));
@@ -166,7 +166,7 @@ void demo_crtl_rbtree()
     node = NULL;
     for(node=crtl_rbtree_getfirst(rbt); node; node = crtl_rbtree_getnext(node))
     {
-        struct structA *a1 = CRTL_RBTREE_DATA(node);
+        struct structA *a1 = crtl_rbtree_node_data(node);
 //        rbt->display(a1);
     }
     crtl_print_debug(">>nnode %d.\n", crtl_rbtree_nnode(rbt));
@@ -174,20 +174,20 @@ void demo_crtl_rbtree()
     
     crtl_print_debug("Use crtl_rbtree_iterator_t\n");
     
-    struct structA *a1 = NULL;
-    crtl_rbtree_iterator_t iter = crtl_rbtree_iterator(rbt);
-    for(a1 = iter->first(iter); a1; a1 = iter->next(iter))
-    {
-//        rbt->display(a1);
-    }
-    for(a1 = iter->prev(iter); a1; a1 = iter->prev(iter))
-    {
-//        rbt->display(a1);
-    }
-    for(a1 = iter->next(iter); a1; a1 = iter->next(iter))
-    {
-//        rbt->display(a1);
-    }
+//    struct structA *a1 = NULL;
+//    crtl_rbtree_iterator_t iter = crtl_rbtree_iterator(rbt);
+//    for(a1 = iter->first(iter); a1; a1 = iter->next(iter))
+//    {
+////        rbt->display(a1);
+//    }
+//    for(a1 = iter->prev(iter); a1; a1 = iter->prev(iter))
+//    {
+////        rbt->display(a1);
+//    }
+//    for(a1 = iter->next(iter); a1; a1 = iter->next(iter))
+//    {
+////        rbt->display(a1);
+//    }
     
     crtl_rbtree_destroy(rbt);
 }
@@ -195,9 +195,9 @@ void demo_crtl_rbtree()
 
 int main()
 {
-    demo_rbtree_original();
+//    demo_rbtree_original();
 
-//    demo_crtl_rbtree();
+    demo_crtl_rbtree();
 
     return 0;
 }

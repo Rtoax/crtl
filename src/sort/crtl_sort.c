@@ -1,18 +1,19 @@
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_assert.h"
+#include "crtl/log.h"
+#include "crtl/assert.h"
+#include "crtl/sort.h"
 
-#include "crtl/bits/crtl_types_basic.h"
-#include "crtl/crtl_alloc.h"
-#include "crtl/crtl_string.h"
+#include "crtl/bits/types_basic.h"
+#include "crtl/alloc.h"
+#include "crtl/string.h"
 #include "crtl/easy/macro.h"
+#include "crtl/easy/attribute.h"
 
-#include "crtl/bits/crtl_types_fn.h"
 
 
 
 _api void crtl_sort_cocktailshaker(void *base, size_t num, size_t size, int (*cmp)(const void *, const void *))
 {
-    crtl_byte *pbBase = (crtl_byte *)base;
+    unsigned char *pbBase = (unsigned char *)base;
     size_t i;
     int swapped;
 
@@ -40,7 +41,7 @@ _api void crtl_sort_cocktailshaker(void *base, size_t num, size_t size, int (*cm
 
 _api void crtl_sort_heap(void *base, size_t num,size_t size, int (*cmp)(const void *, const void *))
 {
-    crtl_byte *pbBase = (crtl_byte *)base;
+    unsigned char *pbBase = (unsigned char *)base;
     int i = (num / 2 - 1) * size;
     int n = num * size;
     int c, r;
@@ -71,7 +72,7 @@ _api void crtl_sort_heap(void *base, size_t num,size_t size, int (*cmp)(const vo
 
 _api void crtl_sort_insertion(void *base, size_t num, size_t size, int (*cmp)(const void *, const void *))
 {
-    crtl_byte *pbBase = (crtl_byte *)base;
+    unsigned char *pbBase = (unsigned char *)base;
     size_t i, j;
 
     if(num)
@@ -83,7 +84,7 @@ _api void crtl_sort_insertion(void *base, size_t num, size_t size, int (*cmp)(co
 
 _api void crtl_sort_qsort3way(void *base, size_t n, size_t size, int (*cmp)(const void *, const void *))
 {
-    crtl_byte *ptr = (crtl_byte *)base;
+    unsigned char *ptr = (unsigned char *)base;
 
     while(n > 1) {
         int i = 1, lt = 0, gt = n;
@@ -116,8 +117,8 @@ _api void crtl_sort_qsort3way(void *base, size_t n, size_t size, int (*cmp)(cons
 
 static size_t __partition(void *base, size_t lo,size_t hi,size_t size,int (*cmp)(const void *, const void *))
 {
-    crtl_byte *pbBase = (crtl_byte *)base;
-    crtl_byte *v = (crtl_byte *)base;
+    unsigned char *pbBase = (unsigned char *)base;
+    unsigned char *v = (unsigned char *)base;
 
     size_t i = lo;
     size_t j = hi + 1;
@@ -160,8 +161,8 @@ _api void crtl_sort_qsortH(void *base,size_t lo,size_t hi,size_t size,int (*cmp)
 
 static size_t __LomutoPartition(void *base,size_t lo,size_t hi,size_t size,int (*cmp)(const void *, const void *))
 {
-  crtl_byte *ptr = (crtl_byte *)base;
-  crtl_byte *p = ptr + hi * size;
+  unsigned char *ptr = (unsigned char *)base;
+  unsigned char *p = ptr + hi * size;
 
   int i = lo - 1;
   size_t j;
@@ -191,7 +192,7 @@ _api void crtl_sort_qsortL(void *base,size_t lo,size_t hi,size_t size,int (*cmp)
 
 _api void crtl_sort_selection(void *base,size_t num,size_t size,int (*cmp)(const void *, const void *))
 {
-    crtl_byte *pvBase = (crtl_byte *)base;
+    unsigned char *pvBase = (unsigned char *)base;
     size_t i, j;
     size_t m;
 
@@ -211,7 +212,7 @@ _api void crtl_sort_selection(void *base,size_t num,size_t size,int (*cmp)(const
 
 _api void crtl_sort_shell(void *base,size_t num,size_t size,int (*cmp)(const void *, const void *))
 {
-    crtl_byte *pbBase = (crtl_byte *)base;
+    unsigned char *pbBase = (unsigned char *)base;
     size_t i, j;
     size_t h = 1;
 
@@ -343,20 +344,23 @@ static void __sort_swap_bytes(void *a, void *b, size_t n)
 	} while (n);
 }
 
+
+typedef void (*__crtl_swap_fn_t)(void *a, void *b, int size);
+
 /*
  * The values are arbitrary as long as they can't be confused with
  * a pointer, but small integers make for the smallest compare
  * instructions.
  */
-#define __SWAP_WORDS_64 (crtl_swap_fn_t)0
-#define __SWAP_WORDS_32 (crtl_swap_fn_t)1
-#define __SWAP_BYTES    (crtl_swap_fn_t)2
+#define __SWAP_WORDS_64 (__crtl_swap_fn_t)0
+#define __SWAP_WORDS_32 (__crtl_swap_fn_t)1
+#define __SWAP_BYTES    (__crtl_swap_fn_t)2
 
 /*
  * The function pointer is last to make tail calls most efficient if the
  * compiler decides not to inline this function.
  */
-static void __sort_do_swap(void *a, void *b, size_t size, crtl_swap_fn_t swap_func)
+static void __sort_do_swap(void *a, void *b, size_t size, __crtl_swap_fn_t swap_func)
 {
 	if (swap_func == __SWAP_WORDS_64)
 		__sort_swap_words_64(a, b, size);

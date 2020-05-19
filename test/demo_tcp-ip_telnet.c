@@ -1,7 +1,7 @@
 #include "crtl/crtl_signal.h"
 #include <crtl/crtl_mask.h>
-#include <crtl/crtl_log.h>
-#include <crtl/crtl_string.h>
+#include <crtl/log.h>
+#include <crtl/string.h>
 #include "crtl/tcp-ip/crtl_ether.h"
 #include "crtl/tcp-ip/crtl_icmp.h"
 #include "crtl/tcp-ip/crtl_telnet.h"

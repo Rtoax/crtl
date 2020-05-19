@@ -2,6 +2,7 @@
 #define __CRTL_EASY_ONCE_H 1
 
 #include <pthread.h>
+#include "crtl/easy/attribute.h"
 
 /*
  * Copyright 1995-2016 The OpenSSL Project Authors. All Rights Reserved.

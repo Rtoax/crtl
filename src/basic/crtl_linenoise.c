@@ -1,7 +1,7 @@
 
 #include "crtl/bits/crtl_linenoise.h"
 
-#include "crtl/crtl_log.h"
+#include "crtl/log.h"
 
 //#include "types/hash/hashtab_rt.h"
 

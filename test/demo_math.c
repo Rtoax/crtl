@@ -1,5 +1,5 @@
-#include <crtl/crtl_log.h>
-#include <crtl/crtl_math.h>
+#include <crtl/log.h>
+#include <crtl/math.h>
 #include <crtl/crtl_time.h>
 #include <crtl/easy/byteswap.h>
 

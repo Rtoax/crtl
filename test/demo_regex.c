@@ -1,6 +1,8 @@
-#include <crtl/crtl_string.h>
+#include <crtl/bits/crtl_regex.h>
+
+#include <crtl/string.h>
 #include <crtl/crtl_mask.h>
-#include <crtl/crtl_log.h>
+#include <crtl/log.h>
 
 void demo_regex_posix()
 {

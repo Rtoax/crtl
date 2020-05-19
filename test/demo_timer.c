@@ -1,7 +1,7 @@
 #include <string.h>
-#include <crtl/crtl_tree.h>
-#include <crtl/crtl_log.h>
-#include <crtl/crtl_timer.h>
+#include <crtl/tree.h>
+#include <crtl/log.h>
+#include <crtl/timer.h>
 #include <crtl/crtl_task.h>
 
 

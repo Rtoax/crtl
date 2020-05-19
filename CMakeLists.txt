@@ -22,7 +22,7 @@ aux_source_directory(./src/hpc  DIR_SRCS)
 set(CMAKE_C_FLAGS "-g -Wall")
 
 #添加头文件路径 
-include_directories( ./crtl ./ ./src )
+include_directories( ./ ./src )
 
 #添加库 
 find_library(RT rt /usr/lib64) 

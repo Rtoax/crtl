@@ -1,17 +1,18 @@
 
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_assert.h"
-#include "crtl/bits/crtl_types_basic.h"
-#include "crtl/crtl_file.h"
-#include "crtl/crtl_alloc.h"
-#include "crtl/crtl_tree.h"
+#include "crtl/log.h"
+#include "crtl/assert.h"
+#include "crtl/bits/types_basic.h"
+#include "crtl/file.h"
+#include "crtl/alloc.h"
+#include "crtl/tree.h"
 
-#include "crtl/bits/crtl_msgq_posix.h"
-#include "crtl/bits/crtl_msgq_systemV.h"
+#include "crtl/bits/msgq.h"
 
 #include "crtl/bits/crtl_lock_rwlock.h"
 
 #include "crtl/easy/macro.h"
+
+#include "crtl/msgq.h"
 
 #include "crtl_mute_dbg.h" //去除所有debug打印
 
@@ -70,7 +71,7 @@ static struct __crtl_msgq_tree_node _unused* __crtl_msgq_getmsgqbymqd(crtl_mqd_t
         return NULL;
     }
     
-    return rbtree_node->data;    
+    return crtl_rbtree_node_data(rbtree_node);    
 }
 
 

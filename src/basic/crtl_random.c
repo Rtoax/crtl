@@ -1,6 +1,12 @@
-#include "crtl/crtl_random.h"
-#include "crtl/crtl_log.h"
-#include "crtl/crtl_assert.h"
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include "crtl/random.h"
+#include "crtl/log.h"
+#include "crtl/assert.h"
 
 #include "crtl/easy/attribute.h"
 
@@ -31,13 +37,13 @@ static int _unused __crtl_random_int_device(int seed, int min, int max)
     unsigned random_value;
 
     /* Make sure MAX is greater than MIN. */
-    assert (max > min);
+    crtl_assert (max > min);
     
     /* If this is the first time this function is called, open a file
      * descriptor to /dev/random. */
     if (dev_random_fd == -1) {
         dev_random_fd = open ("/dev/random", O_RDONLY);
-        assert (dev_random_fd != -1);
+        crtl_assert (dev_random_fd != -1);
     }
     /* Read enough random bytes to fill an integer variable. */
     next_random_byte = (char*) &random_value;

@@ -4,10 +4,11 @@
 #include <stdarg.h>
 #include <libgen.h> //basename
 
-#include "crtl_log.h"
-#include "crtl_lock.h"
-#include "crtl/bits/crtl_types_basic.h"
-#include "crtl/crtl_assert.h"
+#include "crtl/log.h"
+#include "crtl/crtl_lock.h"
+#include "crtl/bits/types_basic.h"
+#include "crtl/assert.h"
+#include "crtl/easy/attribute.h"
 
 
 const static struct {

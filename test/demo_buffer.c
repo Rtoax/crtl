@@ -1,5 +1,5 @@
-#include "crtl/bits/crtl_types_buffer.h"
-#include <crtl/crtl_log.h>
+#include "crtl/buffer.h"
+#include <crtl/log.h>
 
 struct test_data {
     int a;
@@ -8,7 +8,7 @@ struct test_data {
 
 static void demo_1_create_buffer_test()
 {
-    crtl_buffer_head_t head = crtl_buffer_head_init();
+    crtl_buffer_t head = crtl_buffer_head_init();
     
     struct test_data *data = crtl_buffer_node_new(head, sizeof(struct test_data));    
     data = crtl_buffer_node_grow(data, sizeof(struct test_data)*2);

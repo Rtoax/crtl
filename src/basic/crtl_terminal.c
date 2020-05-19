@@ -1,10 +1,20 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#if HAVE_CURSES
+#include <curses.h>
+#endif
+#include <time.h>
+#include <math.h>
+#include <termios.h>
 #include <sys/ioctl.h>
 
-#include "crtl/crtl_terminal.h"
-#include "crtl/crtl_file.h"
+#include "crtl/terminal.h"
+#include "crtl/file.h"
 #include "crtl/crtl_lock.h"
 
+#include "crtl/easy/attribute.h"
 
 
 _api void crtl_terminal_size(int *const x, int *const y)

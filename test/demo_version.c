@@ -1,4 +1,4 @@
-#include "crtl/crtl_log.h"
+#include "crtl/log.h"
 #include "crtl/bits/crtl_version.h"
 
 int main()

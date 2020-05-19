@@ -1,5 +1,5 @@
-#include <crtl/crtl_types.h>
-#include <crtl/crtl_log.h>
+#include <crtl/types.h>
+#include <crtl/log.h>
 
 void demo1_bits_set()
 {

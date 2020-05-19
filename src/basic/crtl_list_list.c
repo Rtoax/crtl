@@ -1,8 +1,9 @@
 #include <stdint.h>
 
-#include "crtl/crtl_log.h"
-#include "crtl/bits/crtl_list.h"
+#include "crtl/log.h"
 #include "crtl/easy/attribute.h"
+
+#include "crypto/list/list.h"
 
 typedef int (*cmp_func)(void *, struct list_head const *, struct list_head const *);
 

@@ -1,7 +1,9 @@
+#include <stdarg.h>
+
 #include "crtl/crtl_signal.h"
 #include <crtl/crtl_mask.h>
-#include <crtl/crtl_log.h>
-#include <crtl/crtl_string.h>
+#include <crtl/log.h>
+#include <crtl/string.h>
 #include "crtl/tcp-ip/crtl_ether.h"
 #include "crtl/tcp-ip/crtl_icmp.h"
 
@@ -27,11 +29,21 @@ void demo_tcp_ip_ether()
     
 }
 
+int display(void *handle, const char *fmt, ...)
+{   
+    va_list va;
+    va_start(va, fmt);
+    fprintf((FILE*)handle, fmt, va);
+
+    va_end(va);
+}
+
+
 void demo_tcp_ip_icmp()
 {
-    crtl_icmp_ping("10.170.6.24", 2, 1, "RONG", sizeof("RONG"), fprintf, stdout);
-    crtl_icmp_ping("10.170.6.24", 2, 1, "TAO", sizeof("TAO"), fprintf, stdout);
-    crtl_icmp_ping("10.170.6.24", 2, 1, NULL, 0, fprintf, stdout);
+    crtl_icmp_ping("10.170.6.24", 2, 1, "RONG", sizeof("RONG"), display, stdout);
+    crtl_icmp_ping("10.170.6.24", 2, 1, "TAO", sizeof("TAO"), display, stdout);
+    crtl_icmp_ping("10.170.6.24", 2, 1, NULL, 0, display, stdout);
 
     CRTL_ICMPING("10.170.6.24");
     
