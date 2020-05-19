@@ -1,6 +1,6 @@
 #include <crtl/log.h>
 #include <crtl/math.h>
-#include <crtl/crtl_time.h>
+#include <crtl/time.h>
 #include <crtl/easy/byteswap.h>
 
 void demo_math_sqrt_test1()

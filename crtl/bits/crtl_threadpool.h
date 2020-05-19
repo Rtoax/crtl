@@ -8,7 +8,7 @@
 #include <signal.h>
 #include <sched.h>
 
-#include "crtl/crtl_lock.h"
+#include "crtl/lock.h"
 #include "crtl/log.h"
 #include "crtl/bits/crtl_thread.h"
 

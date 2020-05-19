@@ -8,7 +8,7 @@
 
 #include "crtl/easy/macro.h"
 
-#include "crtl/bits/crtl_mask.h"
+#include "crtl/bits/mask.h"
 #include "crtl/tree.h"
 
 #include "crtl/bits/msgq.h"

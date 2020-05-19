@@ -12,7 +12,7 @@
 
 #include "crtl/terminal.h"
 #include "crtl/file.h"
-#include "crtl/crtl_lock.h"
+#include "crtl/lock.h"
 
 #include "crtl/easy/attribute.h"
 

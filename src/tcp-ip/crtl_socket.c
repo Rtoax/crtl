@@ -5,7 +5,7 @@
 #include <sys/types.h>          /* See NOTES */
 #include <unistd.h>
 
-#include <crtl/crtl_time.h>
+#include <crtl/time.h>
 #include "crtl/log.h"
 #include "crtl/assert.h"
 #include "crtl/bits/types_basic.h"

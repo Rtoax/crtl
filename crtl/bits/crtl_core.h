@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#include "crtl/bits/crtl_time_def.h"
+#include "crtl/bits/time.h"
 
 #if defined(__PASE__)
 /* On IBM i PASE, the highest process priority is -10 */

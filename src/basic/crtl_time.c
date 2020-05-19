@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#include "crtl/crtl_time.h"
+#include "crtl/time.h"
 
 #include "crtl/bits/types_basic.h"
 #include "crtl/log.h"

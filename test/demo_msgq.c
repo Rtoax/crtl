@@ -6,7 +6,7 @@
 #include "crtl/msgq.h"
 
 #include "crtl/easy/macro.h"
-#include "crtl/crtl_task.h"
+#include "crtl/task.h"
 
 
 crtl_mqd_t mqd1, mqd2;

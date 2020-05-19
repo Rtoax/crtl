@@ -1,7 +1,7 @@
 #include <stdarg.h>
 
-#include "crtl/crtl_signal.h"
-#include <crtl/crtl_mask.h>
+#include "crtl/signal.h"
+#include <crtl/mask.h>
 #include <crtl/log.h>
 #include <crtl/string.h>
 #include "crtl/tcp-ip/crtl_ether.h"

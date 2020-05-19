@@ -4,12 +4,12 @@
 #include <stdarg.h>
 #include <signal.h>
 
-#include "crtl/crtl_time.h"
+#include "crtl/time.h"
 
 #include "crtl/bits/types_basic.h"
 #include "crtl/log.h"
 #include "crtl/assert.h"
-#include "crtl/crtl_task.h"
+#include "crtl/task.h"
 #include "crtl/tree.h"
 #include "crtl/bits/crtl_lock_rwlock.h"
 #include "crtl/bits/crtl_lock_cond.h"
