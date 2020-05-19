@@ -75,34 +75,173 @@ typedef struct {
 
 
 
+
+/**
+ * get process id
+ * @param void
+ * @return the  process ID of the calling process
+ */
 int crtl_getpid(void);
+
+/**
+ * get parent process id
+ * @param void
+ * @return returns the process ID of the parent of the calling process
+ */
 int crtl_getppid(void);
-int crtl_getpriority(int pid, int* priority);
+
+
+    
+/**
+ * get program scheduling priority
+ * @param void
+ * @return program scheduling priority
+ */
+int crtl_getpriority(int pid, int* priority);  
+
+/**
+ * set program scheduling priority
+ * @param void
+ * @return error number
+ */
 int crtl_setpriority(int pid, int priority); //CRTL_PRIORITY_XXX
 
+
+/**
+ * get the name of the current system
+ * @param buffer: buffer
+ * @return error number
+ */
 int crtl_uname(crtl_utsname_t* buffer);
 
 
+/**
+ * open file with The caller can force the close-on-exec 
+ * flag to be set  for  the  new  file  descriptor
+ *
+ * @param path: file path
+ * @param flags: int open(const char *pathname, int flags);
+ *                  O_CREAT|O_EXCL|O_NOCTTY|O_TRUNC|O_APPEND|O_NONBLOCK|
+ *                  O_SYNC|O_NOFOLLOW|O_DIRECTORY|O_LARGEFILE
+ * @return new  file  descriptor
+ */
 int crtl_open_cloexec(const char* path, int flags);
+
+/**
+ * duplicate a file descriptor with The caller can force the close-on-exec 
+ * flag to be set  for  the  new  file  descriptor
+ *
+ * @param oldfd: old  file  descriptor
+ * @param newfd: new  file  descriptor
+ * @return error number if failed, new  file  descriptor if success
+ */
 int crtl_dup2_cloexec(int oldfd, int newfd);
 
 
+/**
+ * set file descriptor to non block
+ *
+ * @param sockfd: file  descriptor
+ * @return error number
+ */
 int crtl_fcntl_sockfdnonblk(int sockfd);
 
+
+/**
+ * set file descriptor to non block
+ *
+ * @param fd: file  descriptor
+ * @param set: if(set) -> nonblock; else block
+ * @return error number
+ */
 int crtl_fcntl_nonblk(int fd, int set);
+
+/**
+ * set file descriptor to close-on-exec 
+ *
+ * @param fd: file  descriptor
+ * @param set: if(set) -> nonclose-on-exec ; else close-on-exec 
+ * @return error number
+ */
 int crtl_fcntl_cloexec(int fd, int set);
 
+/**
+ * set file descriptor to non block
+ *
+ * @param fd: file  descriptor
+ * @param set: if(set) -> nonblock; else block
+ * @return error number
+ */
 int crtl_ioctl_nonblk(int fd, int set); //crtl_ioctl_nonblk(fd, 1);
+
+/**
+ * set file descriptor to close-on-exec 
+ *
+ * @param fd: file  descriptor
+ * @param set: if(set) -> nonclose-on-exec ; else close-on-exec 
+ * @return error number
+ */
 int crtl_ioctl_cloexec(int fd, int set);
 
 
+
+/**
+ * get current work directory
+ * @param dir: directory
+ * @param size: size of string of directory buffer
+ * @return error number
+ */
 int crtl_cwd(char* buffer, size_t* size);
+
+/**
+ * change current work directory
+ * @param dir: directory
+ * @return error number
+ */
 int crtl_chdir(const char* dir);
+
+/**
+ * get temperaory directory
+ * @param dir: directory
+ * @param size: size of string of directory buffer
+ * @return error number
+ */
 int crtl_tmpdir(char* buffer, size_t* size);
 
-
+/**
+ * get resource usage
+ * @param rusage: resource usage buffer
+ * @return error number
+ */
 int crtl_getrusage(crtl_rusage_t* rusage);
 
+    
+/**
+ * receive a message from a socket
+ * The recvfrom() and recvmsg() calls are used to receive messages from a socket, 
+ * and may be used to receive data on a socket whether or not it is connection-oriented.
+ *
+ * @param fd: file  descriptor
+ * @param msg: The recvmsg() call uses a msghdr structure to minimize the number of 
+ *              directly supplied  arguments.   This structure is defined as follows in <sys/socket.h>.
+ *              struct iovec {                    // Scatter/gather array items 
+ *                 void  *iov_base;              // Starting address 
+ *                 size_t iov_len;               // Number of bytes to transfer 
+ *              };
+ *              
+ *              struct msghdr {
+ *                 void         *msg_name;       // optional address 
+ *                 socklen_t     msg_namelen;    // size of address 
+ *                 struct iovec *msg_iov;        // scatter/gather array 
+ *                 size_t        msg_iovlen;     // # elements in msg_iov 
+ *                 void         *msg_control;    // ancillary data, see below 
+ *                 size_t        msg_controllen; // ancillary data buffer len 
+ *                 int           msg_flags;      // flags on received message 
+ *              };
+ *              
+ * @param flags: ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags)'s flags
+ * @return receive message size
+ */
 ssize_t crtl_recvmsg(int fd, struct msghdr* msg, int flags);
 
 /* close() on macos has the "interesting" quirk that it fails with EINTR

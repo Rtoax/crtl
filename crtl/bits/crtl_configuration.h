@@ -17,6 +17,10 @@
 
 
 
+
+/**
+ * configuration handle
+ */
 typedef struct crtl_config_struct __crtl_config_t;
 
 

@@ -39,7 +39,24 @@ struct __crtl_getpar_struct;
 typedef struct __crtl_getpar_struct * crtl_getpar_t;
 
 /* crtl_getpar_ parameter parsing */
+
+/**
+ * Create argument getpar handle
+ *
+ * @param argc: argument number
+ * @param argv: arguments
+ * @param Delimiter: Delimiter of argument, if is '=', key=value will be used
+ * @param fromfilepar: not use
+ * @return getpar handle
+ */
 struct __crtl_getpar_struct* crtl_getpar_init(int argc, char **argv, char Delimiter, char *fromfilepar);
+
+/**
+ * free argument getpar handle
+ *
+ * @param args_id: getpar handle
+ * @return error number
+ */
 int crtl_getpar_free(struct __crtl_getpar_struct *args_id);
 
 int crtl_getpar_int(struct __crtl_getpar_struct *args_id, char *name, int *p);

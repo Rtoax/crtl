@@ -85,9 +85,40 @@
 
 
 
+/**
+ * return string describing error number
+ *
+ * @param err: error number, CRTL_EXXXX
+ * @return return string describing error number
+ */
 const char* crtl_strerror(int err);
+
+/**
+ * return string describing error number, thread safe
+ *
+ * @param err: error number, CRTL_EXXXX
+ * @param buf: string describing error number
+ * @param buflen: string describing length
+ * @return return string describing error number
+ */
 char* crtl_strerror_r(int err, char* buf, size_t buflen);
+
+/**
+ * return error number name
+ *
+ * @param err: error number, CRTL_EXXXX
+ * @return return error number name
+ */
 const char* crtl_err_name(int err);
+
+/**
+ * return error number name
+ *
+ * @param err: error number, CRTL_EXXXX
+ * @param buf: error number name
+ * @param buflen: error number name length
+ * @return return error number name
+ */
 char* crtl_err_name_r(int err, char* buf, size_t buflen);
 
 

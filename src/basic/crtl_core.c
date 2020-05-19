@@ -426,7 +426,6 @@ int crtl_open_cloexec(const char* path, int flags)
 
 int crtl_dup2_cloexec(int oldfd, int newfd)
 {
-#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__linux__)
   int r;
 
   r = dup3(oldfd, newfd, O_CLOEXEC);
@@ -434,22 +433,6 @@ int crtl_dup2_cloexec(int oldfd, int newfd)
     return CRTL_ERROR;
 
   return r;
-#else
-  int err;
-  int r;
-
-  r = dup2(oldfd, newfd);  /* Never retry. */
-  if (r == -1)
-    return CRTL_ERROR;
-
-  err = crtl_cloexec(newfd, 1);
-  if (err != 0) {
-    uv__close(newfd);
-    return err;
-  }
-
-  return r;
-#endif
 }
 
 
