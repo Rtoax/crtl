@@ -15,6 +15,7 @@
 #include "crypto/round/roundup.h"
 #include <crypto/align/align.h>
 #include <crypto/operator/compare.h>
+#include "crypto/expect.h"
 
 #include "crtl_mute_dbg.h"
 

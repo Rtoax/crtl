@@ -7,6 +7,7 @@
 
 #include "crypto/operator/compare.h"
 #include "crypto/round/roundup.h"
+#include "crypto/expect.h"
 
 
 /*

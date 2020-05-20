@@ -8,6 +8,8 @@
 #include "crtl/assert.h"
 #include "crtl/log.h"
 
+#include "crypto/expect.h"
+
 /**
  *  Creates an epoll instance.  Returns an fd for the new instance.
  * The "size" parameter is a hint specifying the number of file

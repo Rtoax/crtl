@@ -8,6 +8,9 @@
 
 #include "crypto/atomic/fetch.h"
 
+#include "crypto/expect.h"
+
+
 
 #define __ATOMIC_OP(op_name, op_string)					\
 static inline int op_name(int val, int *ptr)				\

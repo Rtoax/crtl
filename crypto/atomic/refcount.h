@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include <crypto/atomic/atomic.h>
+#include "crypto/expect.h"
 
 
 /**

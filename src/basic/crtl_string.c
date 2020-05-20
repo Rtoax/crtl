@@ -17,6 +17,7 @@
 
 #include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"
+#include "crypto/expect.h"
 
 
 

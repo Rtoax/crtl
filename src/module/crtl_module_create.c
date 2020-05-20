@@ -1,5 +1,6 @@
 
 #include "crypto/module/types.h"
+#include "crypto/expect.h"
 
 
 /* 创建模块 */

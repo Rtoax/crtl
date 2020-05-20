@@ -4,6 +4,8 @@
 #include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"
 
+#include "crypto/expect.h"
+
 #define _ERR(err_no, err_str) {err_no, #err_no, err_str}
 
 const struct  {

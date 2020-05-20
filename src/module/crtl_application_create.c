@@ -1,6 +1,7 @@
 
 #include "crypto/module/types.h"
 #include "crypto/atomic/cas.h"
+#include "crypto/expect.h"
 
 
 

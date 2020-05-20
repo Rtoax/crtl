@@ -13,6 +13,7 @@
 
 #include "crypto/timer/types.h"
 #include "crypto/atomic/cas.h"
+#include "crypto/expect.h"
 
 /* 定时器列表的读写锁 */
 static crtl_lock_rw_t _unused __crtl_timers_list_rwlock = CRTL_LOCK_RWLOCK_INITIALIZER;

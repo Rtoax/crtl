@@ -4,6 +4,7 @@
 #include "crtl/easy/attribute.h"
 
 #include "crypto/list/list.h"
+#include "crypto/expect.h"
 
 typedef	int (*crtl_notifier_fn_t)(unsigned long action, int priority, void *data);
 

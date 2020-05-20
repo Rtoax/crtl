@@ -23,6 +23,8 @@
 #include "crtl/easy/macro.h"
 #include "crtl/easy/attribute.h"
 
+#include "crypto/expect.h"
+
 
 int crtl_socket_server_tcp(struct sockaddr_in *srvaddr, int port, int listen_backlog)
 {

@@ -17,6 +17,7 @@
 #include "crtl_mute_dbg.h" //去除所有debug打印
 
 #include "crypto/atomic/cas.h"
+#include "crypto/expect.h"
 
 
 /* 同步消息队列消息中-临时消息队列传递的消息结构 */

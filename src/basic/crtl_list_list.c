@@ -4,6 +4,7 @@
 #include "crtl/easy/attribute.h"
 
 #include "crypto/list/list.h"
+#include "crypto/expect.h"
 
 typedef int (*cmp_func)(void *, struct list_head const *, struct list_head const *);
 

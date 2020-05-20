@@ -6,6 +6,7 @@
 #include "crtl/assert.h"
 #include "crtl/log.h"
 
+#include "crypto/expect.h"
 
 
 /* get enviroment */

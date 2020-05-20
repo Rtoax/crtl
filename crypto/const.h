@@ -33,6 +33,12 @@
 #define CRTL_ULL(x)		(_CRTL_ULL(x))
 
 
+/* is constant during compiled:  yes -> 1, no -> 0 */
+#ifndef constant_p
+#define constant_p(v) __builtin_constant_p(v)
+#endif
+
+
 
 #endif /* __CRYPTO_BITS_CONST_H */
 

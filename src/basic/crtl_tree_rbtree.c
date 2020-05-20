@@ -10,6 +10,7 @@
 #include "crtl/easy/attribute.h"
 
 #include "crypto/align/container.h"
+#include "crypto/expect.h"
 
 /*
   Red Black Trees

@@ -40,5 +40,14 @@
 
 
 
+
+/* compare t1 with t2 is same as each other: yes -> 1, no -> 0 */
+#ifndef typecmp
+#define typecmp(t1, t2) __builtin_types_compatible_p(t1, t2)
+#endif
+
+
+
+
 #endif /*<__CRTL_EASY_COMPARE_H>*/
 

@@ -8,6 +8,9 @@
 #include "crtl/bits/hweight.h"
 
 #include "crypto/bit/bits.h"
+#include "crypto/bit/bit.h"
+
+#include "crypto/xchg.h"
 
 
 /*

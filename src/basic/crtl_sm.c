@@ -16,6 +16,7 @@
 
 #include "crypto/list/list.h"
 #include "crypto/atomic/atomic.h"
+#include "crypto/expect.h"
 
 
 /* 状态机事件处理结构体 */

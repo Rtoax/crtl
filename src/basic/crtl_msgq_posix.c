@@ -6,6 +6,8 @@
 #include "crtl/time.h"
 #include "crtl/easy/macro.h"
 
+#include "crypto/expect.h"
+
 
 crtl_mqd_t crtl_mq_open(const char *name, int oflag, mode_t mode, long mq_flags, long mq_maxmsg, long mq_msgsize)
 {
