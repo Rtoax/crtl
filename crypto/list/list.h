@@ -3,6 +3,7 @@
 #include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"
 
+#include "crypto/align/container.h"
 
 
 /* SPDX-License-Identifier: GPL-2.0 */

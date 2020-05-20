@@ -11,7 +11,6 @@
 
 #include "crtl/bits/types_basic.h"
 
-#include "crtl/easy/attribute.h"
 
 
 
@@ -35,13 +34,13 @@
 
 
 
-_api int crtl_posix_shm_open(const char *name, int size, int oflag, int mode);
-_api void *crtl_posix_shm_mmap(int size, int prot, int flags, int fd);
-_api int crtl_posix_shm_munmap(void *addr, int size);
-_api int crtl_posix_shm_munmap(void *addr, int size);
-_api int crtl_posix_shm_put(void *shm_addr, const void *data, int data_len);
-_api int crtl_posix_shm_get(void *shm_addr, void *data, int data_len);
-_api int crtl_posix_shm_unlink(const char *name);
+int crtl_posix_shm_open(const char *name, int size, int oflag, int mode);
+void *crtl_posix_shm_mmap(int size, int prot, int flags, int fd);
+int crtl_posix_shm_munmap(void *addr, int size);
+int crtl_posix_shm_munmap(void *addr, int size);
+int crtl_posix_shm_put(void *shm_addr, const void *data, int data_len);
+int crtl_posix_shm_get(void *shm_addr, void *data, int data_len);
+int crtl_posix_shm_unlink(const char *name);
 
 
 

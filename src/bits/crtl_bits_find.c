@@ -1,11 +1,12 @@
-#include "crtl/easy/round.h"
 #include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"
-#include "crtl/easy/operator.h"
-
 #include "crtl/bitmap.h"
+#include "crtl/bits/bits_find.h"
 
+#include "crypto/bit/bitops.h"
 
+#include "crypto/operator/compare.h"
+#include "crypto/round/roundup.h"
 
 
 /*
@@ -44,7 +45,7 @@ static inline unsigned long __crtl_find_next_bit(const unsigned long *addr1,
 		tmp ^= invert;
 	}
 
-	return MIN(start + __ffs(tmp), nbits);
+	return MIN(start + _ctzl(tmp), nbits);
 }
 
 
@@ -67,7 +68,7 @@ unsigned long crtl_find_first_bit(const unsigned long *addr, unsigned long size)
 
     for (idx = 0; idx * CRTL_BITS_PER_LONG < size; idx++) {
         if (addr[idx])
-            return MIN(idx * CRTL_BITS_PER_LONG + __ffs(addr[idx]), size);
+            return MIN(idx * CRTL_BITS_PER_LONG + _ctzl(addr[idx]), size);
     }
 
     return size;
@@ -82,7 +83,7 @@ unsigned long crtl_find_first_zero_bit(const unsigned long *addr, unsigned long 
 
 	for (idx = 0; idx * CRTL_BITS_PER_LONG < size; idx++) {
 		if (addr[idx] != ~0UL)
-			return MIN(idx * CRTL_BITS_PER_LONG + ffz(addr[idx]), size);
+			return MIN(idx * CRTL_BITS_PER_LONG + _ffz(addr[idx]), size);
 	}
 
 	return size;
@@ -126,7 +127,7 @@ unsigned long crtl_find_last_bit(const unsigned long *addr, unsigned long size)
         do {
             val &= addr[idx];
             if (val)
-                return idx * CRTL_BITS_PER_LONG + __fls(val);
+                return idx * CRTL_BITS_PER_LONG + _fls64(val);
 
             val = ~0ul;
         } while (idx--);

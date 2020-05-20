@@ -23,6 +23,8 @@
 
 #include <stddef.h>
 
+#include "crypto/align/offset.h"
+
 typedef void *crtl_queue_t[2];
 
 /* private macros. */

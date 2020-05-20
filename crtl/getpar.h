@@ -1,44 +1,13 @@
-/* Copyright (c) Colorado School of Mines, 2011.*/
-/* All rights reserved.                       */
-
-/**
- *  This API is not safe, i'll develop another one further more. Users do not use this file&API
- *  By the way, I Love Yuehua Xue.      rongtao@sylincom.com  2020.03.28 
- */
-
-/* par.h - include file for crtl_getpar_, selfdoc, and error handling functions */
-
 #ifndef __CRTL_BITS_crtl_getpar__H
 #define __CRTL_BITS_crtl_getpar__H 1
 
-
-/* INCLUDES */
-#include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stddef.h>
-#include <string.h>
-#include <math.h>
-#include <ctype.h>
-#include <limits.h>
-#include <float.h>
-
-#include <fcntl.h>      /* non-ANSI */
-#include <unistd.h>     /* non-ANSI */
-#include <sys/types.h>  /* non-ANSI */
-
-/* GLOBAL DECLARATIONS */
 
 #ifdef __cplusplus  /* if C++, specify external C linkage */
 extern "C" {
 #endif
 
-struct __crtl_getpar_struct;
-
 typedef void* crtl_getpar_t;
 
-/* crtl_getpar_ parameter parsing */
 
 /**
  * Create argument getpar handle

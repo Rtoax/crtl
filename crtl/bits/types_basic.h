@@ -9,11 +9,6 @@ typedef enum {
 }crtl_boolean;
 
 
-enum{
-    CRTL_0 = 0,
-    CRTL_1,    
-};
-
 enum {
     CRTL_ERROR = -2,
     CRTL_NOTSUPPORT,

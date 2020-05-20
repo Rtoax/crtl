@@ -3,9 +3,15 @@
 #include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"
 
+#include "crypto/xchg.h"
+
+#include "crypto/align/container.h"
+
+
 /* SPDX-License-Identifier: GPL-2.0-only */
 #ifndef LLIST_H
 #define LLIST_H
+
 /*
  * Lock-less NULL terminated single linked list
  *
@@ -52,9 +58,6 @@
  * Copyright 2010,2011 Intel Corp.
  *   Author: Huang Ying <ying.huang@intel.com>
  */
-
-//#include <linux/atomic.h>
-//#include <linux/kernel.h>
 
 struct llist_head {
 	struct llist_node *first;

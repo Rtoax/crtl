@@ -8,6 +8,6 @@ Version: 1.0.0
 Description: c Run-Time Library
 URL: http://libcrtl.org/
 
-Libs: -L${libdir} -lrt -lpthread -lm -ldl -lcrtl
+Libs: -L${libdir} -lrt -lpthread -lm -ldl -lcrtl -lcmocka -lcrypt
 Cflags: -I${includedir}
 

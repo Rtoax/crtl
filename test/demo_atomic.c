@@ -1,5 +1,5 @@
-#include <crtl/bits/atomic.h>
-#include "crtl/bits/refcount.h"
+#include <crypto/atomic/atomic.h>
+#include "crypto/atomic/refcount.h"
 
 #include <crtl/log.h>
 

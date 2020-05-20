@@ -61,6 +61,28 @@
 # define CRTL_VERSION_STRING  CRTL_VERSION_PERFIX" "UV_VERSION_STRING_BASE "-" CRTL_VERSION_SUFFIX
 #endif
 
+
+/*
+ * Common definitions for all gcc versions go here.
+ */
+#define __GCC_VERSION (__GNUC__ * 10000		\
+		     + __GNUC_MINOR__ * 100	        \
+		     + __GNUC_PATCHLEVEL__)
+
+#if __GCC_VERSION < 40600
+ #error Sorry, your compiler is too old - please upgrade it.
+#endif
+
+
+#ifdef __GNUC__
+ #define SYSTEM_VERSION      __VERSION__/* like: 4.8.5 20150623 (Red Hat 4.8.5-36) */
+ #define COMPILER_VERSION    GCC_VERSION
+#else
+ #define SYSTEM_VERSION      "unknown"
+ #define COMPILER_VERSION    0
+#endif
+
+
 /**
  * Get LIBCrtl Version Integer
  * @param void

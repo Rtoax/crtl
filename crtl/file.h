@@ -10,7 +10,6 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-#include "crtl/easy/attribute.h"
 
 #include "crtl/bits/types_basic.h"
 

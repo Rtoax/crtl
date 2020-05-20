@@ -28,23 +28,6 @@
 
 
 /**
- *  There are some old version
- *  Rongtao 2019.07.20
- */
-/*	file name: 		float.h
- *	author:			Rong Tao
- *	create time:	2018.11.18
- * 	
- */
-#ifndef _T_MATH_FLOAT_H__
-
-#define _T_MATH_FLOAT_H__
-
-
-
-
-
-/**
  *	float point type function
  *	define macro and typedef.
  *	Author:	Rongtao
@@ -106,36 +89,8 @@ int finitel (long double x)
 #define T_INFINITY INFINITY
 #define T_NAN NAN
 
-
-
-
-#endif /*<_T_MATH_FLOAT_H__>*/
-
-
-#ifndef __RT_MATH_FLOAT_EXCEPTION_H
-#define __RT_MATH_FLOAT_EXCEPTION_H 1
-
-
-/**
- *  There are some old version
- *  Rongtao 2019.07.20
- */
-/*	file name: 		fexcepts.h
- *	author:			Rong Tao
- *	create time:	2018.11.18
- * 	
- */
-#ifndef _T_MATH_FLOAT_EXCEPT_H__
-#define _T_MATH_FLOAT_EXCEPT_H__
-
-#include <math.h>
-
 /*some Examining the FPU status word*/
 #include <fenv.h>
-#include <stdlib.h>
-#include <stdio.h>
-
-#include "crtl/log.h"
 
 #define T_FE_ALL_EXCEPT FE_ALL_EXCEPT
 #define T_FE_INEXACT FE_INEXACT
@@ -214,15 +169,6 @@ int finitel (long double x)
 	t_float_throw(T_FE_OVERFLOW);
 	}t_float_catchall(T_FE_ALL_EXCEPT);
 */
-
-#endif /*<_T_MATH_FLOAT_EXCEPT_H__>*/
-
-
-
-#endif /*<__RT_MATH_FLOAT_EXCEPTION_H>*/
-
-
-
 
 #endif /*<__RT_MATH_FLOAT_H>*/
 

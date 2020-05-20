@@ -1,8 +1,9 @@
 #include <errno.h>
 #include <stdarg.h>
-#include <stdio.h>
+#include <stdint.h>
 #include <stdarg.h>
 #include <libgen.h> //basename
+#include <stdlib.h>
 
 #include "crtl/log.h"
 #include "crtl/lock.h"

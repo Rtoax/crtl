@@ -1,3 +1,6 @@
+#include <malloc.h>
+#include <stdlib.h>
+
 #include "crtl/bits/linenoise.h"
 #include "crtl/log.h"
 #include "crtl/task.h"
@@ -108,7 +111,7 @@ static void* __linenoise_thread_cb(void *arg)
 
 void demo_linenoise_test1() 
 {
-    crtl_thread_t _unused task;
+    crtl_thread_t task;
 
     crtl_thread_normal(&task, __linenoise_thread_cb, NULL);
 

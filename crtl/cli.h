@@ -5,41 +5,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE         /* See feature_test_macros(7) */
-#endif
+
 #include <stdio.h>
 #include <errno.h>
-#include <memory.h>
-#include <stdarg.h>
 #include <stdlib.h>
-#include <malloc.h>
-#include <ctype.h>
-#include <string.h>
 #include <time.h>
-#include <crypt.h>
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE       /* See feature_test_macros(7) */
-#endif
-#include <unistd.h>
-#include <regex.h>
-
-#include <sys/time.h>
-#include <limits.h>
-#include <sys/types.h>
-
+#include <string.h>
+#include <malloc.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-#include <signal.h>
-#include <strings.h>
-
-/* major, minor, revision, version */
-#define LIBCLI_VERSION_MAJOR        1
-#define LIBCLI_VERISON_MINOR        10
-#define LIBCLI_VERISON_REVISION     0
-#define LIBCLI_VERSION ((LIBCLI_VERSION_MAJOR << 16) | (LIBCLI_VERISON_MINOR << 8) | LIBCLI_VERISON_REVISION)
 
 /* cli errno */
 #define CLI_OK                   0
@@ -68,9 +44,6 @@ extern "C" {
 #define LIBCLI_MODE_EXEC        0
 #define LIBCLI_MODE_CONFIG      1
 
-/* enable */
-#define LIBCLI_HAS_ENABLE       1
-
 /* print */
 #define LIBCLI_PRINT_PLAIN      0x00
 #define LIBCLI_PRINT_FILTERED   0x01
@@ -85,10 +58,8 @@ extern "C" {
 extern const char cli_enable_password[];
 
 
-
-
 /* cmd type */
-enum command_types {
+enum crtl_cli_command_types {
     CLI_ANY_COMMAND,
     CLI_REGULAR_COMMAND,
     CLI_FILTER_COMMAND,
@@ -179,7 +150,7 @@ enum crtl_cli_optarg_flags {
     CLI_CMD_HYPHENATED_OPTION   = 1 << 9,
     CLI_CMD_SPOT_CHECK          = 1 << 10,
 };
-
+    
 /* cmd optarg */
 struct crtl_cli_optarg {
     char *name;
@@ -233,6 +204,7 @@ struct crtl_cli_buildmode {
     int transient_mode;
     char *mode_text;
 };
+
 
 /* APIs */
 struct crtl_cli_struct *crtl_cli_init(const char *banner, const char *hostname);
@@ -291,6 +263,11 @@ int crtl_cli_register_optarg(struct crtl_cli_command *cmd, const char *name, int
                         int (*transient_mode)(struct crtl_cli_struct *, const char *, const char *));
 char *crtl_cli_find_optarg_value(struct crtl_cli_struct *cli, char *name, char *find_after);
 struct crtl_cli_optarg_pair *crtl_cli_get_all_found_optargs(struct crtl_cli_struct *cli);
+struct crtl_cli_optarg_pair *crtl_cli_get_next_optargs(struct crtl_cli_optarg_pair *optarg);
+const char *crtl_cli_get_name_optargs(struct crtl_cli_optarg_pair *optarg);
+const char *crtl_cli_get_value_optargs(struct crtl_cli_optarg_pair *optarg);
+
+
 int crtl_cli_unregister_optarg(struct crtl_cli_command *cmd, const char *name);
 char *crtl_cli_get_optarg_value(struct crtl_cli_struct *cli, const char *name, char *find_after);
 int crtl_cli_set_optarg_value(struct crtl_cli_struct *cli, const char *name, const char *value, int allow_multiple);

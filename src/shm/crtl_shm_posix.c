@@ -2,6 +2,7 @@
 #include "crtl/log.h"
 #include "crtl/assert.h"
 #include "crtl/easy/attribute.h"
+#include "crtl/easy/macro.h"
 
 
 

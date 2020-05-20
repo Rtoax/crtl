@@ -1,8 +1,6 @@
 #ifndef __CRTL_EASY_ATTRIBUTE_H
 #define __CRTL_EASY_ATTRIBUTE_H 1
 
-#include "crtl/easy/extern.h"
-
 /**
  * some useful amcor
  */

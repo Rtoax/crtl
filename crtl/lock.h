@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#include "crtl/easy/attribute.h"
 
 #include "crtl/bits/semaphore.h"
 #include "crtl/bits/mutex.h"
@@ -29,26 +28,23 @@
 
 
 
-
-
 /**
  * file descripter lock write
  * @param fd: file descripter
  * @return void
  */
-_api void crtl_fd_lock(int fd);
+void crtl_fd_lock(int fd);
 
 /**
  * file descripter unlock
  * @param fd: file descripter
  * @return void
  */
-_api void crtl_fd_unlock(int fd);
+void crtl_fd_unlock(int fd);
 
 
-_api int  crtl_lock_reg(int fd, int cmd, int type, off_t offset, int whence, off_t len);
-_api pid_t crtl_lock_test(int fd, int type, off_t offset, int whence, off_t len);
-
+int  crtl_lock_reg(int fd, int cmd, int type, off_t offset, int whence, off_t len);
+pid_t crtl_lock_test(int fd, int type, off_t offset, int whence, off_t len);
 
 
 

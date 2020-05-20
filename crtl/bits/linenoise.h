@@ -1,21 +1,7 @@
 #ifndef __CRTL_BITS_LINENOISE_H
 #define __CRTL_BITS_LINENOISE_H 1
 
-
-#include <termios.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <sys/stat.h>
 #include <sys/types.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-
-
 
 typedef struct crtl_linenoise_completions_t {
     size_t len;

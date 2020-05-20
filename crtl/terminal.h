@@ -35,5 +35,3 @@ int crtl_terminal_progress_bar(int posx, int posy, const int iTotal, const int T
 
 
 #endif //__CRTL_TERMINAL_H
-
-

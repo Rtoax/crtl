@@ -1,5 +1,7 @@
 
 #include "crypto/module/types.h"
+#include "crypto/atomic/cas.h"
+
 
 
 

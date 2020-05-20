@@ -1,22 +1,27 @@
 #include <errno.h>
 #include <unistd.h> //close
-#include <arpa/inet.h> //inet_xxxx
 #include <fcntl.h>
 #include <sys/types.h>          /* See NOTES */
 #include <unistd.h>
 
-#include <crtl/time.h>
+#include <signal.h>
+#include <string.h>
+#include <stdint.h>
+#include <netdb.h>
+#include <net/if.h>
+#include <netpacket/packet.h>
+#include <arpa/inet.h> //inet_xxxx
+
+#include "crtl/time.h"
 #include "crtl/log.h"
 #include "crtl/assert.h"
 #include "crtl/bits/types_basic.h"
 #include "crtl/network/socket.h"
-#include "crtl/network/byteorder.h"
 #include "crtl/network/inet.h"
-
-#include "crtl/easy/macro.h"
 #include "crtl/file.h"
 
-
+#include "crtl/easy/macro.h"
+#include "crtl/easy/attribute.h"
 
 
 int crtl_socket_server_tcp(struct sockaddr_in *srvaddr, int port, int listen_backlog)

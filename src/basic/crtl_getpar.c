@@ -1,9 +1,18 @@
-/* Copyright (c) Colorado School of Mines, 2011.*/
-/* All rights reserved.			*/
-
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <stdio.h>
+#include <ctype.h>
+#include <stddef.h>
+#include <math.h>
+#include <ctype.h>
+#include <limits.h>
+#include <float.h>
+
+#include <fcntl.h>      /* non-ANSI */
+#include <unistd.h>     /* non-ANSI */
+#include <sys/types.h>  /* non-ANSI */
 
 #include "crtl/easy/attribute.h"
 #include "crtl/bits/types_basic.h"

@@ -307,14 +307,14 @@ static void demo_bitmap_test_from_arr32()
 
 int main()
 {
-//    demo_bitmap_test1();
-//    demo_bitmap_test2_equal();
-//    demo_bitmap_test3_complement();
-//    demo_bitmap_test_shift();
-//    demo_bitmap_test_cut();
-//    demo_bitmap_test_replace();
-//    demo_bitmap_test_parse();
-//    demo_bitmap_test_map();
+    demo_bitmap_test1();
+    demo_bitmap_test2_equal();
+    demo_bitmap_test3_complement();
+    demo_bitmap_test_shift();
+    demo_bitmap_test_cut();
+    demo_bitmap_test_replace();
+    demo_bitmap_test_parse();
+    demo_bitmap_test_map();
     demo_bitmap_test_from_arr32();
 
     return 0;

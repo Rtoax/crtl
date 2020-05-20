@@ -9,20 +9,6 @@
 #include "crtl/bits/types_basic.h"
 
 
-/**
- * File: crtl_hashtab_struct.h   security\selinux\ss 2509    2011/3/15   
- *
- * A hash table (crtl_hashtab_struct) maintains associations between
- * key values and datum values.  The type of the key values
- * and the type of the datum values is arbitrary.  The
- * functions for hash computation and key comparison are
- * provided by the creator of the table.
- *
- * Author : Stephen Smalley, <sds@epoch.ncsc.mil>
- */
-#ifndef _SS_HASHTAB_H_
-#define _SS_HASHTAB_H_
-
 #define crtl_hashtab_MAX_NODES	0xffffffff
 
 struct crtl_hashtab_node {
@@ -94,9 +80,6 @@ int crtl_hashtab_map(struct crtl_hashtab_struct *h, int (*apply)(void *k, void *
 
 /* Fill info with some hash table statistics */
 void crtl_hashtab_stat(struct crtl_hashtab_struct *h, struct crtl_hashtab_info *info);
-
-#endif	/* _SS_HASHTAB_H_ */
-
 
 
 

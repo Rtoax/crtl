@@ -37,6 +37,7 @@
 #include "crtl/network/checksum.h"
 #include "crtl/time.h"
 
+#include "crypto/align/offset.h"
 
 /* Constants ---------------------------------------------------------------------------------------------------------*/
 #define CRTL_ICMP_BUF_SIZE           256

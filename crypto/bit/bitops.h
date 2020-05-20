@@ -3,24 +3,15 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "crtl/bits/bits.h"
-#include "crtl/easy/round.h"
+
 #include "crtl/easy/macro.h"
 #include "crtl/bits/hweight.h"
 
-
-#define CRTL_BITS_PER_TYPE(type)	(sizeof(type) * CRTL_BITS_PER_BYTE)
-#define CRTL_BITS_TO_LONGS(nr)	    DIV_ROUND_UP(nr, CRTL_BITS_PER_TYPE(long))
-#define CRTL_BITS_TO_U64(nr)		DIV_ROUND_UP(nr, CRTL_BITS_PER_TYPE(uint64_t))
-#define CRTL_BITS_TO_U32(nr)		DIV_ROUND_UP(nr, CRTL_BITS_PER_TYPE(uint32_t))
-#define CRTL_BITS_TO_BYTES(nr)	    DIV_ROUND_UP(nr, CRTL_BITS_PER_TYPE(char))
-
-
-
+#include "crypto/bit/bits.h"
 
 
 /*
- * Include this here because some architectures need generic_ffs/fls in
+ * Include this here because some architectures need generic_ffs/_fls32 in
  * scope
  */
 
@@ -63,7 +54,7 @@ static inline int crtl_get_bitmask_order(unsigned int count)
 {
     int order;
 
-    order = fls(count);
+    order = _fls32(count);
     return order;   /* We could be slightly more clever with -1 here... */
 }
 
@@ -179,7 +170,7 @@ static inline int crtl_get_count_order(unsigned int count)
 {
 	int order;
 
-	order = fls(count) - 1;
+	order = _fls32(count) - 1;
 	if (count & (count - 1))
 		order++;
 	return order;
@@ -196,9 +187,9 @@ static inline int crtl_get_count_order_long(unsigned long l)
 	if (l == 0UL)
 		return -1;
 	else if (l & (l - 1UL))
-		return (int)fls_long(l);
+		return (int)fls64(l);
 	else
-		return (int)fls_long(l) - 1;
+		return (int)fls64(l) - 1;
 }
 
 
@@ -263,3 +254,4 @@ static inline void __crtl_assign_bit(long nr, volatile unsigned long *addr, bool
 
 
 #endif /*<__CRTL_BITS_BITOPS_H>*/
+

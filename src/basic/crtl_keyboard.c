@@ -1,5 +1,8 @@
 #include "crtl/keyboard.h"
 #include "crtl/assert.h"
+#include "crtl/log.h"
+
+#include "crtl/easy/attribute.h"
 
 
 

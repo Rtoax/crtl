@@ -1,7 +1,5 @@
 #include <malloc.h>
 
-#include "crtl/bits/atomic.h"
-
 #include "crtl/bits/rwlock.h"
 #include "crtl/bits/semaphore.h"
 
@@ -17,6 +15,7 @@
 #include "crypto/tree/rbtree.h"
 
 #include "crypto/list/list.h"
+#include "crypto/atomic/atomic.h"
 
 
 /* 状态机事件处理结构体 */

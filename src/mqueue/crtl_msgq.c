@@ -16,6 +16,8 @@
 
 #include "crtl_mute_dbg.h" //去除所有debug打印
 
+#include "crypto/atomic/cas.h"
+
 
 /* 同步消息队列消息中-临时消息队列传递的消息结构 */
 struct __crtl_msgq_sync_msg_body {

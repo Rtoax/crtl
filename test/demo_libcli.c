@@ -35,7 +35,7 @@ int cmd_test(struct crtl_cli_struct *cli, const char *command, char *argv[], int
     return CLI_OK;
 }
 
-int cmd_set(struct crtl_cli_struct *cli, const char _unused *command, char *argv[], int argc) 
+int cmd_set(struct crtl_cli_struct *cli, const char   *command, char *argv[], int argc) 
 {
     if (argc < 2 || strcmp(argv[0], "?") == 0) {
         crtl_cli_print(cli, "Specify a variable to set");
@@ -68,7 +68,7 @@ int cmd_set(struct crtl_cli_struct *cli, const char _unused *command, char *argv
     return CLI_OK;
 }
 
-int cmd_config_int(struct crtl_cli_struct *cli, const char _unused *command, char *argv[], int argc) 
+int cmd_config_int(struct crtl_cli_struct *cli, const char   *command, char *argv[], int argc) 
 {
     if (argc < 1) {
         crtl_cli_print(cli, "Specify an interface to configure");
@@ -85,26 +85,26 @@ int cmd_config_int(struct crtl_cli_struct *cli, const char _unused *command, cha
     return CLI_OK;
 }
 
-int cmd_config_int_exit(struct crtl_cli_struct *cli, const char _unused *command, char _unused *argv[], int _unused argc) 
+int cmd_config_int_exit(struct crtl_cli_struct *cli, const char   *command, char   *argv[], int   argc) 
 {
     crtl_cli_set_configmode(cli, LIBCLI_MODE_CONFIG, NULL);
     return CLI_OK;
 }
 
-int cmd_show_regular(struct crtl_cli_struct *cli, const char _unused *command, char _unused *argv[], int _unused argc) 
+int cmd_show_regular(struct crtl_cli_struct *cli, const char   *command, char   *argv[], int   argc) 
 {
     crtl_cli_print(cli, "crtl_cli_regular() has run %u times", regular_count);
     return CLI_OK;
 }
 
-int cmd_debug_regular(struct crtl_cli_struct *cli, const char _unused *command, char _unused *argv[], int _unused argc) 
+int cmd_debug_regular(struct crtl_cli_struct *cli, const char   *command, char   *argv[], int   argc) 
 {
     debug_regular = !debug_regular;
     crtl_cli_print(cli, "crtl_cli_regular() debugging is %s", debug_regular ? "enabled" : "disabled");
     return CLI_OK;
 }
 
-int cmd_context(struct crtl_cli_struct *cli, const char _unused *command, char _unused *argv[], int _unused argc) 
+int cmd_context(struct crtl_cli_struct *cli, const char   *command, char   *argv[], int   argc) 
 {
     struct my_context *myctx = (struct my_context *)crtl_cli_get_context(cli);
     crtl_cli_print(cli, "User context has a value of %d and message saying %s", myctx->value, myctx->message);
@@ -139,7 +139,7 @@ int idle_timeout(struct crtl_cli_struct *cli)
     return CLI_QUIT;
 }
 
-void pc(struct crtl_cli_struct _unused *cli, const char *string) 
+void pc(struct crtl_cli_struct   *cli, const char *string) 
 {
     printf("%s\n", string);
 }
@@ -158,8 +158,8 @@ int cmd_perimeter(struct crtl_cli_struct *cli, const char *command, char *argv[]
 
     crtl_cli_print(cli, "perimeter callback, with %d args", argc);
     
-    for (; optargs; optargs = optargs->next) 
-        crtl_cli_print(cli, "%d, %s=%s", i++, optargs->name, optargs->value);
+    for (; optargs; optargs = crtl_cli_get_next_optargs(optargs)) 
+        crtl_cli_print(cli, "%d, %s=%s", i++, crtl_cli_get_name_optargs(optargs), crtl_cli_get_value_optargs(optargs));
 
     if ((verboseArg = crtl_cli_get_optarg_value(cli, "verbose", verboseArg))) {
         do {
@@ -293,7 +293,7 @@ int side_length_validator(struct crtl_cli_struct *cli, const char *name, const c
     return rc;
 }
 
-int check1_validator(struct crtl_cli_struct *cli, const char _unused *name, const char _unused *value) 
+int check1_validator(struct crtl_cli_struct *cli, const char   *name, const char   *value) 
 {
     char *color;
     char *transparent;
@@ -418,7 +418,7 @@ void run_child(int acceptfd)
 
 
 
-void * _unused __libcrtl_cli_callback(void*arg)
+void *   __libcrtl_cli_callback(void*arg)
 {
     int sockfd, acceptfd;
     struct sockaddr_in addr;
@@ -490,7 +490,7 @@ void demo_libcrtl_cli_test1_terminal()
 }
 void demo_libcrtl_cli_test2() 
 {
-    crtl_thread_t _unused task;
+    crtl_thread_t   task;
 
     crtl_thread_normal(&task, __libcrtl_cli_callback, NULL);
     

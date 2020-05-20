@@ -19,7 +19,7 @@
 #include "crtl/easy/macro.h"
 
 #include "crypto/timer/types.h"
-
+#include "crypto/atomic/cas.h"
 
 #include "crtl_mute_dbg.h"
 

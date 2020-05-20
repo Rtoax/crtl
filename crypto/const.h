@@ -1,8 +1,8 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 /* const.h: Macros for dealing with constants.  */
 
-#ifndef __CRTL_BITS_CONST_H
-#define __CRTL_BITS_CONST_H 1
+#ifndef __CRYPTO_BITS_CONST_H
+#define __CRYPTO_BITS_CONST_H 1
 
 /* Some constant macros are used in both assembler and
  * C code.  Therefore we cannot annotate them always with
@@ -34,4 +34,5 @@
 
 
 
-#endif /* __CRTL_BITS_CONST_H */
+#endif /* __CRYPTO_BITS_CONST_H */
+

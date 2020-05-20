@@ -24,6 +24,8 @@
 #include "crtl/log.h"
 
 #include "crypto/list/plist.h"
+#include "crypto/align/array.h"
+
 
 #if 0
 

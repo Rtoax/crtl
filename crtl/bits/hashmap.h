@@ -2,17 +2,6 @@
 #define __CRTL_BITS_CRTL_HASHMAP_H 1
 
 
-
-/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
-
-/*
- * Generic non-thread safe hash map implementation.
- *
- * Copyright (c) 2019 Facebook
- */
-#ifndef __LIBBPF_CRTL_HASHMAP_H
-#define __LIBBPF_CRTL_HASHMAP_H
-
 #include <stdbool.h>
 #include <stddef.h>
 #include <bits/wordsize.h>
@@ -175,7 +164,6 @@ bool crtl_hashmap_find(const struct crtl_hashmap_struct *map, const void *key, v
 	     cur = tmp)							    \
 		if (map->equal_fn(cur->key, (_key), map->ctx))
 
-#endif /* __LIBBPF_CRTL_HASHMAP_H */
 
 #endif /*<__CRTL_BITS_CRTL_HASHMAP_H>*/
 

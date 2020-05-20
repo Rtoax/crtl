@@ -1,4 +1,5 @@
 #include "crtl/assert.h"
+#include "crtl/log.h"
 
 #include "crypto/list/llist.h"
 

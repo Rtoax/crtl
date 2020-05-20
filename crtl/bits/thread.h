@@ -1,7 +1,9 @@
 #ifndef __CRTL_THREAD_H
 #define __CRTL_THREAD_H 1
 
-#define _GNU_SOURCE             /* See feature_test_macros(7) */
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif             /* See feature_test_macros(7) */
 #include <fcntl.h>
 #include <unistd.h>
 #include <pthread.h>

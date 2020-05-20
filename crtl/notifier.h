@@ -1,5 +1,5 @@
-#ifndef __CRTL_BITS_NOTIFIER_H
-#define __CRTL_BITS_NOTIFIER_H 1
+#ifndef __CRTL_NOTIFIER_H
+#define __CRTL_NOTIFIER_H 1
 
 
 /**
@@ -60,4 +60,4 @@ void crtl_notifier_chain_destroy(crtl_notifier_t chain);
 
 
 
-#endif /*<__CRTL_BITS_NOTIFIER_H>*/
+#endif /*<__CRTL_NOTIFIER_H>*/

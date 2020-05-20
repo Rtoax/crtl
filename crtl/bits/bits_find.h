@@ -5,8 +5,6 @@
 /**
  * DOC: bitmap bitops
  *
- * Also the following operations in asm/bitops.h apply to bitmaps.::
- *
  *  crtl_set_bit(bit, addr)                  *addr |= bit
  *  crtl_clear_bit(bit, addr)                *addr &= ~bit
  *  crtl_change_bit(bit, addr)               *addr ^= bit
@@ -24,9 +22,8 @@
  *                                      (*addr1 & *addr2)
  *
  */
-
 unsigned long crtl_find_next_bit(const unsigned long *addr, unsigned long size,
-                              unsigned long offset);
+                                unsigned long offset);
 
 unsigned long crtl_find_first_bit(const unsigned long *addr, unsigned long size);
 
@@ -57,8 +54,7 @@ extern unsigned long crtl_find_next_clump8(unsigned long *clump,
 				      const unsigned long *addr,
 				      unsigned long size, unsigned long offset);
 
-#define crtl_find_first_clump8(clump, bits, size) \
-	crtl_find_next_clump8((clump), (bits), (size), 0)
+#define crtl_find_first_clump8(clump, bits, size) crtl_find_next_clump8((clump), (bits), (size), 0)
 
 
 

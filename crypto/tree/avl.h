@@ -27,6 +27,8 @@
 
 #include "crtl/easy/attribute.h"
 
+#include "crypto/align/offset.h"
+
 
 
 /* Node in an AVL tree.  Embed this in some other data structure.  */

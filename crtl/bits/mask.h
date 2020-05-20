@@ -6,7 +6,7 @@
 
 #include "crtl/easy/byteswap.h"
 
-#if __BYTE_ORDER == __BIG_ENDIAN
+#if BIG_ENDIAN
  #define __crtl_mask_32bit(bit)	(1ULL << (bit))
 #else /* __BYTE_ORDER == __LITTLE_ENDIAN */
 // #define __crtl_mask_bit(bit)	((bit) < 8 ? ((1L << (bit)) << 8) : ((1L << (bit)) >> 8))

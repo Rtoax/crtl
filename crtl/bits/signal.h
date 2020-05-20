@@ -1,8 +1,11 @@
 #ifndef __CRTL_BITS_SIGNAL_H
 #define __CRTL_BITS_SIGNAL_H 1
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 #include <signal.h>
+
 #include "crtl/easy/macro.h"
 
 

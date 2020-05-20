@@ -2,22 +2,6 @@
 #define __RT_MATH_INT_H 1
 
 #include <math.h>
-
-
-/**
- *  There are some old version 
- *  Rongtao 2019.07.20
- */
-/*	file name: 		integer.h
- *	author:			Rong Tao
- *	create time:	2018.11.18
- * 	
- */
-#ifndef _T_MATH_TYPES_INTEGER_H__
-#define _T_MATH_TYPES_INTEGER_H__
-
-
-
 #include <stdint.h>
 
 
@@ -36,12 +20,4 @@
 
 
 
-
-#endif /*<_T_MATH_TYPES_INTEGER_H__>*/
-
-
-
-
 #endif /*<__RT_MATH_INT_H>*/
-
-

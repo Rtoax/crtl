@@ -1,24 +1,43 @@
 
 #include <errno.h>
 #include <ctype.h>
-#include <crtl/easy/compare.h>
 #include <crtl/log.h>
 
 #include "crtl/bitmap.h"
 
 #include <crtl/bits/ctype.h>
 
+#include <crtl/easy/attribute.h>
+#include "crtl/easy/byteswap.h"
+
+#include "crypto/bit/bitops.h"
+
+#include "crypto/round/roundup.h"
+#include <crypto/align/align.h>
+#include <crypto/operator/compare.h>
+
 #include "crtl_mute_dbg.h"
 
-#define IS_ERR(ptr) (!ptr)
+
+#define CRTL_BITS_PER_TYPE(type)	(sizeof(type) * CRTL_BITS_PER_BYTE)
+#define CRTL_BITS_TO_LONGS(nr)	    DIV_ROUND_UP(nr, CRTL_BITS_PER_TYPE(long))
+#define CRTL_BITS_TO_U64(nr)		DIV_ROUND_UP(nr, CRTL_BITS_PER_TYPE(uint64_t))
+#define CRTL_BITS_TO_U32(nr)		DIV_ROUND_UP(nr, CRTL_BITS_PER_TYPE(uint32_t))
+#define CRTL_BITS_TO_BYTES(nr)	    DIV_ROUND_UP(nr, CRTL_BITS_PER_TYPE(char))
+
+
+        
+#ifdef __LITTLE_ENDIAN
+#define CRTL_BITMAP_MEM_ALIGNMENT 8
+#else
+#define CRTL_BITMAP_MEM_ALIGNMENT (8 * sizeof(unsigned long))
+#endif
+#define CRTL_BITMAP_MEM_MASK (CRTL_BITMAP_MEM_ALIGNMENT - 1)
+ 
+
+
+#define IS_ERR(ptr) (!ptr) 
 #define PTR_ERR(ptr) ((long)ptr)
-
-
-// SPDX-License-Identifier: GPL-2.0-only
-/*
- * lib/bitmap.c
- * Helper functions for bitmap.h.
- */
 
 /**
  * DOC: bitmap introduction
@@ -39,7 +58,6 @@
  *
  * The byte ordering of bitmaps is more natural on little
  * endian architectures.  See the big-endian headers
- * include/asm-ppc64/bitops.h and include/asm-s390/bitops.h
  * for the best explanations of this ordering.
  */
 
@@ -1565,12 +1583,9 @@ _api int crtl_bitmap_allocate_region(unsigned long *bitmap, unsigned int pos, in
  *
  * Require nbits % BITS_PER_LONG == 0.
  */
-#ifdef __BIG_ENDIAN
-
-#include "crtl/easy/byteswap.h"
-
 _api void crtl_bitmap_copy_le(unsigned long *dst, const unsigned long *src, unsigned int nbits)
 {
+#ifdef __BIG_ENDIAN
 	unsigned int i;
 
 	for (i = 0; i < nbits/CRTL_BITS_PER_LONG; i++) {
@@ -1579,8 +1594,10 @@ _api void crtl_bitmap_copy_le(unsigned long *dst, const unsigned long *src, unsi
 		else
 			dst[i] = cpu_to_le32(src[i]);
 	}
-}
+#else
+    crtl_bitmap_copy(dst, src, nbits);
 #endif
+}
 
 _api unsigned long *crtl_bitmap_alloc(unsigned int nbits)
 {
@@ -1624,7 +1641,6 @@ _api inline void crtl_bitmap_copy_clear_tail(unsigned long *dst, const unsigned 
 }
 
 
-#if CRTL_BITS_PER_LONG == 64
 /**
  * crtl_bitmap_from_arr32 - copy the contents of uint32_t array of bits to bitmap
  *	@bitmap: array of unsigned longs, the destination bitmap
@@ -1633,6 +1649,8 @@ _api inline void crtl_bitmap_copy_clear_tail(unsigned long *dst, const unsigned 
  */
 _api void crtl_bitmap_from_arr32(unsigned long *bitmap, const uint32_t *buf, unsigned int nbits)
 {
+#if CRTL_BITS_PER_LONG == 64
+
 	unsigned int i, halfwords;
 
 	halfwords = DIV_ROUND_UP(nbits, 32);
@@ -1645,6 +1663,9 @@ _api void crtl_bitmap_from_arr32(unsigned long *bitmap, const uint32_t *buf, uns
 	/* Clear tail bits in last word beyond nbits. */
 	if (nbits % CRTL_BITS_PER_LONG)
 		bitmap[(halfwords - 1) / 2] &= CRTL_BITMAP_LAST_WORD_MASK(nbits);
+#else
+    crtl_bitmap_copy_clear_tail((unsigned long *) (bitmap),  (const unsigned long *) (buf), (nbits));
+#endif
 }
 
 /**
@@ -1655,6 +1676,7 @@ _api void crtl_bitmap_from_arr32(unsigned long *bitmap, const uint32_t *buf, uns
  */
 _api void crtl_bitmap_to_arr32(uint32_t *buf, const unsigned long *bitmap, unsigned int nbits)
 {
+#if CRTL_BITS_PER_LONG == 64
 	unsigned int i, halfwords;
 
 	halfwords = DIV_ROUND_UP(nbits, 32);
@@ -1667,9 +1689,11 @@ _api void crtl_bitmap_to_arr32(uint32_t *buf, const unsigned long *bitmap, unsig
 	/* Clear tail bits in last element of array beyond nbits. */
 	if (nbits % CRTL_BITS_PER_LONG)
 		buf[halfwords - 1] &= (uint32_t) (UINT_MAX >> ((-nbits) & 31));
+#else
+    crtl_bitmap_copy_clear_tail((unsigned long *) (buf),  (const unsigned long *) (bitmap), (nbits));
+#endif
 }
 
-#endif
 
 
 

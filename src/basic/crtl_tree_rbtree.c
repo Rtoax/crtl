@@ -9,6 +9,8 @@
 #include "crypto/tree/rbtree.h"
 #include "crtl/easy/attribute.h"
 
+#include "crypto/align/container.h"
+
 /*
   Red Black Trees
   (C) 1999  Andrea Arcangeli <andrea@suse.de>

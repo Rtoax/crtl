@@ -1,3 +1,26 @@
+
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE         /* See feature_test_macros(7) */
+#endif
+#include <memory.h>
+#include <stdarg.h>
+#include <ctype.h>
+#include <crypt.h>
+#ifndef _XOPEN_SOURCE
+#define _XOPEN_SOURCE       /* See feature_test_macros(7) */
+#endif
+#include <unistd.h>
+#include <regex.h>
+
+#include <sys/time.h>
+#include <limits.h>
+#include <sys/types.h>
+
+
+#include <signal.h>
+#include <strings.h>
+
+
 #include "crtl/cli.h"
 #include "crtl/log.h"
 #include "crtl/easy/attribute.h"
@@ -14,6 +37,7 @@ enum crtl_cli_states {
     STATE_ENABLE_PASSWORD,
     STATE_ENABLE,
 };
+    
 
 struct unp {
     char *username;
@@ -2213,6 +2237,23 @@ struct crtl_cli_optarg_pair *crtl_cli_get_all_found_optargs(struct crtl_cli_stru
   if (cli) return cli->found_optargs;
   return NULL;
 }
+
+struct crtl_cli_optarg_pair *crtl_cli_get_next_optargs(struct crtl_cli_optarg_pair *optarg) {
+    if(optarg) return optarg->next;
+    return NULL;
+}
+
+const char *crtl_cli_get_name_optargs(struct crtl_cli_optarg_pair *optarg)
+{
+    if(optarg) return optarg->name;
+    return NULL;
+}
+const char *crtl_cli_get_value_optargs(struct crtl_cli_optarg_pair *optarg)
+{
+    if(optarg) return optarg->value;
+    return NULL;
+}
+
 
 char *crtl_cli_get_optarg_value(struct crtl_cli_struct *cli, const char *name, char *find_after) {
   char *value = NULL;

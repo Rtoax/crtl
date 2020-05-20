@@ -1,25 +1,26 @@
-
-#include "crtl/network/inet.h"
-
-/*	file name: 		if.c
- *	author:			Rong Tao
- *	create time:	2018.11.14
- * 	
- */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <net/if.h>
 #include <malloc.h>
 #include <string.h>
 
-#include "crtl/log.h"
-#include "crtl/string.h"
+#include <arpa/inet.h> //inet_xxxx
+
+#include <netinet/in.h>
+#include <net/if.h>
+
+#include "crtl/easy/endian.h"
+#include "crtl/easy/byteswap.h"
+#include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"
 
+#include "crtl/log.h"
+#include "crtl/string.h"
 
 #include "crtl/bits/types_basic.h"
+#include "crtl/network/inet.h"
+
+#include "crypto/align/array.h"
 
 
 /**
@@ -29,8 +30,8 @@
  */
 int crtl_if_showallnameindexs(void)
 {
-	t_if_nameindex *head, *ifni;
-	ifni = t_if_nameindex();
+	struct if_nameindex *head, *ifni;
+	ifni = if_nameindex();
     head = ifni;
 
 	if (head == NULL) 
@@ -45,7 +46,7 @@ int crtl_if_showallnameindexs(void)
         ifni++;
     } 
 	
-	t_if_freenameindex(head);
+	if_freenameindex(head);
     head = NULL;
     ifni = NULL;
 	return CRTL_SUCCESS;
@@ -58,12 +59,12 @@ int crtl_if_showallnameindexs(void)
  */
 int crtl_if_indexexist(unsigned int if_index)
 {
-	char *if_name = (char*)malloc(T_IFNAMSIZ*sizeof(char));
-	char *name = t_if_indextoname(if_index, if_name);
+	char *if_name = (char*)malloc(IFNAMSIZ*sizeof(char));
+	char *name = if_indextoname(if_index, if_name);
 	
     if (name == NULL) 
 	{
-        perror("t_if_indextoname()");
+        perror("if_indextoname()");
 		free(if_name);
         return CRTL_ERROR;
     }
@@ -89,8 +90,8 @@ int crtl_if_nameexist(const char *if_name)
 	}
 
 	unsigned int if_index;
-	t_if_nameindex *head, *ifni;
-	ifni = t_if_nameindex();
+	struct if_nameindex *head, *ifni;
+	ifni = if_nameindex();
     head = ifni;
 
 	if (head == NULL) 
@@ -104,7 +105,7 @@ int crtl_if_nameexist(const char *if_name)
         if(strcmp(if_name, ifni->if_name) == 0)
     	{
     		if_index = ifni->if_index;
-			t_if_freenameindex(head);
+			if_freenameindex(head);
 		    head = NULL;
 		    ifni = NULL;
 			return if_index;
@@ -112,7 +113,7 @@ int crtl_if_nameexist(const char *if_name)
         ifni++;
     } 
 	
-	t_if_freenameindex(head);
+	if_freenameindex(head);
     head = NULL;
     ifni = NULL;
 	return CRTL_ERROR;

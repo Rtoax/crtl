@@ -2,7 +2,7 @@
 #ifndef __CRTL_BITS_BITS_H
 #define __CRTL_BITS_BITS_H
 
-#include "crtl/bits/const.h"
+#include "crypto/const.h"
 
 
 #ifndef CRTL_BITS_PER_LONG_LONG
@@ -43,7 +43,6 @@
 /**
  * DOC: bitmap bitops
  *
- * Also the following operations in asm/bitops.h apply to bitmaps.::
  *
  *  crtl_set_bit(bit, addr)                  *addr |= bit
  *  crtl_clear_bit(bit, addr)                *addr &= ~bit
@@ -62,50 +61,6 @@
  *                                      (*addr1 & *addr2)
  *
  */
-#if 0
-static inline void crtl_set_bit(int nr, volatile void *addr)
-{
-	int	mask;
-	volatile unsigned int *a = addr;
-	unsigned long tmp;
-
-	a += nr >> 5;
-	mask = 1 << (nr & 0x1f);
-
-	__asm__ __volatile__ (
-		"1:						\n\t"
-		"movli.l	@%1, %0	! crtl_set_bit		\n\t"
-		"or		%2, %0				\n\t"
-		"movco.l	%0, @%1				\n\t"
-		"bf		1b				\n\t"
-		: "=&z" (tmp)
-		: "r" (a), "r" (mask)
-		: "t", "memory"
-	);
-}
-
-static inline void crtl_clear_bit(int nr, volatile void *addr)
-{
-	int	mask;
-	volatile unsigned int *a = addr;
-	unsigned long tmp;
-
-	a += nr >> 5;
-	mask = 1 << (nr & 0x1f);
-
-	__asm__ __volatile__ (
-		"1:						\n\t"
-		"movli.l	@%1, %0	! crtl_clear_bit		\n\t"
-		"and		%2, %0				\n\t"
-		"movco.l	%0, @%1				\n\t"
-		"bf		1b				\n\t"
-		: "=&z" (tmp)
-		: "r" (a), "r" (~mask)
-		: "t", "memory"
-	);
-}
-
-#else
 
 /* How many bits in an unsigned long */
 #define ____BITS_PER_LONG (8 * sizeof(unsigned long))
@@ -121,8 +76,6 @@ static inline void crtl_clear_bit(int nr, volatile void *addr)
     volatile unsigned long *laddr = addr;
 	laddr[nr / ____BITS_PER_LONG] &= ~(1UL << (nr % ____BITS_PER_LONG));
 }
-
-#endif
 
 static inline void crtl_change_bit(int nr, volatile void *addr)
 {

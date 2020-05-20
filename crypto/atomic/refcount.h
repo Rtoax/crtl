@@ -1,10 +1,10 @@
-#ifndef __CRTL_BITS_REFCOUNT_H
-#define __CRTL_BITS_REFCOUNT_H 1
+#ifndef __CRYPTO_BITS_REFCOUNT_H
+#define __CRYPTO_BITS_REFCOUNT_H 1
 
 #include <limits.h>
 #include <stdio.h>
 
-#include "crtl/bits/atomic.h"
+#include <crypto/atomic/atomic.h>
 
 
 /**
@@ -159,4 +159,5 @@ static inline void crtl_refcount_inc(crtl_refcount_t *r)
 }
 
 
-#endif /*<__CRTL_BITS_REFCOUNT_H>*/
+#endif /*<__CRYPTO_BITS_REFCOUNT_H>*/
+

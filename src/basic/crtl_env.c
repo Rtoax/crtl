@@ -2,7 +2,9 @@
 #include "crtl/bits/core.h"
 #include "crtl/easy/attribute.h"
 #include "crtl/bits/types_basic.h"
+#include "crtl/easy/macro.h"
 #include "crtl/assert.h"
+#include "crtl/log.h"
 
 
 

@@ -12,7 +12,6 @@
 #include <math.h>
 #include <termios.h>
 
-#include "crtl/easy/attribute.h"
 
 
 #define VK_LEFT 	(97)
