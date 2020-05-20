@@ -2,7 +2,7 @@
 #include <errno.h>
 #include <string.h>
 
-#include "crtl/bits/crtl_epoll.h"
+#include "crtl/bits/epoll.h"
 #include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"
 #include "crtl/assert.h"

@@ -1,10 +1,10 @@
-#include "crtl/bits/crtl_thread.h"
+#include "crtl/bits/thread.h"
 #include "crtl/log.h"
 #include "crtl/assert.h"
 
 #include "crtl/bits/types_basic.h"
 
-#include "crtl/linux/crtl_linux_user.h"
+#include "crtl/bits/core.h"
 
 
 
@@ -34,7 +34,7 @@ int crtl_thread_create(crtl_thread_t * __newthread, int __detachstate, size_t __
 
     /* 如果为 root 用户，设置属性 */
     char user[64] = {"rongtao"};
-    crtl_linux_getcurrentusername(user);
+    crtl_getcurrentusername(user);
     if(strcmp(user, "root") == 0) {
         attr = &thread_attr;
     }

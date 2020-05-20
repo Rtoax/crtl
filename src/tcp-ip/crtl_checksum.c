@@ -1,5 +1,5 @@
 #include "crtl/easy/attribute.h"
-#include "crtl/tcp-ip/crtl_checksum.h"
+#include "crtl/network/checksum.h"
 
 /* get checksum value */
 inline unsigned short crtl_tcp_ip_chksum1(void *pkg, int size)

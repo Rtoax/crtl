@@ -7,12 +7,12 @@
 
 #include "crtl/easy/attribute.h"
 
-#include "crtl/bits/crtl_lock_semaphore.h"
-#include "crtl/bits/crtl_lock_mutex.h"
-#include "crtl/bits/crtl_lock_spin.h"
-#include "crtl/bits/crtl_lock_rwlock.h"
-#include "crtl/bits/crtl_lock_cond.h"
-#include "crtl/bits/crtl_lock_barrier.h"
+#include "crtl/bits/semaphore.h"
+#include "crtl/bits/mutex.h"
+#include "crtl/bits/spinlock.h"
+#include "crtl/bits/rwlock.h"
+#include "crtl/bits/cond.h"
+#include "crtl/bits/barrier.h"
 
 
 

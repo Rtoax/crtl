@@ -1,7 +1,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "crtl/bits/crtl_tree_huffman.h"
+#include "crtl/bits/tree_huffman.h"
 
 
 // Initialize a new instance of the frequency histogram.

@@ -1,6 +1,6 @@
 #include "crtl/log.h"
 #include "crtl/bits/types_basic.h"
-#include "crtl/linux/crtl_linux_user.h"
+#include "crtl/bits/core.h"
 #include "crtl/easy/macro.h"
 
 
@@ -11,7 +11,7 @@
  *	Author:	Rong Tao
  *	Time:	2018.11.17
  */
-char* crtl_linux_getcurrentusername(char *username)
+char* crtl_getcurrentusername(char *username)
 {
 	if(username == NULL)
 	{
@@ -44,7 +44,7 @@ char* crtl_linux_getcurrentusername(char *username)
  *	Author:	Rong Tao
  *	Time:	2018.11.17
  */
-char* crtl_linux_getcurrentuserrealname(char *realname)
+char* crtl_getcurrentuserrealname(char *realname)
 {
 	if(realname == NULL)
 	{
@@ -71,7 +71,7 @@ char* crtl_linux_getcurrentuserrealname(char *realname)
  *	Author:	Rong Tao
  *	Time:	2018.11.17
  */
-char* crtl_linux_getcurrentuserdir(char *dir)
+char* crtl_getcurrentuserdir(char *dir)
 {
 	if(dir == NULL)
 	{
@@ -102,7 +102,7 @@ char* crtl_linux_getcurrentuserdir(char *dir)
  *	Author:	Rong Tao
  *	Time:	2018.11.17
  */
-char* crtl_linux_getcurrentusershell(char *shell)
+char* crtl_getcurrentusershell(char *shell)
 {
 	if(shell == NULL)
 	{
@@ -134,7 +134,7 @@ char* crtl_linux_getcurrentusershell(char *shell)
  *	Author:	Rong Tao
  *	Time:	2018.11.17
  */
-char* crtl_linux_getcurrentgrpname(char *grpname)
+char* crtl_getcurrentgrpname(char *grpname)
 {
 	if(grpname == NULL)
 	{
@@ -158,7 +158,7 @@ char* crtl_linux_getcurrentgrpname(char *grpname)
  *	Author:	Rong Tao
  *	Time:	2018.11.17
  */
-char *crtl_linux_gethostname(char *hostname)
+char *crtl_gethostname(char *hostname)
 {
 	if(hostname == NULL)
 	{

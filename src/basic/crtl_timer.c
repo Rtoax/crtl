@@ -6,7 +6,7 @@
 #include "crtl/assert.h"
 #include "crtl/task.h"
 #include "crtl/tree.h"
-#include "crtl/bits/crtl_lock_rwlock.h"
+#include "crtl/bits/rwlock.h"
 
 #include "crtl/easy/byteswap.h"
 #include "crtl/easy/macro.h"

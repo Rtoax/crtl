@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "crtl/bits/crtl_errno.h"
+#include "crtl/error.h"
 #include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"
 

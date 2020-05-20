@@ -1,6 +1,8 @@
 #include "crtl/tree.h"
 #include "crtl/log.h"
 
+#include "crypto/tree/splay.h"
+
 
 struct test_data {
     int a;

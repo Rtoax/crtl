@@ -39,7 +39,7 @@
 # include <zlib.h>
 #endif
 
-#include "crtl/tcp-ip/crtl_telnet.h"
+#include "crtl/tcp-ip/telnet.h"
 
 /* inlinable functions */
 #if defined(__GNUC__) || __STDC_VERSION__ >= 199901L

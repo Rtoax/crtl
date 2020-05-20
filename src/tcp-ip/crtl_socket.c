@@ -9,9 +9,9 @@
 #include "crtl/log.h"
 #include "crtl/assert.h"
 #include "crtl/bits/types_basic.h"
-#include "crtl/tcp-ip/crtl_socket.h"
+#include "crtl/network/socket.h"
 #include "crtl/network/byteorder.h"
-#include "crtl/network/crtl_network_inet.h"
+#include "crtl/network/inet.h"
 
 #include "crtl/easy/macro.h"
 #include "crtl/file.h"
@@ -19,7 +19,7 @@
 
 
 
-int crtl_socket_server_tcp(sockaddr_in_t *srvaddr, int port, int listen_backlog)
+int crtl_socket_server_tcp(struct sockaddr_in *srvaddr, int port, int listen_backlog)
 {
     if(unlikely(!srvaddr) || unlikely(!port) || !listen_backlog)
     {
@@ -43,13 +43,13 @@ int crtl_socket_server_tcp(sockaddr_in_t *srvaddr, int port, int listen_backlog)
 	crtl_socket_reuseaddr(listenfd, 2, 0);
 
     
-    bzero(srvaddr, sizeof(sockaddr_in_t));
+    bzero(srvaddr, sizeof(struct sockaddr_in));
     
     srvaddr->sin_family = AF_INET;
     srvaddr->sin_addr.s_addr = crtl_hton32(INADDR_ANY);
     srvaddr->sin_port = crtl_hton16(port);
     
-    if(bind(listenfd, (sockaddr_t*)srvaddr, sizeof(sockaddr_t)) < 0)
+    if(bind(listenfd, (struct sockaddr*)srvaddr, sizeof(struct sockaddr)) < 0)
     {
         crtl_print_err("bind: %s\n", strerror(errno));
         close(listenfd);
@@ -91,7 +91,7 @@ int crtl_socket_sendtimeout(int sockfd, int sec, int usec)
 
 
 /* non block connect */
-int crtl_socket_connect_nonblk(int sockfd, const sockaddr_t *saptr, socklen_t salen, int nsec)
+int crtl_socket_connect_nonblk(int sockfd, const struct sockaddr *saptr, socklen_t salen, int nsec)
 {
 	int				flags, n, error;
 	socklen_t		len;
@@ -147,7 +147,7 @@ done:
 
 /* timeout connect */
 static void _unused __connect_timeout_alarm(int signo);
-int crtl_socket_connect_timeout(int sockfd, const sockaddr_t *saptr, socklen_t salen, int nsec)
+int crtl_socket_connect_timeout(int sockfd, const struct sockaddr *saptr, socklen_t salen, int nsec)
 {
     typedef void    Sigfunc(int);   /* for signal handlers */
 
@@ -180,7 +180,7 @@ static void _unused __connect_timeout_alarm(int signo)
 
 
 /* create socket */
-int crtl_socket_client_tcp(sockaddr_in_t *srvaddr, const char *srvIPv4, int port)
+int crtl_socket_client_tcp(struct sockaddr_in *srvaddr, const char *srvIPv4, int port)
 {
     if(unlikely(!srvaddr) || unlikely(!srvIPv4) || unlikely(!port))
     {
@@ -195,7 +195,7 @@ int crtl_socket_client_tcp(sockaddr_in_t *srvaddr, const char *srvIPv4, int port
 		return CRTL_ERROR;
 	}
     
-    bzero(srvaddr, sizeof(sockaddr_in_t));
+    bzero(srvaddr, sizeof(struct sockaddr_in));
 	srvaddr->sin_family = AF_INET;
 	srvaddr->sin_port = crtl_hton16(port);
 	
@@ -206,7 +206,7 @@ int crtl_socket_client_tcp(sockaddr_in_t *srvaddr, const char *srvIPv4, int port
 		return CRTL_ERROR;
 	}
 	
-	if(connect(sockfd, (sockaddr_t*)srvaddr, sizeof(sockaddr_t)) < 0)
+	if(connect(sockfd, (struct sockaddr*)srvaddr, sizeof(struct sockaddr)) < 0)
 	{
         crtl_print_err("connect: %s\n", strerror(errno));
         close(sockfd);
@@ -218,23 +218,23 @@ int crtl_socket_client_tcp(sockaddr_in_t *srvaddr, const char *srvIPv4, int port
 
 
 
-int crtl_socket_accept(int listenfd, sockaddr_t *src_addr, socklen_t *paddrlen)
+int crtl_socket_accept(int listenfd, struct sockaddr *src_addr, socklen_t *paddrlen)
 {
     if(unlikely(!listenfd) || unlikely(!src_addr))
     {
         crtl_print_err("Invalid value.\n");
         return CRTL_ERROR;
     }
-    *paddrlen = sizeof(sockaddr_t);
+    *paddrlen = sizeof(struct sockaddr);
 
-    return accept(listenfd, (sockaddr_t*)src_addr, paddrlen);
+    return accept(listenfd, (struct sockaddr*)src_addr, paddrlen);
 }
 
 
 /* accept */
-int crtl_socket_accept_tcp(int listenfd, sockaddr_t *src_addr, socklen_t *paddrlen)
+int crtl_socket_accept_tcp(int listenfd, struct sockaddr *src_addr, socklen_t *paddrlen)
 {
-    return crtl_socket_accept(listenfd, (sockaddr_t*)src_addr, paddrlen);
+    return crtl_socket_accept(listenfd, (struct sockaddr*)src_addr, paddrlen);
 }
 
 
@@ -278,7 +278,7 @@ int crtl_socket_write_tcp(int listenfd, const void *msg, int msg_len)
 
 
 
-int crtl_socket_server_udp(sockaddr_in_t *srvaddr, int port)
+int crtl_socket_server_udp(struct sockaddr_in *srvaddr, int port)
 {
     if(unlikely(!srvaddr) || unlikely(!port))
     {
@@ -288,7 +288,7 @@ int crtl_socket_server_udp(sockaddr_in_t *srvaddr, int port)
 
     int sockfd = -1;
 
-    bzero(srvaddr, sizeof(sockaddr_in_t));
+    bzero(srvaddr, sizeof(struct sockaddr_in));
     srvaddr->sin_family = AF_INET;    
     srvaddr->sin_addr.s_addr = crtl_hton32(INADDR_ANY);
     srvaddr->sin_port = crtl_hton16(port);
@@ -305,7 +305,7 @@ int crtl_socket_server_udp(sockaddr_in_t *srvaddr, int port)
 	crtl_socket_keepalive(sockfd, 2, 0);
 	crtl_socket_reuseaddr(sockfd, 2, 0);
     
-    if(bind(sockfd, (sockaddr_t *)srvaddr, sizeof(sockaddr_t)))
+    if(bind(sockfd, (struct sockaddr *)srvaddr, sizeof(struct sockaddr)))
     {
         crtl_print_err("bind: %s\n", strerror(errno));
         close(sockfd);
@@ -316,7 +316,7 @@ int crtl_socket_server_udp(sockaddr_in_t *srvaddr, int port)
 }
 
 
-int crtl_socket_client_udp(sockaddr_in_t *srvaddr, const char *srvIPv4, int port)
+int crtl_socket_client_udp(struct sockaddr_in *srvaddr, const char *srvIPv4, int port)
 {
     if(unlikely(!srvaddr) || unlikely(!srvIPv4) || unlikely(!port))
     {
@@ -326,7 +326,7 @@ int crtl_socket_client_udp(sockaddr_in_t *srvaddr, const char *srvIPv4, int port
     
     int sockfd = -1, t;
     
-    bzero(srvaddr, sizeof(sockaddr_in_t));
+    bzero(srvaddr, sizeof(struct sockaddr_in));
     srvaddr->sin_family = AF_INET;
     srvaddr->sin_port = crtl_hton16(port);
     
@@ -346,7 +346,7 @@ int crtl_socket_client_udp(sockaddr_in_t *srvaddr, const char *srvIPv4, int port
 
 
 /* recvfrom */
-int crtl_socket_udp_recvfrom(int sockfd, void *msg, int msg_len, int flags, sockaddr_t *src_addr)
+int crtl_socket_udp_recvfrom(int sockfd, void *msg, int msg_len, int flags, struct sockaddr *src_addr)
 {
     if(unlikely(!msg) || unlikely(!msg_len) || unlikely(!sockfd))
     {
@@ -354,30 +354,30 @@ int crtl_socket_udp_recvfrom(int sockfd, void *msg, int msg_len, int flags, sock
         return CRTL_ERROR;
     }
 
-    socklen_t addrlen = sizeof(sockaddr_in_t);
+    socklen_t addrlen = sizeof(struct sockaddr_in);
     
-    return recvfrom(sockfd, msg, msg_len, flags, (sockaddr_t *)src_addr, &addrlen);
+    return recvfrom(sockfd, msg, msg_len, flags, (struct sockaddr *)src_addr, &addrlen);
 }
 
 /* sendto */
-int crtl_socket_udp_sendto(int sockfd, const void *msg, int msg_len, int flags, sockaddr_t *src_addr)
+int crtl_socket_udp_sendto(int sockfd, const void *msg, int msg_len, int flags, struct sockaddr *src_addr)
 {
     if(unlikely(!msg) || unlikely(!msg_len) || unlikely(!sockfd))
     {
         crtl_print_err("Invalid value.\n");
         return CRTL_ERROR;
     }
-    socklen_t addrlen = sizeof(sockaddr_in_t);
+    socklen_t addrlen = sizeof(struct sockaddr_in);
 
     __crtl_dbg("msg_len = %d\n", msg_len);
 
-    return sendto(sockfd, msg, msg_len, flags, (sockaddr_t *)src_addr, addrlen);
+    return sendto(sockfd, msg, msg_len, flags, (struct sockaddr *)src_addr, addrlen);
 }
 
 
 
 /* Unix Socket API */
-int crtl_socket_server_unix(sockaddr_un_t *srvaddr, const char* path, int backlog)
+int crtl_socket_server_unix(struct sockaddr_un *srvaddr, const char* path, int backlog)
 {
     if(!path)
     {
@@ -388,7 +388,7 @@ int crtl_socket_server_unix(sockaddr_un_t *srvaddr, const char* path, int backlo
     if(!srvaddr)
     {
         null_addr = 1;
-        srvaddr = (sockaddr_un_t*)malloc(sizeof(sockaddr_un_t));
+        srvaddr = (struct sockaddr_un*)malloc(sizeof(struct sockaddr_un));
     }
     
     if(0 == crtl_is_exist(path))
@@ -411,7 +411,7 @@ int crtl_socket_server_unix(sockaddr_un_t *srvaddr, const char* path, int backlo
         
         unlink(path);
         
-        ret = bind(listen_fd, (sockaddr_t *)srvaddr, sizeof(sockaddr_t));
+        ret = bind(listen_fd, (struct sockaddr *)srvaddr, sizeof(struct sockaddr));
         if(ret == -1)
         {
             crtl_print_err("bind: %s\n", strerror(errno));
@@ -441,7 +441,7 @@ int crtl_socket_server_unix(sockaddr_un_t *srvaddr, const char* path, int backlo
 
 
 /* client */
-int crtl_socket_client_unix(sockaddr_un_t *srvaddr, const char* path)
+int crtl_socket_client_unix(struct sockaddr_un *srvaddr, const char* path)
 {
     if(!srvaddr || !path)
     {
@@ -467,7 +467,7 @@ int crtl_socket_client_unix(sockaddr_un_t *srvaddr, const char* path)
         srvaddr->sun_family = AF_UNIX;
         strcpy(srvaddr->sun_path, path);
         
-        ret = connect(connect_fd, (sockaddr_t *)srvaddr, sizeof(sockaddr_t));
+        ret = connect(connect_fd, (struct sockaddr *)srvaddr, sizeof(struct sockaddr));
         if(ret == -1)
         {
             crtl_print_err("connect: %s\n", strerror(errno));
@@ -480,7 +480,7 @@ int crtl_socket_client_unix(sockaddr_un_t *srvaddr, const char* path)
 }
 
 
-int crtl_socket_accept_unix(int listenfd, sockaddr_t *src_addr, socklen_t *paddrlen)
+int crtl_socket_accept_unix(int listenfd, struct sockaddr *src_addr, socklen_t *paddrlen)
 {
     return crtl_socket_accept(listenfd, src_addr, paddrlen);
 }

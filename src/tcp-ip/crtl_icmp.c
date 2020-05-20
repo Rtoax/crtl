@@ -33,8 +33,8 @@
 
 #include "crtl/log.h"
 #include "crtl/easy/attribute.h"
-#include "crtl/tcp-ip/crtl_icmp.h"
-#include "crtl/tcp-ip/crtl_checksum.h"
+#include "crtl/tcp-ip/icmp.h"
+#include "crtl/network/checksum.h"
 #include "crtl/time.h"
 
 

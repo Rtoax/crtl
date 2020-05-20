@@ -1,5 +1,5 @@
 
-#include "crtl/bits/crtl_lock_spin.h"
+#include "crtl/bits/spinlock.h"
 #include "crtl/log.h"
 #include "crtl/assert.h"
 #include "crtl/bits/types_basic.h"

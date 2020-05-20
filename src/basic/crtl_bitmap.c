@@ -4,7 +4,7 @@
 #include <crtl/easy/compare.h>
 #include <crtl/log.h>
 
-#include "crtl/bits/crtl_bitmap.h"
+#include "crtl/bitmap.h"
 
 #include <crtl/bits/ctype.h>
 

@@ -1,5 +1,5 @@
 
-#include "crtl/bits/crtl_hweight.h"
+#include "crtl/bits/hweight.h"
 
 /**
  * hweightN - returns the hamming weight of a N-bit word

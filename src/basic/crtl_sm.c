@@ -1,9 +1,9 @@
 #include <malloc.h>
 
-#include "crtl/bits/crtl_atomic.h"
+#include "crtl/bits/atomic.h"
 
-#include "crtl/bits/crtl_lock_rwlock.h"
-#include "crtl/bits/crtl_lock_semaphore.h"
+#include "crtl/bits/rwlock.h"
+#include "crtl/bits/semaphore.h"
 
 
 #include "crtl/tree.h"

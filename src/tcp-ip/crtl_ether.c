@@ -14,10 +14,10 @@
 #include <netpacket/packet.h>
 
 
-#include "crtl/tcp-ip/crtl_ether.h"
+#include "crtl/tcp-ip/ether.h"
 #include "crtl/log.h"
 #include "crtl/bits/types_basic.h"
-#include "crtl/linux/crtl_linux_user.h"
+#include "crtl/bits/core.h"
 
 
 
@@ -88,7 +88,7 @@ inline int crtl_ether_mac(const char *ether, unsigned char mac[CRTL_ETH_ALEN])
     }
     
     char user[64] = {0};
-    crtl_linux_getcurrentusername(user);
+    crtl_getcurrentusername(user);
     if(strcmp(user, "root") != 0)
     {
         crtl_print_err("must be root user.\n");
@@ -141,7 +141,7 @@ int crtl_ether_sendto(char *dst_mac, const char *ether, unsigned short proto, vo
     }
     
     char user[64] = {0};
-    crtl_linux_getcurrentusername(user);
+    crtl_getcurrentusername(user);
     if(strcmp(user, "root") != 0)
     {
         crtl_print_err("must be root user.\n");

@@ -1,4 +1,4 @@
-#include <crtl/bits/crtl_regex.h>
+#include <crtl/bits/regex.h>
 
 #include <crtl/string.h>
 #include <crtl/mask.h>

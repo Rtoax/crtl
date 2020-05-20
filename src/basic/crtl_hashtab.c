@@ -3,9 +3,16 @@
 #include <malloc.h>
 #include <string.h>
 
-#include "crtl/bits/crtl_hashtab.h"
+#include "crtl/bits/hashtab.h"
 #include "crtl/log.h"
 
+#include "crtl/easy/attribute.h"
+
+
+
+
+_hidden uint32_t __hash_value(struct crtl_hashtab_struct *h, const void *key);
+_hidden int __keycmp(struct crtl_hashtab_struct *h, const void *key1, const void *key2);
 
 
 _api struct crtl_hashtab_struct *crtl_hashtab_create(uint32_t (*hash_value)(struct crtl_hashtab_struct *h, const void *key),

@@ -8,7 +8,7 @@
 
 #include "crtl/bits/msgq.h"
 
-#include "crtl/bits/crtl_lock_rwlock.h"
+#include "crtl/bits/rwlock.h"
 
 #include "crtl/easy/macro.h"
 

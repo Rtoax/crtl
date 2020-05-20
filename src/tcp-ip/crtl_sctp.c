@@ -1,5 +1,5 @@
 #include "config.h"
-#include "crtl/tcp-ip/crtl_sctp.h"
+#include "crtl/tcp-ip/sctp.h"
 
 
 #if !HAVE_NETINET_SCTP_H || !HAVE_LIBSCTP

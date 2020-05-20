@@ -1,4 +1,4 @@
-#include "crtl/bits/crtl_lock_semaphore.h"
+#include "crtl/bits/semaphore.h"
 #include "crtl/log.h"
 #include "crtl/assert.h"
 #include "crtl/bits/types_basic.h"

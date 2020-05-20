@@ -2,7 +2,7 @@
 
 #include <unistd.h>
 
-#include "crtl/bits/crtl_tree_huffman.h"
+#include "crtl/bits/tree_huffman.h"
 
 
 // Write the path to the root node of the Huffman

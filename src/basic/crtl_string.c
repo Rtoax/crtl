@@ -12,7 +12,7 @@
 
 #include "crtl/bits/types_basic.h"
 #include "crtl/bits/ctype.h"
-#include "crtl/bits/crtl_regex.h"
+#include "crtl/bits/regex.h"
 #include "crtl/bits/types_basic.h"
 
 #include "crtl/easy/attribute.h"

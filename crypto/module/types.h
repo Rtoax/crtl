@@ -12,8 +12,8 @@
 #include "crtl/tree.h"
 
 #include "crtl/bits/msgq.h"
-#include "crtl/bits/crtl_lock_rwlock.h"
-#include "crtl/bits/crtl_thread.h"
+#include "crtl/bits/rwlock.h"
+#include "crtl/bits/thread.h"
 
 #include "crypto/list/list.h"
 

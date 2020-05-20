@@ -4,8 +4,8 @@
 #include <crtl/mask.h>
 #include <crtl/log.h>
 #include <crtl/string.h>
-#include "crtl/tcp-ip/crtl_ether.h"
-#include "crtl/tcp-ip/crtl_icmp.h"
+#include "crtl/tcp-ip/ether.h"
+#include "crtl/tcp-ip/icmp.h"
 
 void demo_tcp_ip_ether()
 {

@@ -1,10 +1,10 @@
 #include <unistd.h>
 
-#include "crtl/bits/crtl_tree_huffman.h"
+#include "crtl/bits/tree_huffman.h"
 
+#include "crtl/easy/attribute.h"
 
-static const char*
-__crtl_huf_error_map[] = {
+static const char* __crtl_huf_error_map[] = {
     "Success",
     "Failed to allocate the memory block",
     "An invalid argument was specified to the function",
@@ -14,8 +14,7 @@ __crtl_huf_error_map[] = {
 };
 
 // Initialize a new instance of the configuration.
-crtl_huf_error_t
-crtl_huf_config_init(crtl_huf_config_t **self)
+crtl_huf_error_t crtl_huf_config_init(crtl_huf_config_t **self)
 {
     __crtl_huf_routine_m();
     __crtl_huf_routine_param_m(self);
@@ -31,8 +30,7 @@ crtl_huf_config_init(crtl_huf_config_t **self)
 
 
 // Release memory occupied by the configuration.
-crtl_huf_error_t
-crtl_huf_config_free(crtl_huf_config_t **self)
+crtl_huf_error_t crtl_huf_config_free(crtl_huf_config_t **self)
 {
     __crtl_huf_routine_m();
     __crtl_huf_routine_param_m(self);
@@ -47,8 +45,7 @@ crtl_huf_config_free(crtl_huf_config_t **self)
 
 
 // Return string representation of the specified error.
-const char*
-crtl_huf_error_string(crtl_huf_error_t error)
+const char* crtl_huf_error_string(crtl_huf_error_t error)
 {
     size_t crtl_huf_error_map_len = (sizeof(__crtl_huf_error_map) 
             / sizeof(*__crtl_huf_error_map));
@@ -67,8 +64,7 @@ crtl_huf_error_string(crtl_huf_error_t error)
 
 
 // Initialize a new instance of the read-writer.
-crtl_huf_error_t
-crtl_huf_read_writer_init(
+crtl_huf_error_t crtl_huf_read_writer_init(
         crtl_huf_read_writer_t **self,
         crtl_huf_reader_t reader,
         crtl_huf_writer_t writer)
@@ -96,8 +92,7 @@ crtl_huf_read_writer_init(
 
 
 // Release memory occupied by the read-writer.
-crtl_huf_error_t
-crtl_huf_read_writer_free(crtl_huf_read_writer_t **self)
+crtl_huf_error_t crtl_huf_read_writer_free(crtl_huf_read_writer_t **self)
 {
     __crtl_huf_routine_m();
     __crtl_huf_routine_param_m(self);
@@ -111,8 +106,7 @@ crtl_huf_read_writer_free(crtl_huf_read_writer_t **self)
 
 // Write the specified amount of byte from the buffer
 // starting from the *buf* pointer.
-crtl_huf_error_t
-crtl_huf_write(crtl_huf_writer_t writer, const void *buf, size_t count)
+crtl_huf_error_t crtl_huf_write(crtl_huf_writer_t writer, const void *buf, size_t count)
 {
     __crtl_huf_routine_m();
     __crtl_huf_routine_param_m(buf);
@@ -128,8 +122,7 @@ crtl_huf_write(crtl_huf_writer_t writer, const void *buf, size_t count)
 
 // Read the specified amount of bytes into the buffer
 // starting from the *buf* pointer.
-crtl_huf_error_t
-crtl_huf_read(crtl_huf_reader_t reader, void *buf, size_t *count)
+crtl_huf_error_t crtl_huf_read(crtl_huf_reader_t reader, void *buf, size_t *count)
 {
     __crtl_huf_routine_m();
 
@@ -149,8 +142,7 @@ crtl_huf_read(crtl_huf_reader_t reader, void *buf, size_t *count)
 
 
 // Allocate the memory block of the specified size.
-crtl_huf_error_t
-crtl_huf_malloc(void** ptr, size_t size, size_t num)
+crtl_huf_error_t crtl_huf_malloc(void** ptr, size_t size, size_t num)
 {
     __crtl_huf_routine_m();
     __crtl_huf_routine_param_m(ptr);

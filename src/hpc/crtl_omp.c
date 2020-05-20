@@ -1,4 +1,4 @@
-#include "crtl/hpc/crtl_omp.h"
+#include "crtl/hpc/omp.h"
 
 
 

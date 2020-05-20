@@ -6,9 +6,7 @@
 
 #include "crtl/bits/types_basic.h"
 
-#include "crtl/bits/crtl_tree_avl.h"
-#include "crtl/bits/crtl_tree_splay.h"
-#include "crtl/bits/crtl_tree_huffman.h"
+#include "crtl/bits/tree_huffman.h"
 
 
 

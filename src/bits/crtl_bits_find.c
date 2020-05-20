@@ -2,7 +2,8 @@
 #include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"
 #include "crtl/easy/operator.h"
-#include "crtl/bits/crtl_bitmap.h"
+
+#include "crtl/bitmap.h"
 
 
 

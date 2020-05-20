@@ -3,7 +3,7 @@
 #include "crtl/task.h"
 #include "crtl/log.h"
 
-#include "crtl/tcp-ip/crtl_socket.h"
+#include "crtl/network/socket.h"
 
 
 #define TCP_PORT    6021
@@ -12,12 +12,12 @@
 /**********************************************************************************************************************/
 static void *tcp_server(void*arg)
 {
-    sockaddr_in_t srvaddr, cliaddr;
+    struct sockaddr_in srvaddr, cliaddr;
     int listenfd = crtl_socket_server_tcp(&srvaddr, TCP_PORT, 20);
     while(1)
     {
         socklen_t len;
-        int connfd = crtl_socket_accept_tcp(listenfd, (sockaddr_t*)&cliaddr, &len);
+        int connfd = crtl_socket_accept_tcp(listenfd, (struct sockaddr*)&cliaddr, &len);
         int child_pid;
         char __msg[256] = {0};
         
@@ -39,7 +39,7 @@ static void *tcp_server(void*arg)
 
 static void *tcp_client(void*arg)
 {
-    sockaddr_in_t srvaddr, cliaddr;
+    struct sockaddr_in srvaddr, cliaddr;
     int sockfd = crtl_socket_client_tcp(&srvaddr, "127.0.0.1", TCP_PORT);
     while(1)
     {
@@ -74,7 +74,7 @@ static void demo_tcp_ip_socket_tcp_test1()
 /**********************************************************************************************************************/
 static void *udp_server(void*arg)
 {
-    sockaddr_in_t srvaddr, cliaddr;
+    struct sockaddr_in srvaddr, cliaddr;
 
     int server_sockfd = crtl_socket_server_udp(&srvaddr, TCP_PORT);
     crtl_print_info("sockfd = %d.\n", server_sockfd);
@@ -87,13 +87,13 @@ static void *udp_server(void*arg)
     {
         crtl_print_info("recvfrom.\n");
         int len = 0;
-        len = crtl_socket_udp_recvfrom(server_sockfd, __msg, sizeof(__msg), 0, (sockaddr_t*)&cliaddr);
+        len = crtl_socket_udp_recvfrom(server_sockfd, __msg, sizeof(__msg), 0, (struct sockaddr*)&cliaddr);
         crtl_print_info("recvfrom. len = %d\n", len);
         if(len <= 0)
             break;
         
         crtl_print_notice("server: recv msg: %s\n", __msg);
-        len = crtl_socket_udp_sendto(server_sockfd, __msg, sizeof(__msg), 0, (sockaddr_t*)&cliaddr);
+        len = crtl_socket_udp_sendto(server_sockfd, __msg, sizeof(__msg), 0, (struct sockaddr*)&cliaddr);
         crtl_print_info("sendto. len = %d\n", len);
     }
     crtl_socket_close(server_sockfd);
@@ -106,10 +106,10 @@ static void *udp_server(void*arg)
 
 static void *udp_client(void*arg)
 {
-    sockaddr_in_t srvaddr, cliaddr;
+    struct sockaddr_in srvaddr, cliaddr;
     
     int client_sockfd = crtl_socket_client_udp(&srvaddr, "127.0.0.1", TCP_PORT);
-    crtl_print_info("sockfd = %d. %d. %d\n", client_sockfd, sizeof(sockaddr_in_t), sizeof(sockaddr_t));
+    crtl_print_info("sockfd = %d. %d. %d\n", client_sockfd, sizeof(struct sockaddr_in), sizeof(struct sockaddr));
 
     while(1)
     {
@@ -118,10 +118,10 @@ static void *udp_client(void*arg)
         crtl_print_info("sendto.\n");
         int len = 0;
         sleep(1);
-        len = crtl_socket_udp_sendto(client_sockfd, __msg, strlen(__msg), 0, (sockaddr_t*)&srvaddr);
+        len = crtl_socket_udp_sendto(client_sockfd, __msg, strlen(__msg), 0, (struct sockaddr*)&srvaddr);
         crtl_print_info("sendto. len = %d, %s\n", len, strerror(errno));
         
-        len = crtl_socket_udp_recvfrom(client_sockfd, __msg, sizeof(__msg), 0, (sockaddr_t*)&cliaddr);
+        len = crtl_socket_udp_recvfrom(client_sockfd, __msg, sizeof(__msg), 0, (struct sockaddr*)&cliaddr);
         crtl_print_info("recvfrom. len = %d\n", len);
         crtl_print_notice("client: recv msg: %s\n", __msg);
     }
@@ -155,12 +155,12 @@ static void demo_tcp_ip_socket_udp_test1()
 
 static void *unix_server(void*arg)
 {
-    sockaddr_un_t srvaddr, cliaddr;
+    struct sockaddr_un srvaddr, cliaddr;
     int listenfd = crtl_socket_server_unix(&srvaddr, UNIX_PATH, 20);
     while(1)
     {
         socklen_t len;
-        int connfd = crtl_socket_accept_unix(listenfd, (sockaddr_t*)&cliaddr, &len);
+        int connfd = crtl_socket_accept_unix(listenfd, (struct sockaddr*)&cliaddr, &len);
         int child_pid;
         char __msg[256] = {0};
         
@@ -182,7 +182,7 @@ static void *unix_server(void*arg)
 
 static void *unix_client(void*arg)
 {
-    sockaddr_un_t srvaddr, cliaddr;
+    struct sockaddr_un srvaddr, cliaddr;
     int sockfd = crtl_socket_client_unix(&srvaddr, UNIX_PATH);
     while(1)
     {

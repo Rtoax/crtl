@@ -1,10 +1,13 @@
+#include <string.h>
+#include <unistd.h>
+
 #include "crtl/log.h"
 #include "crtl/bits/types_basic.h"
-#include "crtl/linux/crtl_linux_host.h"
+#include "crtl/bits/core.h"
 #include "crtl/easy/macro.h"
 
 
-const char const *crtl_linux_hostname()
+const char const *crtl_hostname()
 {
     static char hostname[256] = {0};
 
@@ -14,7 +17,7 @@ const char const *crtl_linux_hostname()
 	return hostname;
 }
 
-const char const *crtl_linux_domainname()
+const char const *crtl_domainname()
 {
     static char domainname[256] = {0};
 
@@ -25,7 +28,7 @@ const char const *crtl_linux_domainname()
 }
 
 
-long crtl_linux_hostid()
+long crtl_hostid()
 {
     return gethostid();
 }

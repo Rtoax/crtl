@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include "crtl/bits/crtl_hashmap.h"
+#include "crtl/bits/hashmap.h"
 #include "crtl/log.h"
 
 // SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)

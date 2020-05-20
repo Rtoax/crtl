@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <crtl/bits/crtl_bitmask.h>
+#include <crtl/bits/bitmask.h>
 
 /* How many bits in an unsigned long */
 #define __BITS_PER_LONG (8 * sizeof(unsigned long))

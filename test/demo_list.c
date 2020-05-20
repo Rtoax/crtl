@@ -1,4 +1,6 @@
+#include "stdio.h"
 #include "crypto/list/list.h"
+#include "crypto/list/llist.h"
 
 
 struct list_test {

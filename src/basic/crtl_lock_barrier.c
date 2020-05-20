@@ -1,4 +1,4 @@
-#include "crtl/bits/crtl_lock_barrier.h"
+#include "crtl/bits/barrier.h"
 #include "crtl/log.h"
 #include "crtl/assert.h"
 #include "crtl/bits/types_basic.h"

@@ -4,7 +4,7 @@
 #include <locale.h>
 #include <malloc.h>
 
-#include "crtl/bits/crtl_plugin.h"
+#include "crtl/bits/plugin.h"
 #include "crtl/bits/types_basic.h"
 
 

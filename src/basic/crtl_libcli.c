@@ -1,4 +1,4 @@
-#include "crtl/bits/crtl_libcli.h"
+#include "crtl/cli.h"
 #include "crtl/log.h"
 #include "crtl/easy/attribute.h"
 #include "crtl/easy/macro.h"

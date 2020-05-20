@@ -1,5 +1,5 @@
 
-#include "crtl/network/crtl_network_inet.h"
+#include "crtl/network/inet.h"
 
 /*	file name: 		if.c
  *	author:			Rong Tao

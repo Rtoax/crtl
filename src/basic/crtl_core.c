@@ -9,7 +9,7 @@
 #include <sys/ioctl.h>
 #include <sys/syscall.h>   /* For SYS_xxx definitions */
 
-#include "crtl/bits/crtl_core.h"
+#include "crtl/bits/core.h"
 #include "crtl/bits/types_basic.h"
 #include "crtl/string.h"
 #include "crtl/log.h"

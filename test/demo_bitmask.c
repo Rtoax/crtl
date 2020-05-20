@@ -1,5 +1,5 @@
 
-#include "crtl/bits/crtl_bitmask.h"
+#include "crtl/bits/bitmask.h"
 #include <crtl/string.h>
 #include <crtl/log.h>
 

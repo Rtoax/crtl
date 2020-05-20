@@ -1,5 +1,5 @@
 
-#include "crtl/bits/crtl_lock_cond.h"
+#include "crtl/bits/cond.h"
 #include "crtl/log.h"
 #include "crtl/assert.h"
 #include "crtl/bits/types_basic.h"

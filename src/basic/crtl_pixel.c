@@ -1,4 +1,4 @@
-#include "crtl/bits/crtl_pixel.h"
+#include "crtl/bits/pixel.h"
 #include "crtl/bits/ctype.h"
 #include "crtl/terminal.h"
 

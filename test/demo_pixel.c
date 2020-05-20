@@ -1,4 +1,4 @@
-#include "crtl/bits/crtl_pixel.h"
+#include "crtl/bits/pixel.h"
 #include "crtl/log.h"
 
 void demo_pixel_test1()

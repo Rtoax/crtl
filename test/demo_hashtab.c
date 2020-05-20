@@ -1,11 +1,11 @@
-#include "crtl/bits/crtl_hashtab.h"
+#include "crtl/bits/hashtab.h"
 #include "crtl/log.h"
 
 
 
 /**********************************************************************************************************************/
 
-_hidden int rt_crtl_hashtab_test_display(void *k, void *d, void *args)
+int rt_crtl_hashtab_test_display(void *k, void *d, void *args)
 {
     printf("%s: %s\n", (char*)k, (char*)d);
 

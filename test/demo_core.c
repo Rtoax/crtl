@@ -1,5 +1,5 @@
 
-#include "crtl/bits/crtl_core.h"
+#include "crtl/bits/core.h"
 #include "crtl/log.h"
 
 static void demo_core_test1()

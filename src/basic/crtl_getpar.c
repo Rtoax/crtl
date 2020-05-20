@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "crtl/bits/crtl_getpar.h"
 #include "crtl/easy/attribute.h"
 #include "crtl/bits/types_basic.h"
 #include "crtl/file.h"

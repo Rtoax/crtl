@@ -17,7 +17,7 @@
  * see <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
 
-#include "crtl/bits/crtl_tree_avl.h"
+#include "crypto/tree/avl.h"
 
 /* Returns the left child (sign < 0) or the right child (sign > 0) of the
  * specified AVL tree node.
