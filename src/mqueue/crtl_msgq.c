@@ -15,7 +15,7 @@
 
 #include "crtl/msgq.h"
 
-#include "crtl_mute_dbg.h" //去除所有debug打印
+#include "crypto/mutelogdbg.h" //去除所有debug打印
 
 #include "crypto/atomic/cas.h"
 #include "crypto/expect.h"

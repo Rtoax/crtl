@@ -2,8 +2,8 @@
 //#error  Not include <crtl/bits/bits_set.h> directly, include <crtl/crtl_type.h> instead.
 //#endif
 
-#ifndef __CRTL_BITS_TYPES_BITS_SET_H
-#define __CRTL_BITS_TYPES_BITS_SET_H 1
+#ifndef __CRTL_CRYPTO_BITS_TYPES_BITS_SET_H
+#define __CRTL_CRYPTO_BITS_TYPES_BITS_SET_H 1
 
 
 /**
@@ -37,4 +37,16 @@ typedef struct {
 
 
 
-#endif /*<__CRTL_BITS_TYPES_BITS_SET_H>*/
+typedef __crtl_bits_set crtl_bits_set;
+
+
+#define CRTL_BITS_SETSIZE                    __CRTL_BITS_SETSIZE
+#define CRTL_BITS_SET(bit, p_bits_set)       __CRTL_BITS_SET(bit, p_bits_set)
+#define CRTL_BITS_CLR(bit, p_bits_set)       __CRTL_BITS_CLR(bit, p_bits_set)
+#define CRTL_BITS_ISSET(bit, p_bits_set)     __CRTL_BITS_ISSET(bit, p_bits_set)
+#define CRTL_BITS_ZERO(p_bits_set)           __CRTL_BITS_ZERO(p_bits_set)
+
+
+
+#endif /*<__CRTL_CRYPTO_BITS_TYPES_BITS_SET_H>*/
+

@@ -8,19 +8,10 @@
 
 
 #include "crtl/bits/types_basic.h"
-#include "crtl/bits/bits_set.h"
 #include "crtl/bits/ctype.h"
 #include "crtl/bits/complex.h"
 
 
-typedef __crtl_bits_set crtl_bits_set;
-
-
-#define CRTL_BITS_SETSIZE                    __CRTL_BITS_SETSIZE
-#define CRTL_BITS_SET(bit, p_bits_set)       __CRTL_BITS_SET(bit, p_bits_set)
-#define CRTL_BITS_CLR(bit, p_bits_set)       __CRTL_BITS_CLR(bit, p_bits_set)
-#define CRTL_BITS_ISSET(bit, p_bits_set)     __CRTL_BITS_ISSET(bit, p_bits_set)
-#define CRTL_BITS_ZERO(p_bits_set)           __CRTL_BITS_ZERO(p_bits_set)
 
 
 
