@@ -7,7 +7,7 @@
 #include "crtl/assert.h"
 
 #include "crypto/tree/rbtree.h"
-#include "crtl/easy/attribute.h"
+#include "crypto/attribute.h"
 
 #include "crypto/align/container.h"
 #include "crypto/expect.h"

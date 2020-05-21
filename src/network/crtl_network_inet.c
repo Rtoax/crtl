@@ -9,10 +9,11 @@
 #include <netinet/in.h>
 #include <net/if.h>
 
-#include "crtl/easy/endian.h"
-#include "crtl/easy/byteswap.h"
-#include "crtl/easy/attribute.h"
-#include "crtl/easy/macro.h"
+#include "crypto/endian.h"
+#include "crtl/bits/byteswap.h"
+#include "crypto/attribute.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 
 #include "crtl/log.h"
 #include "crtl/string.h"

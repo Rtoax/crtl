@@ -5,6 +5,9 @@
 #include <limits.h>
 #include <float.h>
 #include <errno.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdlib.h>
 
 #include "crtl/string.h"
 
@@ -15,8 +18,9 @@
 #include "crtl/bits/regex.h"
 #include "crtl/bits/types_basic.h"
 
-#include "crtl/easy/attribute.h"
-#include "crtl/easy/macro.h"
+#include "crypto/attribute.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 #include "crypto/expect.h"
 
 

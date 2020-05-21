@@ -1,8 +1,8 @@
 #include "crtl/log.h"
 #include "crtl/network/inet.h"
-#include "crtl/easy/attribute.h"
-#include "crtl/easy/endian.h"
-#include "crtl/easy/byteswap.h"
+#include "crypto/attribute.h"
+#include "crypto/endian.h"
+#include "crtl/bits/byteswap.h"
 
 
 

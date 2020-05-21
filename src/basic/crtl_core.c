@@ -14,8 +14,9 @@
 #include "crtl/string.h"
 #include "crtl/log.h"
 
-#include "crtl/easy/attribute.h"
-#include "crtl/easy/macro.h"
+#include "crypto/attribute.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 
 
 int crtl_getpid(void)

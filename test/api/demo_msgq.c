@@ -5,7 +5,6 @@
 
 #include "crtl/msgq.h"
 
-#include "crtl/easy/macro.h"
 #include "crtl/task.h"
 
 

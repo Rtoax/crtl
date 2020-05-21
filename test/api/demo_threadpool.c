@@ -23,7 +23,7 @@ void dummy_task(void *arg) {
     pthread_mutex_unlock(&lock);
 }
 
-static void _unused demo1()
+void demo1()
 {
     crtl_threadpool_t *pool;
 
@@ -48,13 +48,13 @@ static void _unused demo1()
 
 }
 
-void _unused demo2_task1(void *arg)
+void demo2_task1(void *arg)
 {
     crtl_print_err("123: threadid=%ld\r\n", (unsigned long)pthread_self());
 
 }
 
-static void _unused demo2()
+void demo2()
 {
     crtl_threadpool_t *pool = crtl_threadpool_create(THREAD, QUEUE, 0);
     crtl_threadpool_add(pool, &demo2_task1, NULL, 0);

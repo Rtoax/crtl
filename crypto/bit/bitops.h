@@ -4,7 +4,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "crtl/easy/macro.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 #include "crtl/bits/hweight.h"
 
 #include "crypto/bit/bits.h"

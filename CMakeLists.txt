@@ -39,12 +39,12 @@ add_definitions(-g3 -MD -Wall -fopenmp)
 
 #生成动态库和静态库 
 add_library(acc_lib_shared  SHARED ${DIR_SRCS}) 
-add_library(acc_lib_static 	STATIC ${DIR_SRCS})
+#add_library(acc_lib_static 	STATIC ${DIR_SRCS})
 
 
 #将动态库和静态库的名字设置 
 set_target_properties(acc_lib_shared PROPERTIES OUTPUT_NAME "crtl") 
-set_target_properties(acc_lib_static PROPERTIES OUTPUT_NAME "crtl")
+#set_target_properties(acc_lib_static PROPERTIES OUTPUT_NAME "crtl")
 
 
 set(LIBRARY_OUTPUT_PATH ../lib) 

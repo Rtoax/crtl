@@ -3,7 +3,6 @@
 
 
 #include <netpacket/packet.h>
-#include "crtl/easy/attribute.h"
 
 
 #define CRTL_ETH_HRD_SZ	sizeof(crtl_ethhdr_t)
@@ -22,12 +21,12 @@ typedef struct {
     unsigned char   h_dst[CRTL_ETH_ALEN];   /* destination eth addr	*/
     unsigned char   h_src[CRTL_ETH_ALEN];   /* source ether addr	*/
     unsigned short  h_proto;                /* packet type ID field	*/
-}_packed crtl_ethhdr_t;
+}__attribute__((packed)) crtl_ethhdr_t;
 
 typedef struct {
     crtl_ethhdr_t  eth_hdr;     /* ether header */
 	void       *eth_data;	    /* data field */
-}_packed crtl_ethmsg_t;
+}__attribute__((packed)) crtl_ethmsg_t;
 
 
 
@@ -45,7 +44,7 @@ inline int crtl_ether_mac(const char *ether, unsigned char mac[CRTL_ETH_ALEN]);
 /**
  *  crtl_ether_sendto("28:6E:D4:88:C7:2C", "eth0", 0x1204, msg, strlen(msg));
  */
-int crtl_ether_sendto(char *dst_mac, const char *ether, unsigned short proto, void * _unused msg, unsigned int msg_len);
+int crtl_ether_sendto(char *dst_mac, const char *ether, unsigned short proto, void * msg, unsigned int msg_len);
 
 
 

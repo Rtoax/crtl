@@ -3,8 +3,9 @@
 #include <string.h>
 
 #include "crtl/bits/epoll.h"
-#include "crtl/easy/attribute.h"
-#include "crtl/easy/macro.h"
+#include "crypto/attribute.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 #include "crtl/assert.h"
 #include "crtl/log.h"
 

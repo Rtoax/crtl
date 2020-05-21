@@ -2,7 +2,6 @@
 #define __CRTL_ITERATOR_H 1
 
 #include "crtl/bits/types_basic.h"
-#include "crtl/easy/attribute.h"
 
 
 #if 0

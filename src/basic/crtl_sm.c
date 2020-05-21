@@ -7,8 +7,9 @@
 #include "crtl/tree.h"
 
 #include "crtl/log.h"
-#include "crtl/easy/macro.h"
-#include "crtl/easy/attribute.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
+#include "crypto/attribute.h"
 #include "crtl/sm.h"
 #include "crtl/assert.h"
 

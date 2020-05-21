@@ -2,7 +2,6 @@
 #define __CRTL_ALLOC_H 1
 
 #include <malloc.h>
-#include "crtl/easy/attribute.h"
 
 
 typedef void* (*crtl_malloc_fn_t)(size_t size);
@@ -71,12 +70,12 @@ int crtl_replace_allocator(crtl_malloc_fn_t malloc_func, crtl_realloc_fn_t reall
  * @param n6:   size of index of sixth dimension
  * @return address of memory
  */
-_api void *crtl_malloc1 (int n1, int size);
-_api void **crtl_malloc2 (int n1, int n2, int size);
-_api void ***crtl_malloc3 (int n1, int n2, int n3, int size);
-_api void ****crtl_malloc4 (int n1, int n2, int n3, int n4, int size);
-_api void *****crtl_malloc5 (int n1, int n2, int n3, int n4, int n5, int size);
-_api void ******crtl_malloc6 (int n1, int n2, int n3, int n4, int n5, int n6, int size);
+void *crtl_malloc1 (int n1, int size);
+void **crtl_malloc2 (int n1, int n2, int size);
+void ***crtl_malloc3 (int n1, int n2, int n3, int size);
+void ****crtl_malloc4 (int n1, int n2, int n3, int n4, int size);
+void *****crtl_malloc5 (int n1, int n2, int n3, int n4, int n5, int size);
+void ******crtl_malloc6 (int n1, int n2, int n3, int n4, int n5, int n6, int size);
 
 
 /**
@@ -90,12 +89,12 @@ _api void ******crtl_malloc6 (int n1, int n2, int n3, int n4, int n5, int n6, in
  * @param n6:   size of index of sixth dimension
  * @return address of memory
  */
-_api void *crtl_remalloc1(void *v, int n1, int size);
-_api void **crtl_remalloc2(void **v, int n1, int n2, int size);
-_api void ***crtl_remalloc3 (void ***v, int n1, int n2, int n3, int size);
-_api void ****crtl_remalloc4 (void ****v, int n1, int n2, int n3, int n4, int size);
-_api void *****crtl_remalloc5 (void *****v, int n1, int n2, int n3, int n4, int n5, int size);
-_api void ******crtl_remalloc6 (void ******v, int n1, int n2, int n3, int n4, int n5, int n6, int size);
+void *crtl_remalloc1(void *v, int n1, int size);
+void **crtl_remalloc2(void **v, int n1, int n2, int size);
+void ***crtl_remalloc3 (void ***v, int n1, int n2, int n3, int size);
+void ****crtl_remalloc4 (void ****v, int n1, int n2, int n3, int n4, int size);
+void *****crtl_remalloc5 (void *****v, int n1, int n2, int n3, int n4, int n5, int size);
+void ******crtl_remalloc6 (void ******v, int n1, int n2, int n3, int n4, int n5, int n6, int size);
 
 
 /**
@@ -107,13 +106,14 @@ _api void ******crtl_remalloc6 (void ******v, int n1, int n2, int n3, int n4, in
  * @param p:   address of memory
  * @return void
  */
-_api void crtl_mfree6 (void ******p);
-_api void crtl_mfree5 (void *****p);
-_api void crtl_mfree4 (void ****p);
-_api void crtl_mfree3 (void ***p);
-_api void crtl_mfree2 (void **p);
-_api void crtl_mfree1 (void *p);
+void crtl_mfree6 (void ******p);
+void crtl_mfree5 (void *****p);
+void crtl_mfree4 (void ****p);
+void crtl_mfree3 (void ***p);
+void crtl_mfree2 (void **p);
+void crtl_mfree1 (void *p);
 
 
 #endif /*<__CRTL_ALLOC_H>*/
+
 

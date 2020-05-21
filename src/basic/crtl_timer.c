@@ -8,8 +8,9 @@
 #include "crtl/tree.h"
 #include "crtl/bits/rwlock.h"
 
-#include "crtl/easy/byteswap.h"
-#include "crtl/easy/macro.h"
+#include "crtl/bits/byteswap.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 
 #include "crypto/timer/types.h"
 #include "crypto/atomic/cas.h"

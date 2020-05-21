@@ -19,6 +19,8 @@
 #include "crtl/bits/types_basic.h"
 #include "crtl/bits/core.h"
 
+#include "crypto/attribute.h"
+
 
 
 inline char * crtl_ether_proto(unsigned short proto)

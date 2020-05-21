@@ -9,7 +9,7 @@
 #include "crtl/lock.h"
 #include "crtl/bits/types_basic.h"
 #include "crtl/assert.h"
-#include "crtl/easy/attribute.h"
+#include "crypto/attribute.h"
 
 
 const static struct {

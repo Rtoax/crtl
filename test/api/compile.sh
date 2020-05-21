@@ -4,7 +4,8 @@ if [ $# -lt 1 ]; then
 	exit
 fi
 
-../install_crtl.sh
+ ../install_crtl.sh > /dev/null
 
+echo "Compile >> $*"
 gcc $* -lcrtl -lcmocka `pkg-config --libs libcrtl`
 

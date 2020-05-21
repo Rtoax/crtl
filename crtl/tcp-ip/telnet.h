@@ -19,11 +19,6 @@
 #include <termios.h>
 #include <unistd.h>
 
-#include "crtl/easy/attribute.h"
-
-
-#ifndef __RT_TCP_IP_LIBCRTL_TELNET_H
-#define __RT_TCP_IP_LIBCRTL_TELNET_H 1
 
 /*!
  * \brief libtelnet - TELNET protocol handling library
@@ -65,9 +60,6 @@
  *
  * \author Sean Middleditch <sean@sourcemud.org>
  */
-
-#if !defined(LIBCRTL_TELNET_INCLUDE)
-#define LIBCRTL_TELNET_INCLUDE 1
 
 /* standard C headers necessary for the libtelnet API */
 #include <stdarg.h>
@@ -256,7 +248,7 @@ struct crtl_telnet_environ_t {
 	unsigned char type; /*!< either CRTL_TELNET_ENVIRON_VAR or CRTL_TELNET_ENVIRON_USERVAR */
 	char *var;          /*!< name of the variable being set */
 	char *value;        /*!< value of variable being set; empty string if no value */
-}_packed;
+};
 
 /*! 
  * event information 
@@ -388,7 +380,7 @@ struct crtl_telnet_telopt_t {
 	short telopt;      /*!< one of the TELOPT codes or -1 */
 	unsigned char us;  /*!< CRTL_TELNET_WILL or CRTL_TELNET_WONT */
 	unsigned char him; /*!< CRTL_TELNET_DO or CRTL_TELNET_DONT */
-}_packed;
+};
 
 /*! 
  * state tracker -- private data structure 
@@ -715,10 +707,6 @@ extern void crtl_telnet_zmp_arg(crtl_telnet_t *telnet, const char *arg);
 } /* extern "C" */
 #endif
 
-#endif /* !defined(LIBCRTL_TELNET_INCLUDE) */
 
-
-
-#endif /*<__RT_TCP_IP_LIBCRTL_TELNET_H>*/
 #endif /*<__CRTL_TCP_IP_CRTL_TELNET_H>*/
 

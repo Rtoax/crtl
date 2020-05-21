@@ -1,7 +1,7 @@
 #include "crtl/lock.h"
 #include "crtl/bits/types_basic.h"
 
-#include "crtl/easy/attribute.h"
+#include "crypto/attribute.h"
 
 
 _api void crtl_fd_lock(int fd)

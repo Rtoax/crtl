@@ -2,6 +2,7 @@
 #include "crtl/bits/ctype.h"
 #include "crtl/terminal.h"
 
+#include "crypto/attribute.h"
 
 static const unsigned char _unused __crtl_void_pixel_8x8[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /*void*/

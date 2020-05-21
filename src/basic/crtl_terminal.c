@@ -14,7 +14,7 @@
 #include "crtl/file.h"
 #include "crtl/lock.h"
 
-#include "crtl/easy/attribute.h"
+#include "crypto/attribute.h"
 
 
 _api void crtl_terminal_size(int *const x, int *const y)

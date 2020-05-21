@@ -8,7 +8,7 @@
 #include "crtl/log.h"
 #include "crtl/assert.h"
 
-#include "crtl/easy/attribute.h"
+#include "crypto/attribute.h"
 
 
 #define CRTL_RANDOM_SEED_DEV    1

@@ -10,7 +10,8 @@
 
 #include "crtl/bits/rwlock.h"
 
-#include "crtl/easy/macro.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 
 #include "crtl/msgq.h"
 

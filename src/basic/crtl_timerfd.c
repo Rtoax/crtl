@@ -14,12 +14,15 @@
 #include "crtl/bits/rwlock.h"
 #include "crtl/bits/cond.h"
 
-#include "crtl/easy/byteswap.h"
+#include "crtl/bits/byteswap.h"
 #include "crtl/bits/epoll.h"
-#include "crtl/easy/macro.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 
 #include "crypto/timer/types.h"
 #include "crypto/atomic/cas.h"
+
+#include "crypto/attribute.h"
 
 #include "crtl_mute_dbg.h"
 

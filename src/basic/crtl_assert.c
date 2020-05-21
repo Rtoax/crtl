@@ -1,11 +1,13 @@
+#include <malloc.h>
 #include <assert.h>
 #include <execinfo.h>
 
 #include "crtl/assert.h"
 #include "crtl/log.h"
 
-#include "crtl/easy/attribute.h"
-#include "crtl/easy/macro.h"
+#include "crypto/attribute.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 
 
 extern void crtl_fd_lock(int fd);

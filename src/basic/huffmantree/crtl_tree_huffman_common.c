@@ -2,7 +2,7 @@
 
 #include "crtl/bits/tree_huffman.h"
 
-#include "crtl/easy/attribute.h"
+#include "crypto/attribute.h"
 
 static const char* __crtl_huf_error_map[] = {
     "Success",

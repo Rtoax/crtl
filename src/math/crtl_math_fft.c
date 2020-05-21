@@ -1,7 +1,7 @@
 #include <malloc.h>
 
 #include "crtl/time.h"
-#include "crtl/easy/attribute.h"
+#include "crypto/attribute.h"
 
 #include "crtl/fft.h"
 

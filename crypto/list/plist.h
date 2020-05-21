@@ -1,6 +1,7 @@
 
-#include "crtl/easy/attribute.h"
-#include "crtl/easy/macro.h"
+#include "crypto/attribute.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 
 #include "crypto/list/list.h"
 

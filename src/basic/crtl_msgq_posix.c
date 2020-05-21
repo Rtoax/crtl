@@ -4,7 +4,8 @@
 
 #include "crtl/bits/types_basic.h"
 #include "crtl/time.h"
-#include "crtl/easy/macro.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 
 #include "crypto/expect.h"
 

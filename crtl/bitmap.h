@@ -7,7 +7,6 @@
 
 #include "crtl/bits/bits_find.h"
 
-#include "crtl/easy/endian.h"
 
  /**
   * DOC: bitmap overview

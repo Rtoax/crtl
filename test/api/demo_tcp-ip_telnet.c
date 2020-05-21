@@ -129,7 +129,7 @@ static void demo_tcp_ip_crtl_telnet_test1_event_handler(crtl_telnet_t *demo_tcp_
 	}
 }
 
-static int _unused demo_tcp_ip_crtl_telnet_test1_crtl_telnet_client(int argc ,char *argv[])
+static int demo_tcp_ip_crtl_telnet_test1_crtl_telnet_client(int argc ,char *argv[])
 {
 	char buffer[512];
 	int rs;
@@ -456,7 +456,7 @@ static void demo_tcp_ip_crtl_telnet_test2__event_handler(crtl_telnet_t *telnet, 
 	}
 }
 
-static int _unused demo_tcp_ip_crtl_telnet_test2_crtl_telnet_chat(int argc, char **argv) 
+int demo_tcp_ip_crtl_telnet_test2_crtl_telnet_chat(int argc, char **argv) 
 {
 	char buffer[512];
 	short listen_port;
@@ -908,7 +908,7 @@ static void demo_tcp_ip_crtl_telnet_test3__event_handler(crtl_telnet_t *telnet, 
 	}
 }
 
-static int _unused demo_tcp_ip_crtl_telnet_test3_crtl_telnet_proxy(int argc, char **argv) 
+static int demo_tcp_ip_crtl_telnet_test3_crtl_telnet_proxy(int argc, char **argv) 
 {
 	char buffer[512];
 	short listen_port;

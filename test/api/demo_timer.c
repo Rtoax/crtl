@@ -114,9 +114,9 @@ static void demo_timerfd_timer_callback(void *arg)
 }
 
 #define demo_timerfd_create(timerfd, cb, loop, sec, nsec) \
-    int _unused timerfd = crtl_timerfd_create(loop, &cb, #timerfd, sec, nsec)
+    int timerfd = crtl_timerfd_create(loop, &cb, #timerfd, sec, nsec)
 
-static void _unused demo_timerfd_demo1()
+void demo_timerfd_demo1()
 {
 
     demo_timerfd_create(t1, demo_timerfd_timer_callback, true, 1, 1);
@@ -137,7 +137,7 @@ static void _unused demo_timerfd_demo1()
     while(1)sleep(1);
 
 }
-static void _unused demo_timerfd_demo2()
+void demo_timerfd_demo2()
 {
 
     demo_timerfd_create(t1, demo_timerfd_timer_callback, true, 1, 1);
@@ -161,7 +161,7 @@ static void _unused demo_timerfd_demo2()
     
 }
 
-static void _unused demo_timerfd_demo3()
+void demo_timerfd_demo3()
 {
 
     demo_timerfd_create(t1, demo_timerfd_timer_callback, true, 1, 1);

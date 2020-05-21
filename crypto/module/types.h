@@ -6,7 +6,8 @@
 #include "crtl/bits/types_basic.h"
 #include "crtl/alloc.h"
 
-#include "crtl/easy/macro.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 
 #include "crtl/bits/mask.h"
 #include "crtl/tree.h"

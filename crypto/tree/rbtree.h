@@ -9,8 +9,9 @@
 
 #include "crtl/bits/types_basic.h"
 
-#include "crtl/easy/attribute.h"
-#include "crtl/easy/macro.h"
+#include "crypto/attribute.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 
 
 

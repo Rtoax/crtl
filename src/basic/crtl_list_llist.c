@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <sys/types.h>
 #include "crypto/list/llist.h"
 
 

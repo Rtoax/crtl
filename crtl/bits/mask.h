@@ -4,7 +4,7 @@
 
 #include <endian.h>
 
-#include "crtl/easy/byteswap.h"
+#include "crtl/bits/byteswap.h"
 
 #if BIG_ENDIAN
  #define __crtl_mask_32bit(bit)	(1ULL << (bit))

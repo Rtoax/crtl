@@ -1,5 +1,5 @@
 #include <crtl/log.h>
-#include <crtl/easy/once.h>
+#include <crypto/once.h>
 
 DECLARE_ONCE_FUN(rong);
 

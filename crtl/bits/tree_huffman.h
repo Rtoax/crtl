@@ -9,7 +9,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "crtl/easy/attribute.h"
 
 
 #define CRTL_HUF_1KIB_BUFFER 1024
@@ -309,14 +308,14 @@ crtl_huf_error_t crtl_huf_malloc(void** ptr, size_t size, size_t num);
 
 // Write the first bit of the specified word into the
 // bit buffer.
-static inline void _unused crtl_huf_bit_write(crtl_huf_bit_read_writer_t *self, uint8_t bit) {
+static inline void __attribute__((unused)) crtl_huf_bit_write(crtl_huf_bit_read_writer_t *self, uint8_t bit) {
     self->offset -= self->offset ? 1 : 0;
     self->bits |= (bit & 1) << self->offset;
 }
 
 
 // Reset the content of the buffer.
-static inline void _unused crtl_huf_bit_read_writer_reset(crtl_huf_bit_read_writer_t *self) {
+static inline void __attribute__((unused)) crtl_huf_bit_read_writer_reset(crtl_huf_bit_read_writer_t *self) {
     self->bits = 0;
     self->offset = 8;
 }

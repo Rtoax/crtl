@@ -6,7 +6,7 @@
 #include "crtl/bits/hashtab.h"
 #include "crtl/log.h"
 
-#include "crtl/easy/attribute.h"
+#include "crypto/attribute.h"
 
 
 

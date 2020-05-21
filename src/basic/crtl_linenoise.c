@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 #include "crtl/bits/linenoise.h"
-#include "crtl/easy/attribute.h"
+#include "crypto/attribute.h"
 
 #include "crtl/log.h"
 

@@ -6,7 +6,6 @@
 #include <complex.h>
 #include <sys/types.h>
 
-#include "crtl/easy/attribute.h"
 
 #include "crtl/bits/types_basic.h"
 #include "crtl/bits/bits_set.h"

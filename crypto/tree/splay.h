@@ -1,7 +1,7 @@
 #ifndef __CRTL_BITS_TREE_SPLAY_H
 #define __CRTL_BITS_TREE_SPLAY_H 1
 
-#include "crtl/easy/attribute.h"
+#include "crypto/attribute.h"
 
 /*-
  * copyright 2002 niels provos <provos@citi.umich.edu>

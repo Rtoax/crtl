@@ -1,14 +1,20 @@
 
 #include <errno.h>
 #include <ctype.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <malloc.h>
+
 #include <crtl/log.h>
 
 #include "crtl/bitmap.h"
 
 #include <crtl/bits/ctype.h>
 
-#include <crtl/easy/attribute.h>
-#include "crtl/easy/byteswap.h"
+#include <crypto/attribute.h>
+#include "crtl/bits/byteswap.h"
+#include "crypto/endian.h"
 
 #include "crypto/bit/bitops.h"
 

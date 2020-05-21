@@ -1,5 +1,5 @@
-#include "crtl/easy/byteswap.h"
-#include "crtl/easy/attribute.h"
+#include "crtl/bits/byteswap.h"
+#include "crypto/attribute.h"
 
 
 

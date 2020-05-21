@@ -4,7 +4,8 @@
 #include "crtl/log.h"
 #include "crtl/bits/types_basic.h"
 #include "crtl/bits/core.h"
-#include "crtl/easy/macro.h"
+#include "crypto/once.h"
+#include "crypto/type/check.h"
 
 
 const char const *crtl_hostname()

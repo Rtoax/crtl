@@ -25,7 +25,7 @@
 #include <stddef.h>
 #include <inttypes.h> /* for uintptr_t */
 
-#include "crtl/easy/attribute.h"
+#include "crypto/attribute.h"
 
 #include "crypto/align/offset.h"
 

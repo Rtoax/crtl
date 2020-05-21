@@ -1,3 +1,6 @@
+#include <stdint.h>
+#include <malloc.h>
+
 #include "crtl/assert.h"
 #include "crtl/log.h"
 

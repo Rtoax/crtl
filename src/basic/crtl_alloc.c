@@ -1,6 +1,7 @@
 #include <malloc.h>
 
 #include "crtl/bits/types_basic.h"
+#include "crypto/attribute.h"
 
 #include "crtl/alloc.h"
 
