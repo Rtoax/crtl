@@ -21,6 +21,8 @@ enum {
     CRTL_EQ = 0,
     CRTL_GT = 1,
 };
+    
+typedef void* crtl_data_t;
 
 
 #endif /*<__CRTL_BITS_TYPES_BASIC_H>*/

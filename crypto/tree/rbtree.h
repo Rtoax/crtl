@@ -13,6 +13,7 @@
 #include "crypto/once.h"
 #include "crypto/type/check.h"
 
+#include "crypto/iterator/types.h"
 
 
 
@@ -219,6 +220,7 @@ struct crtl_rbtree_struct {
     crtl_boolean alloc;
     
 //    struct crtl_rbtree_iterator_struct iter;
+//    __CRTL_ITERATOR;
 };
 
 
