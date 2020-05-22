@@ -194,6 +194,7 @@ struct crtl_rbtree_node_struct;
 //struct crtl_rbtree_iterator_struct {
 //    struct crtl_rbtree_struct *rbtree;
 //    struct crtl_rbtree_node_struct *curr_node;
+//    
 //    void* (*first)(struct crtl_rbtree_iterator_struct *);
 //    void* (*next)(struct crtl_rbtree_iterator_struct *); 
 //    void* (*prev)(struct crtl_rbtree_iterator_struct *);

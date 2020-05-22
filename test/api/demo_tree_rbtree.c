@@ -172,8 +172,8 @@ void demo_crtl_rbtree()
     crtl_print_debug(">>nnode %d.\n", crtl_rbtree_nnode(rbt));
 
     
-    crtl_print_debug("Use crtl_rbtree_iterator_t\n");
-    
+//    crtl_print_debug("Use crtl_rbtree_iterator_t\n");
+//    
 //    struct structA *a1 = NULL;
 //    crtl_rbtree_iterator_t iter = crtl_rbtree_iterator(rbt);
 //    for(a1 = iter->first(iter); a1; a1 = iter->next(iter))
