@@ -75,6 +75,9 @@
 #define fls64(x) (x?_fls64(x) + 1:0)
 #endif
 
+#ifndef fls_long
+#define fls_long(l) fls64(l)
+#endif
 
 /**
  *  x=8: 0000 0000 0000 1000; number of "1" 
@@ -112,4 +115,15 @@
 #define _parity(x) __builtin_parity(x)
 #endif
 
+
+/**
+ * fls - find last (most-significant) bit set
+ * @x: the word to search
+ *
+ * This is defined the same way as ffs.
+ * Note fls(0) = 0, fls(1) = 1, fls(0x80000000) = 32.
+ */
+#ifndef fls
+#define fls(x) ((unsigned int )x ? sizeof(x) * 8 - __builtin_clz(x) : 0)
+#endif
 
