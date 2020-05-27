@@ -13,6 +13,7 @@ void demo_mkdir_rmdir()
     crtl_print_info("1/2 -> %d\n", crtl_is_directory("1/2"));
     crtl_print_info("toa -> %d\n", crtl_is_regular_file("toa"));
     crtl_print_info("/home/rongtao -> %d\n", crtl_is_directory("/home/rongtao"));
+    
 }
 
 void demo_tempfile()
@@ -21,6 +22,10 @@ void demo_tempfile()
     crtl_print_info("tmpname: %s\n", crtl_mktemp_string(tempfile, ".", "core."));
     crtl_print_info("tmpname: %s\n", crtl_mktemp_string(tempfile, "", "core."));
     crtl_print_info("tmpname: %s\n", crtl_mktemp_string(tempfile, NULL, "core."));
+
+    size_t len = 256;
+    crtl_current_dir(tempfile, &len);
+    crtl_print_info("current: %s\n", tempfile);
 }
 void demo_file_fd()
 {

@@ -13,9 +13,11 @@
 #include "crtl/bits/types_basic.h"
 #include "crtl/string.h"
 #include "crtl/log.h"
+#include "crtl/file.h"
 
 #include "crypto/attribute.h"
 #include "crypto/once.h"
+#include "crypto/alias.h"
 #include "crypto/type/check.h"
 
 
@@ -266,14 +268,9 @@ fixup:
 
   return CRTL_SUCCESS;
 }
+weak_alias(crtl_cwd, crtl_current_dir);
 
-int crtl_chdir(const char* dir)
-{
-  if (chdir(dir))
-    return CRTL_ERROR;
 
-  return CRTL_SUCCESS;
-}
 
 
 int crtl_getrusage(crtl_rusage_t* rusage)

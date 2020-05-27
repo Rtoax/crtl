@@ -78,12 +78,6 @@ struct crtl_dirent_struct {
 };
 
 
-//#define CRTL_FD_Available(fd) ({crtl_boolean __Available = crtl_chk_fd(fd)==CRTL_SUCCESS?true:false;__Available;})
-//
-//int crtl_chk_fd(int fd);
-
-
-/* 创建文件夹 */
 /**
  * create directory with mode 
  * @param dir: directory
@@ -116,6 +110,14 @@ int crtl_chdir(const char* dir);
  * @return error number
  */
 int crtl_cwd(char* buffer, size_t* size);
+
+/**
+ * get current work directory
+ * @param dir: directory
+ * @param size: size of string of directory buffer
+ * @return error number
+ */
+int crtl_current_dir(char* buffer, size_t* size);
 
 /**
  * get temperaory directory

@@ -11,6 +11,15 @@
 
 
 
+_api int crtl_chdir(const char* dir)
+{
+  if (chdir(dir))
+    return CRTL_ERROR;
+
+  return CRTL_SUCCESS;
+}
+
+
 /* create dir */
 _api int crtl_mkdir(const char *dir, mode_t mode)
 {
