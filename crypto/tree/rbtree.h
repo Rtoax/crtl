@@ -1,5 +1,5 @@
-#ifndef __CRTL_BITS_TREE_RBTREE_H
-#define __CRTL_BITS_TREE_RBTREE_H 1
+#ifndef __CRTL_CRYPTO_BITS_TREE_RBTREE_H
+#define __CRTL_CRYPTO_BITS_TREE_RBTREE_H 1
 
 /**
  *  红黑树： AVL平衡二叉树
@@ -236,7 +236,7 @@ struct crtl_rbtree_node_struct {
 
 
 
-#endif /*<__CRTL_BITS_TREE_RBTREE_H>*/
+#endif /*<__CRTL_CRYPTO_BITS_TREE_RBTREE_H>*/
 
 
 

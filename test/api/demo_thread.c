@@ -46,7 +46,7 @@ void demo_thread_create()
     
     crtl_print_debug("thread. %ld\n", thread);
 
-    crtl_thread_join(thread, NULL, 0,0,0,0);
+//    crtl_thread_join(thread, NULL, 0,0,0,0);
     crtl_print_debug("crtl_thread_join. %ld\n", thread);
 
     crtl_threadattr_t attr;
