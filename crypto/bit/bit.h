@@ -7,6 +7,11 @@
 #define _ffs(integer) __builtin_ffs(integer)
 #endif
 
+#ifndef __ffs
+#define __ffs(word) __builtin_ctzl(word)
+#endif
+
+
 /**
  * _ctzl - find first bit in word.
  * @word: The word to search
@@ -16,6 +21,21 @@
 #ifndef _ctzl
 #define _ctzl(long_word) __builtin_ctzl(long_word)
 #endif
+
+
+
+/**
+ * _ctzll - find first bit in word.
+ * @word: The word to search
+ *
+ * Undefined if no bit exists, so code should check against 0 first.
+ */
+#ifndef _ctzll
+#define _ctzll(long_long_word) __builtin_ctzll(long_long_word)
+#endif
+
+
+
 
 /*
  * _ffz - find first zero in word.
@@ -86,6 +106,18 @@
 #ifndef _popcount
 #define _popcount(integer) __builtin_popcount(integer)
 #endif
+
+
+/**
+ *  x=8: 0000 0000 0000 1000; number of "1" 
+ *  8 -> 1
+ */
+#ifndef _popcountll
+#define _popcountll(long_long) __builtin_popcountll(long_long)
+#endif
+
+
+
 
 /**
  *  x=8: 0000 0000 0000 1000;  number of low "0" 

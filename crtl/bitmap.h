@@ -4,6 +4,7 @@
 #include <string.h>
 #include <limits.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "crtl/bits/bits_find.h"
 
