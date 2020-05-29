@@ -24,6 +24,9 @@
 #define mb()	asm volatile("mfence" ::: "memory")
 #define rmb()	asm volatile("lfence" ::: "memory")
 #define wmb()	asm volatile("sfence" ::: "memory")
+
+#define barrier() asm volatile("" ::: "memory")
+
 #define smp_rmb() barrier()
 #define smp_wmb() barrier()
 #define smp_mb()  asm volatile("lock; addl $0,-132(%%rsp)" ::: "memory", "cc")
