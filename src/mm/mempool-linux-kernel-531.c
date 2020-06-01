@@ -286,7 +286,6 @@ out:
  * mempool_alloc - allocate an element from a specific memory pool
  * @pool:      pointer to the memory pool which was allocated via
  *             mempool_create().
- * @gfp_mask:  the usual allocation bitmask.
  *
  * this function only sleeps if the alloc_fn() function sleeps or
  * returns NULL. Note that due to preallocation, this function

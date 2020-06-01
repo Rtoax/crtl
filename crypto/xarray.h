@@ -22,6 +22,9 @@
 #include <crypto/round/roundup.h>
 #include <crypto/list/list.h>
 
+#include <crypto/linux/gfp.h>
+
+
 /* SPDX-License-Identifier: GPL-2.0-only */
 /* -*- linux-c -*- ------------------------------------------------------- *
  *
@@ -276,10 +279,6 @@ enum xa_lock_type {
  * Values for xa_flags.  The radix tree stores its GFP flags in the xa_flags,
  * and we remain compatible with that.
  */
-#define gfp_t unsigned int
-#define __GFP_BITS_SHIFT (26)
-
-
 #define XA_FLAGS_LOCK_IRQ	(( gfp_t)XA_LOCK_IRQ)
 #define XA_FLAGS_LOCK_BH	(( gfp_t)XA_LOCK_BH)
 #define XA_FLAGS_TRACK_FREE	(( gfp_t)4U)
