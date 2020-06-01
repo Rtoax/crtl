@@ -1,4 +1,3 @@
-
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE         /* See feature_test_macros(7) */
 #endif
@@ -15,14 +14,12 @@
 #include <sys/time.h>
 #include <limits.h>
 #include <sys/types.h>
-
-
 #include <signal.h>
 #include <strings.h>
 
-
 #include "crtl/cli.h"
 #include "crtl/log.h"
+
 #include "crypto/attribute.h"
 #include "crypto/once.h"
 #include "crypto/type/check.h"
@@ -30,6 +27,13 @@
 
 #define MATCH_REGEX     1
 #define MATCH_INVERT    2
+
+/* maximul history cmd */
+#define CLI_MAX_HISTORY      256
+
+/* maximul line(length, words) */
+#define CLI_MAX_LINE_LENGTH     4096
+#define CLI_MAX_LINE_WORDS      128
 
 enum crtl_cli_states {
     STATE_LOGIN,
@@ -39,6 +43,128 @@ enum crtl_cli_states {
     STATE_ENABLE,
 };
     
+struct crtl_cli_comphelp {
+    int comma_separated;
+    char **entries;
+    int num_entries;
+};
+
+/* cmd optarg */
+struct crtl_cli_optarg {
+    char *name;
+    int flags;
+    char *help;
+    int mode;
+    int privilege;
+    unsigned int unique_len;
+    int (*get_completions)(struct crtl_cli_struct *, const char *, const char *, struct crtl_cli_comphelp *);
+    int (*validator)(struct crtl_cli_struct *, const char *, const char *);
+    int (*transient_mode)(struct crtl_cli_struct *, const char *, const char *);
+    struct crtl_cli_optarg *next;
+};
+
+/* optarg pair */
+struct crtl_cli_optarg_pair {
+    char *name;
+    char *value;
+    struct crtl_cli_optarg_pair *next;
+};
+
+/* pipeline stage */
+struct crtl_cli_pipeline_stage {
+    struct crtl_cli_command *command;
+    struct crtl_cli_optarg_pair *found_optargs;
+    char **words;
+    int num_words;
+    int status;
+    int first_unmatched;
+    int first_optarg;
+    int stage_num;
+    char *error_word;
+};
+
+/* pipeline */
+struct crtl_cli_pipeline {
+    char *cmdline;
+    char *words[CLI_MAX_LINE_WORDS];
+    int num_words;
+    int num_stages;
+    struct crtl_cli_pipeline_stage stage[CLI_MAX_LINE_WORDS];
+    struct crtl_cli_pipeline_stage *current_stage;
+};
+
+/* build mode */
+struct crtl_cli_buildmode {
+    struct crtl_cli_command *command;
+    struct crtl_cli_optarg_pair *found_optargs;
+    char *cname;
+    int mode;
+    int transient_mode;
+    char *mode_text;
+};
+
+struct crtl_cli_command {
+    char *command;
+    int (*callback)(struct crtl_cli_struct *, const char *, char **, int);
+    unsigned int unique_len;
+    char *help;
+    int privilege;
+    int mode;
+    struct crtl_cli_command *previous;
+    struct crtl_cli_command *next;
+    struct crtl_cli_command *children;
+    struct crtl_cli_command *parent;
+    struct crtl_cli_optarg *optargs;
+    int (*filter)(struct crtl_cli_struct *cli, const char *string, void *data);
+    int (*init)(struct crtl_cli_struct *cli, int, char **, struct crtl_cli_filter *filt);
+    int command_type;
+};
+
+/* cli struct */
+struct crtl_cli_struct {
+    int completion_callback;
+    struct crtl_cli_command *commands;
+    int (*auth_callback)(const char *, const char *);
+    int (*regular_callback)(struct crtl_cli_struct *cli);
+    int (*enable_callback)(const char *);
+    char *banner;
+    struct unp *users;
+    char *enable_password;
+    char *history[CLI_MAX_HISTORY];
+    char showprompt;
+    char *promptchar;
+    char *hostname;
+    char *modestring;
+    int privilege;
+    int mode;
+    int state;
+    struct crtl_cli_filter *filters;
+    void (*print_callback)(struct crtl_cli_struct *cli, const char *string);
+    FILE *client;
+    /* internal buffers */
+    void *conn;
+    void *service;
+    char *commandname;  // temporary buffer for crtl_cli_command_name() to prevent leak
+    char *buffer;
+    unsigned buf_size;
+    struct timeval timeout_tm;
+    time_t idle_timeout;
+    int (*idle_timeout_callback)(struct crtl_cli_struct *);
+    time_t last_action;
+    int telnet_protocol;
+    void *user_context;
+    struct crtl_cli_optarg_pair *found_optargs;
+    int transient_mode;
+    struct crtl_cli_pipeline *pipeline;
+    struct crtl_cli_buildmode *buildmode;
+};
+
+/* filter */
+struct crtl_cli_filter {
+    int (*filter)(struct crtl_cli_struct *cli, const char *string, void *data);
+    void *data;
+    struct crtl_cli_filter *next;
+};
 
 struct unp {
     char *username;
@@ -239,6 +365,12 @@ void crtl_cli_set_hostname(struct crtl_cli_struct *cli, const char *hostname)
         cli->hostname = strdup(hostname);
 }
 
+void crtl_cli_set_client_timeout(struct crtl_cli_struct *cli, struct timeval *tv)
+{
+    cli->timeout_tm.tv_sec = tv->tv_sec;
+    cli->timeout_tm.tv_usec = tv->tv_usec;
+}
+
 void crtl_cli_set_promptchar(struct crtl_cli_struct *cli, const char *promptchar) 
 {
     free_z(cli->promptchar);
@@ -254,7 +386,7 @@ static int crtl_cli_build_shortest(struct crtl_cli_struct *cli, struct crtl_cli_
     for (c = commands; c; c = c->next) 
     {
         c->unique_len = strlen(c->command);
-        if ((c->mode != LIBCLI_MODE_ANY && c->mode != cli->mode) || c->privilege > cli->privilege) 
+        if ((c->mode != CLI_MODE_ANY && c->mode != cli->mode) || c->privilege > cli->privilege) 
             continue;
 
         c->unique_len = 1;
@@ -262,7 +394,7 @@ static int crtl_cli_build_shortest(struct crtl_cli_struct *cli, struct crtl_cli_
         {
             if (c == p) continue;
             if (c->command_type != p->command_type) continue;
-            if ((p->mode != LIBCLI_MODE_ANY && p->mode != cli->mode) || p->privilege > cli->privilege) 
+            if ((p->mode != CLI_MODE_ANY && p->mode != cli->mode) || p->privilege > cli->privilege) 
                 continue;
 
             cp = c->command;
@@ -290,7 +422,7 @@ int crtl_cli_set_privilege(struct crtl_cli_struct *cli, int priv)
 
     if (priv != old) 
     {
-        crtl_cli_set_promptchar(cli, priv == LIBCLI_PRIVILEGE_PRIVILEGED ? "# " : "$ ");
+        crtl_cli_set_promptchar(cli, priv == CLI_PRIVILEGE_PRIVILEGED ? "# " : "$ ");
         crtl_cli_build_shortest(cli, cli->commands);
     }
 
@@ -482,7 +614,7 @@ int crtl_cli_show_help(struct crtl_cli_struct *cli, struct crtl_cli_command *c)
         if (p->command && 
             p->callback && 
             cli->privilege >= p->privilege && 
-            (p->mode == cli->mode || p->mode == LIBCLI_MODE_ANY)) 
+            (p->mode == cli->mode || p->mode == CLI_MODE_ANY)) 
         {
             crtl_cli_error(cli, "  %-20s %s", crtl_cli_command_name(cli, p), (p->help != NULL ? p->help : "No help line"));
         }
@@ -496,20 +628,20 @@ int crtl_cli_show_help(struct crtl_cli_struct *cli, struct crtl_cli_command *c)
 
 int crtl_cli_int_enable(struct crtl_cli_struct *cli, const char _unused *command, char _unused *argv[], int _unused argc) 
 {
-    if (cli->privilege == LIBCLI_PRIVILEGE_PRIVILEGED) 
+    if (cli->privilege == CLI_PRIVILEGE_PRIVILEGED) 
         return CLI_OK;
 
     if (!cli->enable_password && !cli->enable_callback) 
     {
         // No password required, set privilege immediately.
-        crtl_cli_set_privilege(cli, LIBCLI_PRIVILEGE_PRIVILEGED);
-        crtl_cli_set_configmode(cli, LIBCLI_MODE_EXEC, NULL);
+        crtl_cli_set_privilege(cli, CLI_PRIVILEGE_PRIVILEGED);
+        crtl_cli_set_configmode(cli, CLI_MODE_EXEC, NULL);
     } 
     else 
     {
         // Require password entry
         crtl_print_notice("Require privileged commands.\n");
-        crtl_cli_print(cli, "notice: %s", CLI_ENABLE_PASSWORD);
+        crtl_cli_print(cli, "notice: %s", cli_enable_password);
         cli->state = STATE_ENABLE_PASSWORD;
     }
 
@@ -518,8 +650,8 @@ int crtl_cli_int_enable(struct crtl_cli_struct *cli, const char _unused *command
 
 int crtl_cli_int_disable(struct crtl_cli_struct *cli, const char _unused *command, char _unused *argv[], int _unused argc) 
 {
-    crtl_cli_set_privilege(cli, LIBCLI_PRIVILEGE_UNPRIVILEGED);
-    crtl_cli_set_configmode(cli, LIBCLI_MODE_EXEC, NULL);
+    crtl_cli_set_privilege(cli, CLI_PRIVILEGE_UNPRIVILEGED);
+    crtl_cli_set_configmode(cli, CLI_MODE_EXEC, NULL);
     return CLI_OK;
 }
 
@@ -535,7 +667,7 @@ int crtl_cli_int_history(struct crtl_cli_struct *cli, const char _unused *comman
     int i;
 
     crtl_cli_error(cli, "\nCommand history:");
-    for (i = 0; i < LIBCLI_MAX_HISTORY; i++) 
+    for (i = 0; i < CLI_MAX_HISTORY; i++) 
     {
         if (cli->history[i]) 
             crtl_cli_error(cli, "%3d- %s", i, cli->history[i]);
@@ -546,20 +678,20 @@ int crtl_cli_int_history(struct crtl_cli_struct *cli, const char _unused *comman
 
 int crtl_cli_int_quit(struct crtl_cli_struct *cli, const char _unused *command, char _unused *argv[], int _unused argc) 
 {
-    crtl_cli_set_privilege(cli, LIBCLI_PRIVILEGE_UNPRIVILEGED);
-    crtl_cli_set_configmode(cli, LIBCLI_MODE_EXEC, NULL);
+    crtl_cli_set_privilege(cli, CLI_PRIVILEGE_UNPRIVILEGED);
+    crtl_cli_set_configmode(cli, CLI_MODE_EXEC, NULL);
     return CLI_QUIT;
 }
 
 int crtl_cli_int_exit(struct crtl_cli_struct *cli, const char *command, char *argv[], int argc) 
 {
-    if (cli->mode == LIBCLI_MODE_EXEC) 
+    if (cli->mode == CLI_MODE_EXEC) 
         return crtl_cli_int_quit(cli, command, argv, argc);
 
-    if (cli->mode > LIBCLI_MODE_CONFIG)
-        crtl_cli_set_configmode(cli, LIBCLI_MODE_CONFIG, NULL);
+    if (cli->mode > CLI_MODE_CONFIG)
+        crtl_cli_set_configmode(cli, CLI_MODE_CONFIG, NULL);
     else
-        crtl_cli_set_configmode(cli, LIBCLI_MODE_EXEC, NULL);
+        crtl_cli_set_configmode(cli, CLI_MODE_EXEC, NULL);
 
     cli->service = NULL;
     return CLI_OK;
@@ -573,7 +705,7 @@ int crtl_cli_int_idle_timeout(struct crtl_cli_struct *cli)
 
 int crtl_cli_int_configure_terminal(struct crtl_cli_struct *cli, const char _unused *command, char _unused *argv[], int _unused argc) 
 {
-    crtl_cli_set_configmode(cli, LIBCLI_MODE_CONFIG, NULL);
+    crtl_cli_set_configmode(cli, CLI_MODE_CONFIG, NULL);
     return CLI_OK;
 }
 
@@ -593,45 +725,46 @@ struct crtl_cli_struct *crtl_cli_init(const char *banner, const char *hostname)
     }
     cli->telnet_protocol = 1;
 
-    crtl_cli_register_command(cli, 0, "ls", crtl_cli_int_help, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY, "Show available commands");
-    crtl_cli_register_command(cli, 0, "quit", crtl_cli_int_quit, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY, "Disconnect");
-    crtl_cli_register_command(cli, 0, "logout", crtl_cli_int_quit, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY, "Disconnect");
-    crtl_cli_register_command(cli, 0, "exit", crtl_cli_int_exit, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY, "Exit from current mode");
-    crtl_cli_register_command(cli, 0, "history", crtl_cli_int_history, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY,"Show a list of previously run commands");
-    crtl_cli_register_command(cli, 0, "enable", crtl_cli_int_enable, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,"Turn on privileged commands");
-    crtl_cli_allow_enable(cli, CLI_ENABLE_PASSWORD);
-    crtl_cli_register_command(cli, 0, "disable", crtl_cli_int_disable, LIBCLI_PRIVILEGE_PRIVILEGED, LIBCLI_MODE_EXEC,"Turn off privileged commands");
+    crtl_cli_register_command(cli, 0, "ls", crtl_cli_int_help, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY, "Show available commands");
+    crtl_cli_register_command(cli, 0, "quit", crtl_cli_int_quit, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY, "Disconnect");
+    crtl_cli_register_command(cli, 0, "logout", crtl_cli_int_quit, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY, "Disconnect");
+    crtl_cli_register_command(cli, 0, "exit", crtl_cli_int_exit, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY, "Exit from current mode");
+    crtl_cli_register_command(cli, 0, "history", crtl_cli_int_history, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY,"Show a list of previously run commands");
+    crtl_cli_register_command(cli, 0, "enable", crtl_cli_int_enable, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC,"Turn on privileged commands");
+    crtl_cli_allow_enable(cli, cli_enable_password);
+    
+    crtl_cli_register_command(cli, 0, "disable", crtl_cli_int_disable, CLI_PRIVILEGE_PRIVILEGED, CLI_MODE_EXEC,"Turn off privileged commands");
 
-    c = crtl_cli_register_command(cli, 0, "configure", 0, LIBCLI_PRIVILEGE_PRIVILEGED, LIBCLI_MODE_EXEC, "Enter configuration mode");
-    crtl_cli_register_command(cli, c, "terminal", crtl_cli_int_configure_terminal, LIBCLI_PRIVILEGE_PRIVILEGED, LIBCLI_MODE_EXEC,"Configure from the terminal");
+    c = crtl_cli_register_command(cli, 0, "configure", 0, CLI_PRIVILEGE_PRIVILEGED, CLI_MODE_EXEC, "Enter configuration mode");
+    crtl_cli_register_command(cli, c, "terminal", crtl_cli_int_configure_terminal, CLI_PRIVILEGE_PRIVILEGED, CLI_MODE_EXEC,"Configure from the terminal");
 
     // And now the built in filters
-    c = crtl_cli_register_filter(cli, "begin", crtl_cli_range_filter_init, crtl_cli_range_filter, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY,"Begin with lines that match");
-    crtl_cli_register_optarg(c, "range_start", CLI_CMD_ARGUMENT | CLI_CMD_REMAINDER_OF_LINE, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY,"Begin showing lines that match", NULL, NULL, NULL);
+    c = crtl_cli_register_filter(cli, "begin", crtl_cli_range_filter_init, crtl_cli_range_filter, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY,"Begin with lines that match");
+    crtl_cli_register_optarg(c, "range_start", CLI_CMD_ARGUMENT | CLI_CMD_REMAINDER_OF_LINE, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY,"Begin showing lines that match", NULL, NULL, NULL);
 
-    c = crtl_cli_register_filter(cli, "between", crtl_cli_range_filter_init, crtl_cli_range_filter, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY, "Between lines that match");
-    crtl_cli_register_optarg(c, "range_start", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY,"Begin showing lines that match", NULL, NULL, NULL);
-    crtl_cli_register_optarg(c, "range_end", CLI_CMD_ARGUMENT | CLI_CMD_REMAINDER_OF_LINE, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY,"Stop showing lines that match", NULL, NULL, NULL);
+    c = crtl_cli_register_filter(cli, "between", crtl_cli_range_filter_init, crtl_cli_range_filter, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY, "Between lines that match");
+    crtl_cli_register_optarg(c, "range_start", CLI_CMD_ARGUMENT, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY,"Begin showing lines that match", NULL, NULL, NULL);
+    crtl_cli_register_optarg(c, "range_end", CLI_CMD_ARGUMENT | CLI_CMD_REMAINDER_OF_LINE, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY,"Stop showing lines that match", NULL, NULL, NULL);
 
-    crtl_cli_register_filter(cli, "count", crtl_cli_count_filter_init, crtl_cli_count_filter, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY,"Count of lines");
+    crtl_cli_register_filter(cli, "count", crtl_cli_count_filter_init, crtl_cli_count_filter, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY,"Count of lines");
 
-    c = crtl_cli_register_filter(cli, "exclude", crtl_cli_match_filter_init, crtl_cli_match_filter, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY,"Exclude lines that match");
-    crtl_cli_register_optarg(c, "search_pattern", CLI_CMD_ARGUMENT | CLI_CMD_REMAINDER_OF_LINE, LIBCLI_PRIVILEGE_UNPRIVILEGED,LIBCLI_MODE_ANY, "Search pattern", NULL, NULL, NULL);
+    c = crtl_cli_register_filter(cli, "exclude", crtl_cli_match_filter_init, crtl_cli_match_filter, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY,"Exclude lines that match");
+    crtl_cli_register_optarg(c, "search_pattern", CLI_CMD_ARGUMENT | CLI_CMD_REMAINDER_OF_LINE, CLI_PRIVILEGE_UNPRIVILEGED,CLI_MODE_ANY, "Search pattern", NULL, NULL, NULL);
 
-    c = crtl_cli_register_filter(cli, "include", crtl_cli_match_filter_init, crtl_cli_match_filter, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY,"Include lines that match");
-    crtl_cli_register_optarg(c, "search_pattern", CLI_CMD_ARGUMENT | CLI_CMD_REMAINDER_OF_LINE, LIBCLI_PRIVILEGE_UNPRIVILEGED,LIBCLI_MODE_ANY, "Search pattern", NULL, NULL, NULL);
+    c = crtl_cli_register_filter(cli, "include", crtl_cli_match_filter_init, crtl_cli_match_filter, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY,"Include lines that match");
+    crtl_cli_register_optarg(c, "search_pattern", CLI_CMD_ARGUMENT | CLI_CMD_REMAINDER_OF_LINE, CLI_PRIVILEGE_UNPRIVILEGED,CLI_MODE_ANY, "Search pattern", NULL, NULL, NULL);
 
-    c = crtl_cli_register_filter(cli, "grep", crtl_cli_match_filter_init, crtl_cli_match_filter, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY,"Include lines that match regex (options: -v, -i, -e)");
-    crtl_cli_register_optarg(c, "search_flags", CLI_CMD_HYPHENATED_OPTION, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY,"Search flags (-[ivx]", NULL, crtl_cli_search_flags_validator, NULL);
-    crtl_cli_register_optarg(c, "search_pattern", CLI_CMD_ARGUMENT | CLI_CMD_REMAINDER_OF_LINE, LIBCLI_PRIVILEGE_UNPRIVILEGED,LIBCLI_MODE_ANY, "Search pattern", NULL, NULL, NULL);
+    c = crtl_cli_register_filter(cli, "grep", crtl_cli_match_filter_init, crtl_cli_match_filter, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY,"Include lines that match regex (options: -v, -i, -e)");
+    crtl_cli_register_optarg(c, "search_flags", CLI_CMD_HYPHENATED_OPTION, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY,"Search flags (-[ivx]", NULL, crtl_cli_search_flags_validator, NULL);
+    crtl_cli_register_optarg(c, "search_pattern", CLI_CMD_ARGUMENT | CLI_CMD_REMAINDER_OF_LINE, CLI_PRIVILEGE_UNPRIVILEGED,CLI_MODE_ANY, "Search pattern", NULL, NULL, NULL);
     
-    c = crtl_cli_register_filter(cli, "egrep", crtl_cli_match_filter_init, crtl_cli_match_filter, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY,"Include lines that match extended regex");
-    crtl_cli_register_optarg(c, "search_flags", CLI_CMD_HYPHENATED_OPTION, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_ANY,"Search flags (-[ivx]", NULL, crtl_cli_search_flags_validator, NULL);
-    crtl_cli_register_optarg(c, "search_pattern", CLI_CMD_ARGUMENT | CLI_CMD_REMAINDER_OF_LINE, LIBCLI_PRIVILEGE_UNPRIVILEGED,LIBCLI_MODE_ANY, "Search pattern", NULL, NULL, NULL);
+    c = crtl_cli_register_filter(cli, "egrep", crtl_cli_match_filter_init, crtl_cli_match_filter, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY,"Include lines that match extended regex");
+    crtl_cli_register_optarg(c, "search_flags", CLI_CMD_HYPHENATED_OPTION, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_ANY,"Search flags (-[ivx]", NULL, crtl_cli_search_flags_validator, NULL);
+    crtl_cli_register_optarg(c, "search_pattern", CLI_CMD_ARGUMENT | CLI_CMD_REMAINDER_OF_LINE, CLI_PRIVILEGE_UNPRIVILEGED,CLI_MODE_ANY, "Search pattern", NULL, NULL, NULL);
 
     cli->privilege = cli->mode = -1;
-    crtl_cli_set_privilege(cli, LIBCLI_PRIVILEGE_UNPRIVILEGED);
-    crtl_cli_set_configmode(cli, LIBCLI_MODE_EXEC, 0);
+    crtl_cli_set_privilege(cli, CLI_PRIVILEGE_UNPRIVILEGED);
+    crtl_cli_set_configmode(cli, CLI_MODE_EXEC, 0);
 
     // Default to 1 second timeout intervals
     cli->timeout_tm.tv_sec = 1;
@@ -701,7 +834,7 @@ int crtl_cli_done(struct crtl_cli_struct *cli)
 static int crtl_cli_add_history(struct crtl_cli_struct *cli, const char *cmd) 
 {
     int i;
-    for (i = 0; i < LIBCLI_MAX_HISTORY; i++) {
+    for (i = 0; i < CLI_MAX_HISTORY; i++) {
         if (!cli->history[i]) {
             if (i == 0 || strcasecmp(cli->history[i - 1], cmd))
                 if (!(cli->history[i] = strdup(cmd))) 
@@ -712,10 +845,10 @@ static int crtl_cli_add_history(struct crtl_cli_struct *cli, const char *cmd)
     // No space found, drop one off the beginning of the list
     free(cli->history[0]);
 
-    for (i = 0; i < LIBCLI_MAX_HISTORY - 1; i++) 
+    for (i = 0; i < CLI_MAX_HISTORY - 1; i++) 
         cli->history[i] = cli->history[i + 1];
     
-    if (!(cli->history[LIBCLI_MAX_HISTORY - 1] = strdup(cmd))) 
+    if (!(cli->history[CLI_MAX_HISTORY - 1] = strdup(cmd))) 
         return CLI_ERROR;
     return CLI_OK;
 }
@@ -723,7 +856,7 @@ static int crtl_cli_add_history(struct crtl_cli_struct *cli, const char *cmd)
 void crtl_cli_free_history(struct crtl_cli_struct *cli) 
 {
     int i;
-    for (i = 0; i < LIBCLI_MAX_HISTORY; i++) {
+    for (i = 0; i < CLI_MAX_HISTORY; i++) {
         if (cli->history[i]) 
             free_z(cli->history[i]);
     }
@@ -850,7 +983,7 @@ void crtl_cli_get_completions(struct crtl_cli_struct *cli, const char *command, 
 
         if (c->command_type != command_type) continue;
         if (cli->privilege < c->privilege) continue;
-        if (c->mode != cli->mode && c->mode != LIBCLI_MODE_ANY) continue;
+        if (c->mode != cli->mode && c->mode != CLI_MODE_ANY) continue;
         if (stage->words[i] && strncasecmp(c->command, stage->words[i], strlen(stage->words[i]))) continue;
 
         // Special case for 'buildmode' - skip if the argument for this command was seen, unless MULTIPLE flag is set
@@ -1004,8 +1137,8 @@ int crtl_cli_loop(struct crtl_cli_struct *cli, int sockfd)
   if (cli->idle_timeout) time(&cli->last_action);
 
   // Start off in unprivileged mode
-  crtl_cli_set_privilege(cli, LIBCLI_PRIVILEGE_UNPRIVILEGED);
-  crtl_cli_set_configmode(cli, LIBCLI_MODE_EXEC, NULL);
+  crtl_cli_set_privilege(cli, CLI_PRIVILEGE_UNPRIVILEGED);
+  crtl_cli_set_configmode(cli, CLI_MODE_EXEC, NULL);
 
   // No auth required?
   if (!cli->users && !cli->auth_callback) cli->state = STATE_NORMAL;
@@ -1322,10 +1455,10 @@ int crtl_cli_loop(struct crtl_cli_struct *cli, int sockfd)
 
       // Disable
       if (c == CTRL('Z')) {
-        if (cli->mode != LIBCLI_MODE_EXEC) {
+        if (cli->mode != CLI_MODE_EXEC) {
           if (cli->buildmode) crtl_cli_int_free_buildmode(cli);
           crtl_cli_clear_line(sockfd, cmd, l, cursor);
-          crtl_cli_set_configmode(cli, LIBCLI_MODE_EXEC, NULL);
+          crtl_cli_set_configmode(cli, CLI_MODE_EXEC, NULL);
           l = cursor = 0;
           cli->showprompt = 1;
         }
@@ -1471,7 +1604,7 @@ int crtl_cli_loop(struct crtl_cli_struct *cli, int sockfd)
           // Up
           in_history--;
           if (in_history < 0) {
-            for (in_history = LIBCLI_MAX_HISTORY - 1; in_history >= 0; in_history--) {
+            for (in_history = CLI_MAX_HISTORY - 1; in_history >= 0; in_history--) {
               if (cli->history[in_history]) {
                 history_found = 1;
                 break;
@@ -1483,9 +1616,9 @@ int crtl_cli_loop(struct crtl_cli_struct *cli, int sockfd)
         } else {
           // Down
           in_history++;
-          if (in_history >= LIBCLI_MAX_HISTORY || !cli->history[in_history]) {
+          if (in_history >= CLI_MAX_HISTORY || !cli->history[in_history]) {
             int i = 0;
-            for (i = 0; i < LIBCLI_MAX_HISTORY; i++) {
+            for (i = 0; i < CLI_MAX_HISTORY; i++) {
               if (cli->history[i]) {
                 in_history = i;
                 history_found = 1;
@@ -1663,7 +1796,7 @@ int crtl_cli_loop(struct crtl_cli_struct *cli, int sockfd)
 
       if (allowed) {
         cli->state = STATE_ENABLE;
-        crtl_cli_set_privilege(cli, LIBCLI_PRIVILEGE_PRIVILEGED);
+        crtl_cli_set_privilege(cli, CLI_PRIVILEGE_PRIVILEGED);
       } else {
         crtl_cli_error(cli, "\n\nAccess denied");
         cli->state = STATE_NORMAL;
@@ -1766,12 +1899,12 @@ static void _print(struct crtl_cli_struct *cli, int print_mode, const char *form
   p = cli->buffer;
   do {
     char *next = strchr(p, '\n');
-    struct crtl_cli_filter *f = (print_mode & LIBCLI_PRINT_FILTERED) ? cli->filters : 0;
+    struct crtl_cli_filter *f = (print_mode & CLI_PRINT_FILTERED) ? cli->filters : 0;
     int print = 1;
 
     if (next)
       *next++ = 0;
-    else if (print_mode & LIBCLI_PRINT_BUFFERED)
+    else if (print_mode & CLI_PRINT_BUFFERED)
       break;
 
     while (print && f) {
@@ -1798,19 +1931,19 @@ void crtl_cli_bufprint(struct crtl_cli_struct *cli, const char *format, ...) {
   va_list ap;
 
   va_start(ap, format);
-  _print(cli, LIBCLI_PRINT_BUFFERED | LIBCLI_PRINT_FILTERED, format, ap);
+  _print(cli, CLI_PRINT_BUFFERED | CLI_PRINT_FILTERED, format, ap);
   va_end(ap);
 }
 
 void crtl_cli_vabufprint(struct crtl_cli_struct *cli, const char *format, va_list ap) {
-  _print(cli, LIBCLI_PRINT_BUFFERED, format, ap);
+  _print(cli, CLI_PRINT_BUFFERED, format, ap);
 }
 
 void crtl_cli_print(struct crtl_cli_struct *cli, const char *format, ...) {
   va_list ap;
 
   va_start(ap, format);
-  _print(cli, LIBCLI_PRINT_FILTERED, format, ap);
+  _print(cli, CLI_PRINT_FILTERED, format, ap);
   va_end(ap);
 }
 
@@ -1818,7 +1951,7 @@ void crtl_cli_error(struct crtl_cli_struct *cli, const char *format, ...) {
   va_list ap;
 
   va_start(ap, format);
-  _print(cli, LIBCLI_PRINT_PLAIN, format, ap);
+  _print(cli, CLI_PRINT_PLAIN, format, ap);
   va_end(ap);
 }
 
@@ -2349,15 +2482,15 @@ int crtl_cli_int_enter_buildmode(struct crtl_cli_struct *cli, struct crtl_cli_pi
   }
   cli->buildmode->cname = strdup(crtl_cli_command_name(cli, stage->command));
   // And lastly four 'always there' commands to cancel current mode and to execute the command, show settings, and unset
-  crtl_cli_int_register_buildmode_command(cli, NULL, "cancel", crtl_cli_int_buildmode_cancel_cback, LIBCLI_PRIVILEGE_UNPRIVILEGED,
+  crtl_cli_int_register_buildmode_command(cli, NULL, "cancel", crtl_cli_int_buildmode_cancel_cback, CLI_PRIVILEGE_UNPRIVILEGED,
                                      cli->mode, "Cancel command");
-  crtl_cli_int_register_buildmode_command(cli, NULL, "exit", crtl_cli_int_buildmode_exit_cback, LIBCLI_PRIVILEGE_UNPRIVILEGED, cli->mode,
+  crtl_cli_int_register_buildmode_command(cli, NULL, "exit", crtl_cli_int_buildmode_exit_cback, CLI_PRIVILEGE_UNPRIVILEGED, cli->mode,
                                      "Exit and execute command");
-  crtl_cli_int_register_buildmode_command(cli, NULL, "show", crtl_cli_int_buildmode_show_cback, LIBCLI_PRIVILEGE_UNPRIVILEGED, cli->mode,
+  crtl_cli_int_register_buildmode_command(cli, NULL, "show", crtl_cli_int_buildmode_show_cback, CLI_PRIVILEGE_UNPRIVILEGED, cli->mode,
                                      "Show current settings");
-  c = crtl_cli_int_register_buildmode_command(cli, NULL, "unset", crtl_cli_int_buildmode_unset_cback, LIBCLI_PRIVILEGE_UNPRIVILEGED,
+  c = crtl_cli_int_register_buildmode_command(cli, NULL, "unset", crtl_cli_int_buildmode_unset_cback, CLI_PRIVILEGE_UNPRIVILEGED,
                                          cli->mode, "Unset a setting");
-  crtl_cli_register_optarg(c, "setting", CLI_CMD_ARGUMENT | CLI_CMD_DO_NOT_RECORD, LIBCLI_PRIVILEGE_UNPRIVILEGED, cli->mode,
+  crtl_cli_register_optarg(c, "setting", CLI_CMD_ARGUMENT | CLI_CMD_DO_NOT_RECORD, CLI_PRIVILEGE_UNPRIVILEGED, cli->mode,
                       "setting to clear", crtl_cli_int_buildmode_unset_completor, crtl_cli_int_buildmode_unset_validator, NULL);
 
 out:
@@ -2411,7 +2544,7 @@ int crtl_cli_int_execute_buildmode(struct crtl_cli_struct *cli) {
     do {
       if (cli->privilege < optarg->privilege) continue;
       if ((optarg->mode != cli->buildmode->mode) && (optarg->mode != cli->buildmode->transient_mode) &&
-          (optarg->mode != LIBCLI_MODE_ANY))
+          (optarg->mode != CLI_MODE_ANY))
         continue;
 
       value = crtl_cli_get_optarg_value(cli, optarg->name, value);
@@ -2559,7 +2692,7 @@ int crtl_cli_int_buildmode_unset_cback(struct crtl_cli_struct *cli, const char *
   for (c = cli->commands; c; c = c->next) {
     if (c->command_type != CLI_BUILDMODE_COMMAND) continue;
     if (cli->privilege < c->privilege) continue;
-    if ((cli->buildmode->mode != c->mode) && (cli->buildmode->transient_mode != c->mode) && (c->mode != LIBCLI_MODE_ANY))
+    if ((cli->buildmode->mode != c->mode) && (cli->buildmode->transient_mode != c->mode) && (c->mode != CLI_MODE_ANY))
       continue;
     if (strcmp(c->command, argv[0])) continue;
     // Go fry anything by this name
@@ -2624,7 +2757,7 @@ static int crtl_cli_int_locate_command(struct crtl_cli_struct *cli, struct crtl_
     if (strncasecmp(c->command, stage->words[start_word], strlen(stage->words[start_word]))) continue;
 
   AGAIN:
-    if (c->mode == cli->mode || (c->mode == LIBCLI_MODE_ANY && again_any != NULL)) {
+    if (c->mode == cli->mode || (c->mode == CLI_MODE_ANY && again_any != NULL)) {
       int rc = CLI_OK;
 
       // Found a word!
@@ -2668,16 +2801,16 @@ static int crtl_cli_int_locate_command(struct crtl_cli_struct *cli, struct crtl_
         rc = stage->status;
       }
       return rc;
-    } else if (cli->mode > LIBCLI_MODE_CONFIG && c->mode == LIBCLI_MODE_CONFIG) {
+    } else if (cli->mode > CLI_MODE_CONFIG && c->mode == CLI_MODE_CONFIG) {
       // Command matched but from another mode, remember it if we fail to find correct command
       again_config = c;
-    } else if (c->mode == LIBCLI_MODE_ANY) {
+    } else if (c->mode == CLI_MODE_ANY) {
       // Command matched but for any mode, remember it if we fail to find correct command
       again_any = c;
     }
   }
 
-  // Drop out of config submode if we have matched command on LIBCLI_MODE_CONFIG
+  // Drop out of config submode if we have matched command on CLI_MODE_CONFIG
   if (again_config) {
     c = again_config;
     goto AGAIN;
@@ -2984,9 +3117,9 @@ static void crtl_cli_int_parse_optargs(struct crtl_cli_struct *cli, struct crtl_
      */
 
     for (oaptr = optarg; oaptr; oaptr = oaptr->next) {
-      // Skip this option unless it matches privileges, LIBCLI_MODE_ANY, the current mode, or the transient_mode
+      // Skip this option unless it matches privileges, CLI_MODE_ANY, the current mode, or the transient_mode
       if (cli->privilege < oaptr->privilege) continue;
-      if ((oaptr->mode != cli->mode) && (oaptr->mode != cli->transient_mode) && (oaptr->mode != LIBCLI_MODE_ANY)) continue;
+      if ((oaptr->mode != cli->mode) && (oaptr->mode != cli->transient_mode) && (oaptr->mode != CLI_MODE_ANY)) continue;
 
       /*
        * Two special cases - a hphenated option and an 'exact' match optional flag or optional argument.
@@ -3158,7 +3291,7 @@ static void crtl_cli_int_parse_optargs(struct crtl_cli_struct *cli, struct crtl_
   if (lastchar == '\0') {
     for (; optarg; optarg = optarg->next) {
       if (cli->privilege < optarg->privilege) continue;
-      if ((optarg->mode != cli->mode) && (optarg->mode != cli->transient_mode) && (optarg->mode != LIBCLI_MODE_ANY)) continue;
+      if ((optarg->mode != cli->mode) && (optarg->mode != cli->transient_mode) && (optarg->mode != CLI_MODE_ANY)) continue;
       if (optarg->flags & CLI_CMD_DO_NOT_RECORD) continue;
       if (optarg->flags & CLI_CMD_ARGUMENT) {
         crtl_cli_error(cli, "Incomplete command, missing required argument '%s'", optarg->name);

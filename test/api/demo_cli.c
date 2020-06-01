@@ -1,12 +1,17 @@
 #include "crtl/cli.h"
 #include "crtl/log.h"
 #include "crtl/task.h"
+#include "crtl/network/socket.h"
+
+#include <termios.h>
+#include <unistd.h>
 
 
 
 
 #define CLITEST_PORT        8000
 #define MODE_CONFIG_INT     10
+#define CLI_ENABLE_PASSWORD     "rong "
 
 
 unsigned int regular_count = 0;
@@ -30,7 +35,7 @@ int cmd_test(struct crtl_cli_struct *cli, const char *command, char *argv[], int
     crtl_cli_print(cli, "%d arguments:", argc);
     
     for (i = 0; i < argc; i++) 
-        crtl_cli_print(cli, "        %s", argv[i]);
+        crtl_cli_error(cli, "        \033[31m%s\033[m", argv[i]);
 
     return CLI_OK;
 }
@@ -58,8 +63,9 @@ int cmd_set(struct crtl_cli_struct *cli, const char   *command, char *argv[], in
             crtl_cli_print(cli, "Specify a regular callback interval in seconds");
             return CLI_OK;
         }
-        cli->timeout_tm.tv_sec = sec;
-        cli->timeout_tm.tv_usec = 0;
+        struct timeval tv = {sec, 0};
+        crtl_cli_set_client_timeout(cli, &tv);
+
         crtl_cli_print(cli, "Regular callback interval is now %d seconds", sec);
         return CLI_OK;
     }
@@ -87,7 +93,7 @@ int cmd_config_int(struct crtl_cli_struct *cli, const char   *command, char *arg
 
 int cmd_config_int_exit(struct crtl_cli_struct *cli, const char   *command, char   *argv[], int   argc) 
 {
-    crtl_cli_set_configmode(cli, LIBCLI_MODE_CONFIG, NULL);
+    crtl_cli_set_configmode(cli, CLI_MODE_CONFIG, NULL);
     return CLI_OK;
 }
 
@@ -322,7 +328,7 @@ void run_child(int acceptfd)
     struct my_context myctx;
     myctx.value = 5;
     myctx.message = mymessage;
-
+    
 #define CLI_BANNER  "# Welcome TO Crtl Telnet CLI \n"\
                     "#  ls - show the list of cmd\n"
 #define CLI_HOSTNAME    "[telnet@crtl]"
@@ -338,64 +344,65 @@ void run_child(int acceptfd)
     // set 60 second idle timeout
     crtl_cli_set_idle_timeout_callback(cli, 60, idle_timeout);
     
-    crtl_cli_register_command(cli, NULL, "test", cmd_test, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
-    crtl_cli_register_command(cli, NULL, "simple", NULL, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
-    crtl_cli_register_command(cli, NULL, "simon", NULL, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
+    crtl_cli_register_command(cli, NULL, "set", cmd_set, CLI_PRIVILEGE_PRIVILEGED, CLI_MODE_EXEC, NULL);
     
-    crtl_cli_register_command(cli, NULL, "set", cmd_set, LIBCLI_PRIVILEGE_PRIVILEGED, LIBCLI_MODE_EXEC, NULL);
-    
-    c = crtl_cli_register_command(cli, NULL, "show", NULL, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
-    crtl_cli_register_command(cli, c, "regular", cmd_show_regular, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
-                                                    "Show the how many times crtl_cli_regular has run");
-    crtl_cli_register_command(cli, c, "counters", cmd_test, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
-                                                        "Show the counters that the system uses");
-    crtl_cli_register_command(cli, c, "junk", cmd_test, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
-    
-    crtl_cli_register_command(cli, NULL, "interface", cmd_config_int, LIBCLI_PRIVILEGE_PRIVILEGED, LIBCLI_MODE_CONFIG,
+    crtl_cli_register_command(cli, NULL, "interface", cmd_config_int, CLI_PRIVILEGE_PRIVILEGED, CLI_MODE_CONFIG,
                                                         "Configure an interface");
-    crtl_cli_register_command(cli, NULL, "exit", cmd_config_int_exit, LIBCLI_PRIVILEGE_PRIVILEGED, MODE_CONFIG_INT,
+    crtl_cli_register_command(cli, NULL, "exit", cmd_config_int_exit, CLI_PRIVILEGE_PRIVILEGED, MODE_CONFIG_INT,
                                                                 "Exit from interface configuration");
-    crtl_cli_register_command(cli, NULL, "address", cmd_test, LIBCLI_PRIVILEGE_PRIVILEGED, MODE_CONFIG_INT, 
+    crtl_cli_register_command(cli, NULL, "address", cmd_test, CLI_PRIVILEGE_PRIVILEGED, MODE_CONFIG_INT, 
                                                             "Set IP address");
     
-    c = crtl_cli_register_command(cli, NULL, "debug", NULL, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL);
-    crtl_cli_register_command(cli, c, "regular", cmd_debug_regular, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
+    crtl_cli_register_command(cli, NULL, "test", cmd_test, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC, NULL);
+    crtl_cli_register_command(cli, NULL, "simple", NULL, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC, NULL);
+    crtl_cli_register_command(cli, NULL, "simon", NULL, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC, NULL);
+    
+    
+    c = crtl_cli_register_command(cli, NULL, "show", NULL, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC, NULL);
+    crtl_cli_register_command(cli, c, "regular", cmd_show_regular, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC,
+                                                    "Show the how many times crtl_cli_regular has run");
+    crtl_cli_register_command(cli, c, "counters", cmd_test, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC,
+                                                        "Show the counters that the system uses");
+    crtl_cli_register_command(cli, c, "junk", cmd_test, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC, NULL);
+    
+    c = crtl_cli_register_command(cli, NULL, "debug", NULL, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC, NULL);
+    crtl_cli_register_command(cli, c, "regular", cmd_debug_regular, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC,
                                                                     "Enable crtl_cli_regular() callback debugging");
 
     // Register some commands/subcommands to demonstrate opt/arg and buildmode operations
 
-    c = crtl_cli_register_command(cli, NULL, "perimeter", cmd_perimeter, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
+    c = crtl_cli_register_command(cli, NULL, "perimeter", cmd_perimeter, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC,
                                                             "Calculate perimeter of polygon");
-    crtl_cli_register_optarg(c, "transparent", CLI_CMD_OPTIONAL_FLAG, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
+    crtl_cli_register_optarg(c, "transparent", CLI_CMD_OPTIONAL_FLAG, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC,
                                                             "Set transparent flag", NULL, NULL, NULL);
-    crtl_cli_register_optarg(c, "verbose", CLI_CMD_OPTIONAL_FLAG | CLI_CMD_OPTION_MULTIPLE, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
+    crtl_cli_register_optarg(c, "verbose", CLI_CMD_OPTIONAL_FLAG | CLI_CMD_OPTION_MULTIPLE, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC,
                                                         "Set transparent flag", NULL, NULL, NULL);
-    crtl_cli_register_optarg(c, "color", CLI_CMD_OPTIONAL_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, "Set color",
+    crtl_cli_register_optarg(c, "color", CLI_CMD_OPTIONAL_ARGUMENT, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC, "Set color",
                                                         color_completor, color_validator, NULL);
-    crtl_cli_register_optarg(c, "__check1__", CLI_CMD_SPOT_CHECK, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC, NULL, NULL,
+    crtl_cli_register_optarg(c, "__check1__", CLI_CMD_SPOT_CHECK, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC, NULL, NULL,
                                                         check1_validator, NULL);
-    crtl_cli_register_optarg(c, "shape", CLI_CMD_ARGUMENT | CLI_CMD_ALLOW_BUILDMODE, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
+    crtl_cli_register_optarg(c, "shape", CLI_CMD_ARGUMENT | CLI_CMD_ALLOW_BUILDMODE, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC,
                                                         "Specify shape to calclate perimeter for", shape_completor, shape_validator,
                                                         shape_transient_eval);
-    crtl_cli_register_optarg(c, "side_1", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_TRIANGLE,
+    crtl_cli_register_optarg(c, "side_1", CLI_CMD_ARGUMENT, CLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_TRIANGLE,
                                                         "Specify side 1 length", NULL, side_length_validator, NULL);
-    crtl_cli_register_optarg(c, "side_1", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_RECTANGLE,
+    crtl_cli_register_optarg(c, "side_1", CLI_CMD_ARGUMENT, CLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_RECTANGLE,
                                                         "Specify side 1 length", NULL, side_length_validator, NULL);
 
-    crtl_cli_register_optarg(c, "side_2", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_TRIANGLE,
+    crtl_cli_register_optarg(c, "side_2", CLI_CMD_ARGUMENT, CLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_TRIANGLE,
                                                         "Specify side 2 length", NULL, side_length_validator, NULL);
-    crtl_cli_register_optarg(c, "side_2", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_RECTANGLE,
+    crtl_cli_register_optarg(c, "side_2", CLI_CMD_ARGUMENT, CLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_RECTANGLE,
                                                         "Specify side 2 length", NULL, side_length_validator, NULL);
-    crtl_cli_register_optarg(c, "side_3", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_TRIANGLE,
+    crtl_cli_register_optarg(c, "side_3", CLI_CMD_ARGUMENT, CLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_TRIANGLE,
                                                         "Specify side 3 length", NULL, side_length_validator, NULL);
-    crtl_cli_register_optarg(c, "side_3", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_RECTANGLE,
+    crtl_cli_register_optarg(c, "side_3", CLI_CMD_ARGUMENT, CLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_RECTANGLE,
                                                         "Specify side 3 length", NULL, side_length_validator, NULL);
-    crtl_cli_register_optarg(c, "side_4", CLI_CMD_ARGUMENT, LIBCLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_RECTANGLE,
+    crtl_cli_register_optarg(c, "side_4", CLI_CMD_ARGUMENT, CLI_PRIVILEGE_UNPRIVILEGED, MODE_POLYGON_RECTANGLE,
                                                         "Specify side 4 length", NULL, side_length_validator, NULL);
 
     // Set user context and its command
     crtl_cli_set_context(cli, (void *)&myctx);
-    crtl_cli_register_command(cli, NULL, "context", cmd_context, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC,
+    crtl_cli_register_command(cli, NULL, "context", cmd_context, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC,
                                                         "Test a user-specified context");
 
     crtl_cli_set_auth_callback(cli, check_auth);
@@ -404,10 +411,10 @@ void run_child(int acceptfd)
     {// Test reading from a file
         FILE *fh;
 
-        if ((fh = fopen("clitest.txt", "r"))) {
+        if ((fh = fopen("demo_clitest.txt", "r"))) {
             // This sets a callback which just displays the crtl_cli_print() text to stdout
             crtl_cli_print_callback(cli, pc);
-            crtl_cli_file(cli, fh, LIBCLI_PRIVILEGE_UNPRIVILEGED, LIBCLI_MODE_EXEC);
+            crtl_cli_file(cli, fh, CLI_PRIVILEGE_UNPRIVILEGED, CLI_MODE_EXEC);
             crtl_cli_print_callback(cli, NULL);
             fclose(fh);
         }
@@ -416,44 +423,17 @@ void run_child(int acceptfd)
     crtl_cli_done(cli);
 }
 
-
-
-void *   __libcrtl_cli_callback(void*arg)
+void *__libcrtl_cli_callback(void*arg)
 {
-    int sockfd, acceptfd;
-    struct sockaddr_in addr;
-    int on = 1;
-
     signal(SIGCHLD/*Child status has changed (POSIX).*/, SIG_IGN/*sigignore*/);
-
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("socket");
-        return NULL;
-    }
-
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on))) {
-        perror("setsockopt");
-    }
-
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    addr.sin_port = htons(CLITEST_PORT);
-    if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0) 
-    {
-        perror("bind");
-        return NULL;
-    }
     
-    if (listen(sockfd, 50) < 0) 
+    struct sockaddr_in srvaddr, cliaddr;
+    int listenfd = crtl_socket_server_tcp(&srvaddr, CLITEST_PORT, 50);
+    while(1)
     {
-        perror("listen");
-        return NULL;
-    }
-    
-    printf("Listening on port %d\n", CLITEST_PORT);
-    while ((acceptfd = accept(sockfd, NULL, 0))) 
-    {
+        printf("Listening on port %d\n", CLITEST_PORT);
+        socklen_t len;
+        int acceptfd = crtl_socket_accept_tcp(listenfd, (struct sockaddr*)&cliaddr, &len);
         int pid = fork();
         if (pid < 0) {
             perror("fork");
@@ -462,33 +442,29 @@ void *   __libcrtl_cli_callback(void*arg)
 
         /* parent */
         if (pid > 0) {
-            socklen_t len = sizeof(addr);
-            if (getpeername(acceptfd, (struct sockaddr *)&addr, &len) >= 0)
-            printf(" * accepted connection from %s, port %d\n", inet_ntoa(addr.sin_addr), addr.sin_port);
+            socklen_t len = sizeof(cliaddr);
+            if (getpeername(acceptfd, (struct sockaddr *)&cliaddr, &len) >= 0)
+            printf(" * accepted connection from %s, port %d\n", inet_ntoa(cliaddr.sin_addr), cliaddr.sin_port);
 
             close(acceptfd);
             continue;
         }
 
         /* child */
-        close(sockfd);
+        close(listenfd);
         run_child(acceptfd);
         exit(0);
+
     }
 
-    return NULL;
+    crtl_socket_close(listenfd);
+    
 }
 
 
-void demo_libcrtl_cli_test1_terminal() 
-{
-    run_child(fileno(stdout));
-    while(1)
-    {
-        sleep(1);
-    }
-}
-void demo_libcrtl_cli_test2() 
+
+
+void demo_libcrtl_cli_test1() 
 {
     crtl_thread_t   task;
 
@@ -497,17 +473,28 @@ void demo_libcrtl_cli_test2()
     while(1)
     {
         sleep(5);
-        printf("CRTL main rutinue.\n");
+//        printf("CRTL main rutinue.\n");
     }
+}
+
+
+void demo_libcrtl_cli_test2() 
+{
+//    int fd = open("/dev/stdout", O_RDWR |O_NONBLOCK  ); /* FOR PC USE */;
+//    struct termios tc;
+//
+//    tcgetattr(fd, &tc);
+//    tc.c_lflag &= ~(ICANON | ECHO | ECHOE /*| ISIG */);
+//    tcsetattr(fd, TCSANOW, &tc);
+//    
+//    run_child(fd);
 }
 
 
 int main()
 {
-//    demo_libcrtl_cli_test1_terminal();
-
-    demo_libcrtl_cli_test2();
-
+    demo_libcrtl_cli_test1();
+//    demo_libcrtl_cli_test2();
     
     return 0;
 }

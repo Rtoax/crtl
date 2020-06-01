@@ -1,10 +1,6 @@
-#ifndef __CRTL_BITS_LIBCLI_H
-#define __CRTL_BITS_LIBCLI_H 1
+#ifndef __CRTL_BITS_CLI_H
+#define __CRTL_BITS_CLI_H 1
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include <stdio.h>
 #include <errno.h>
@@ -17,7 +13,9 @@ extern "C" {
 #include <sys/socket.h>
 
 
-/* cli errno */
+/**
+ *  cli errno 
+ */
 #define CLI_OK                   0
 #define CLI_ERROR               -1
 #define CLI_QUIT                -2
@@ -32,30 +30,22 @@ extern "C" {
 #define CLI_BUILDMODE_CANCEL    -11
 #define CLI_BUILDMODE_EXIT      -12
 
-/* maximul history cmd */
-#define LIBCLI_MAX_HISTORY      256
 
 /* privilege */
-#define LIBCLI_PRIVILEGE_UNPRIVILEGED   0
-#define LIBCLI_PRIVILEGE_PRIVILEGED     15
+#define CLI_PRIVILEGE_UNPRIVILEGED   0
+#define CLI_PRIVILEGE_PRIVILEGED     15
 
 /* mode */
-#define LIBCLI_MODE_ANY         -1
-#define LIBCLI_MODE_EXEC        0
-#define LIBCLI_MODE_CONFIG      1
+#define CLI_MODE_ANY         -1
+#define CLI_MODE_EXEC        0
+#define CLI_MODE_CONFIG      1
 
 /* print */
-#define LIBCLI_PRINT_PLAIN      0x00
-#define LIBCLI_PRINT_FILTERED   0x01
-#define LIBCLI_PRINT_BUFFERED   0x02
-
-/* maximul line(length, words) */
-#define CLI_MAX_LINE_LENGTH     4096
-#define CLI_MAX_LINE_WORDS      128
+#define CLI_PRINT_PLAIN      0x00
+#define CLI_PRINT_FILTERED   0x01
+#define CLI_PRINT_BUFFERED   0x02
 
 
-#define CLI_ENABLE_PASSWORD cli_enable_password
-extern const char cli_enable_password[];
 
 
 /* cmd type */
@@ -68,74 +58,14 @@ enum crtl_cli_command_types {
 
 
 /* cli struct */
-struct crtl_cli_struct {
-    int completion_callback;
-    struct crtl_cli_command *commands;
-    int (*auth_callback)(const char *, const char *);
-    int (*regular_callback)(struct crtl_cli_struct *cli);
-    int (*enable_callback)(const char *);
-    char *banner;
-    struct unp *users;
-    char *enable_password;
-    char *history[LIBCLI_MAX_HISTORY];
-    char showprompt;
-    char *promptchar;
-    char *hostname;
-    char *modestring;
-    int privilege;
-    int mode;
-    int state;
-    struct crtl_cli_filter *filters;
-    void (*print_callback)(struct crtl_cli_struct *cli, const char *string);
-    FILE *client;
-    /* internal buffers */
-    void *conn;
-    void *service;
-    char *commandname;  // temporary buffer for crtl_cli_command_name() to prevent leak
-    char *buffer;
-    unsigned buf_size;
-    struct timeval timeout_tm;
-    time_t idle_timeout;
-    int (*idle_timeout_callback)(struct crtl_cli_struct *);
-    time_t last_action;
-    int telnet_protocol;
-    void *user_context;
-    struct crtl_cli_optarg_pair *found_optargs;
-    int transient_mode;
-    struct crtl_cli_pipeline *pipeline;
-    struct crtl_cli_buildmode *buildmode;
-};
+struct crtl_cli_struct;
 
 /* filter */
-struct crtl_cli_filter {
-    int (*filter)(struct crtl_cli_struct *cli, const char *string, void *data);
-    void *data;
-    struct crtl_cli_filter *next;
-};
+struct crtl_cli_filter;
 
+struct crtl_cli_command;
 
-struct crtl_cli_command {
-    char *command;
-    int (*callback)(struct crtl_cli_struct *, const char *, char **, int);
-    unsigned int unique_len;
-    char *help;
-    int privilege;
-    int mode;
-    struct crtl_cli_command *previous;
-    struct crtl_cli_command *next;
-    struct crtl_cli_command *children;
-    struct crtl_cli_command *parent;
-    struct crtl_cli_optarg *optargs;
-    int (*filter)(struct crtl_cli_struct *cli, const char *string, void *data);
-    int (*init)(struct crtl_cli_struct *cli, int, char **, struct crtl_cli_filter *filt);
-    int command_type;
-};
-
-struct crtl_cli_comphelp {
-    int comma_separated;
-    char **entries;
-    int num_entries;
-};
+struct crtl_cli_comphelp;
 
 enum crtl_cli_optarg_flags {
     CLI_CMD_OPTIONAL_FLAG       = 1 << 0,
@@ -152,58 +82,12 @@ enum crtl_cli_optarg_flags {
 };
     
 /* cmd optarg */
-struct crtl_cli_optarg {
-    char *name;
-    int flags;
-    char *help;
-    int mode;
-    int privilege;
-    unsigned int unique_len;
-    int (*get_completions)(struct crtl_cli_struct *, const char *, const char *, struct crtl_cli_comphelp *);
-    int (*validator)(struct crtl_cli_struct *, const char *, const char *);
-    int (*transient_mode)(struct crtl_cli_struct *, const char *, const char *);
-    struct crtl_cli_optarg *next;
-};
+struct crtl_cli_optarg;
 
 /* optarg pair */
-struct crtl_cli_optarg_pair {
-    char *name;
-    char *value;
-    struct crtl_cli_optarg_pair *next;
-};
+struct crtl_cli_optarg_pair;
 
-/* pipeline stage */
-struct crtl_cli_pipeline_stage {
-    struct crtl_cli_command *command;
-    struct crtl_cli_optarg_pair *found_optargs;
-    char **words;
-    int num_words;
-    int status;
-    int first_unmatched;
-    int first_optarg;
-    int stage_num;
-    char *error_word;
-};
 
-/* pipeline */
-struct crtl_cli_pipeline {
-    char *cmdline;
-    char *words[CLI_MAX_LINE_WORDS];
-    int num_words;
-    int num_stages;
-    struct crtl_cli_pipeline_stage stage[CLI_MAX_LINE_WORDS];
-    struct crtl_cli_pipeline_stage *current_stage;
-};
-
-/* build mode */
-struct crtl_cli_buildmode {
-    struct crtl_cli_command *command;
-    struct crtl_cli_optarg_pair *found_optargs;
-    char *cname;
-    int mode;
-    int transient_mode;
-    char *mode_text;
-};
 
 
 /* APIs */
@@ -223,6 +107,7 @@ void crtl_cli_allow_enable(struct crtl_cli_struct *cli, const char *password);
 void crtl_cli_deny_user(struct crtl_cli_struct *cli, const char *username);
 void crtl_cli_set_banner(struct crtl_cli_struct *cli, const char *banner);
 void crtl_cli_set_hostname(struct crtl_cli_struct *cli, const char *hostname);
+void crtl_cli_set_client_timeout(struct crtl_cli_struct *cli, struct timeval *tv);
 void crtl_cli_set_promptchar(struct crtl_cli_struct *cli, const char *promptchar);
 void crtl_cli_set_modestring(struct crtl_cli_struct *cli, const char *modestring);
 int crtl_cli_set_privilege(struct crtl_cli_struct *cli, int privilege);
@@ -277,9 +162,4 @@ void crtl_cli_unregister_all_commands(struct crtl_cli_struct *cli);
 void crtl_cli_unregister_all(struct crtl_cli_struct *cli, struct crtl_cli_command *command);
 
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /*<__CRTL_BITS_LIBCLI_H>*/
-
+#endif /*<__CRTL_BITS_CLI_H>*/
