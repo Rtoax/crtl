@@ -4,29 +4,6 @@
 #include <math.h>
 
 
-#ifndef FLT_MAX
-#   ifdef MAXFLOAT
-#	define FLT_MAX MAXFLOAT
-#   else
-#	define FLT_MAX 3.402823466E+38F
-#   endif
-#endif
-#ifndef FLT_MIN
-#   ifdef MINFLOAT
-#	define FLT_MIN MINFLOAT
-#   else
-#	define FLT_MIN 1.175494351E-38F
-#   endif
-#endif
-
-#ifndef DBL_MIN
-#define DBL_MIN		4.94065645841246544e-324
-#endif
-#ifndef DBL_MAX
-#define DBL_MAX		1.79769313486231470e+308
-#endif
-
-
 /**
  *	float point type function
  *	define macro and typedef.
@@ -49,7 +26,7 @@
 /*
 int isinf (double x)
 int isinff (float x)
-int isinfl (long double x)
+//int isinfl (long double x)
 int isnan (double x)
 int isnanf (float x)
 int isnanl (long double x)
@@ -171,4 +148,5 @@ int finitel (long double x)
 */
 
 #endif /*<__RT_MATH_FLOAT_H>*/
+
 

@@ -20,5 +20,28 @@
 #define SIZE_MAX	(~(size_t)0)
 #endif
 
+#ifndef FLT_MAX
+#   ifdef MAXFLOAT
+#	define FLT_MAX MAXFLOAT
+#   else
+#	define FLT_MAX 3.402823466E+38F
+#   endif
+#endif
+#ifndef FLT_MIN
+#   ifdef MINFLOAT
+#	define FLT_MIN MINFLOAT
+#   else
+#	define FLT_MIN 1.175494351E-38F
+#   endif
+#endif
+
+#ifndef DBL_MIN
+#define DBL_MIN		4.94065645841246544e-324
+#endif
+#ifndef DBL_MAX
+#define DBL_MAX		1.79769313486231470e+308
+#endif
+
+
 #endif /* _LINUX_LIMITS_H */
 

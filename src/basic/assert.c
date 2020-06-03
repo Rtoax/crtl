@@ -9,6 +9,7 @@
 #include "crypto/attribute.h"
 #include "crypto/once.h"
 #include "crypto/type/check.h"
+#include "crypto/core/backtrace.h"
 
 
 extern void crtl_fd_lock(int fd);
@@ -31,7 +32,7 @@ _api inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const ch
 #define __ASSERT_NOTE_PREFIX    "\033[1;31m"
 #define __ASSERT_NOTE_SUBFIX    "\033[0m"
 
-        /* Èç¹ûfmt²»ÎªNULL£¬ ½«´òÓ¡ĞÅÏ¢ */
+        /* å¦‚æœfmtä¸ä¸ºNULLï¼Œ å°†æ‰“å°ä¿¡æ¯ */
         if(fmt) {
             va_list va;
             va_start(va, fmt);

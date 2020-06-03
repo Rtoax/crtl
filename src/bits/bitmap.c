@@ -22,6 +22,7 @@
 #include <crypto/align/align.h>
 #include <crypto/operator/compare.h>
 #include "crypto/expect.h"
+#include "crypto/bit/swap.h"
 
 #include "crypto/mutelogdbg.h"
 

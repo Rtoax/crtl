@@ -3,8 +3,7 @@
 
 #include <errno.h>
 #include <string.h>
-
-#include "crtl/bits/backtrace.h"
+#include <stdio.h>
 
 
 #define CRTL_SYS_ERROR  strerror(errno)
@@ -34,19 +33,6 @@
 #define crtl_assert_print(exp, fmt...) __crtl_assert(stderr, !!(exp), 1, __FILE__, __func__, __LINE__, fmt)
 
 
-/**
- * display backtrace of rutinue in stderr
- * @param void
- * @return void
- */
-#define crtl_backtrace() __crtl_assert_backtrace(stderr)
-
-/**
- * display backtrace of rutinue
- * @param fp: FILE* of file (such as stdout, stderr)
- * @return void
- */
-#define crtl_backtrace_fp(fp) __crtl_assert_backtrace(fp)
 
 /**
  * display assert of rutinue

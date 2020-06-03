@@ -15,7 +15,7 @@ is_exclude_file() {
 
 main() {
 	for cpp_file in $all_cpp_files; do
-		exe_file=${cpp_file%%.c*}
+		exe_file=${cpp_file%%.c*}.out
 
 		if [ "$1" == "clear" ]; then
 			rm -f $exe_file
@@ -40,6 +40,10 @@ main() {
 
 	return 0
 }
+
+cd ..
+./install_crtl.sh 
+cd -
 
 main $1
 

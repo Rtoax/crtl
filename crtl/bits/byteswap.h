@@ -8,7 +8,7 @@
 
 
 
-#ifdef __x86_64__
+#if defined __x86_64__ && !defined __ILP32__
 #define CRTL_WORDSIZE	64
 #else
 #define CRTL_WORDSIZE	32
@@ -147,77 +147,6 @@ void crtl_swapfloat(float *tnf4);
 void crtl_swapdouble(double *tndd8);
 
 
-
-/**
- * swab 32 bits byteorder with asm
- * @param x: 32 bits in
- * @return the data after swab
- */
-static inline __attribute__((const)) uint32_t crtl_asm_swab32(uint32_t val)
-{
-	asm("bswapl %0" : "=r" (val) : "0" (val));
-	return val;
-}
-
-/**
- * swab 64 bits byteorder with asm
- * @param x: 64 bits in
- * @return the data after swab
- */
-static inline __attribute__((const)) uint64_t crtl_asm_swab64(uint64_t val)
-{
-#ifdef __i386__
-	union {
-		struct {
-			uint32_t a;
-			uint32_t b;
-		} s;
-		uint64_t u;
-	} v;
-	v.u = val;
-	asm("bswapl %0 ; bswapl %1 ; xchgl %0,%1"
-			: "=r" (v.s.a), "=r" (v.s.b)
-			: "0" (v.s.a), "1" (v.s.b));
-	return v.u;
-#else /* __i386__ */
-	asm("bswapq %0" : "=r" (val) : "0" (val));
-	return val;
-#endif
-}
-
-/**
- *  Some other swap macro
- */
-#if BYTE_ORDER == LITTLE_ENDIAN
-#define le16_to_cpu(val) (val)
-#define le32_to_cpu(val) (val)
-#define le64_to_cpu(val) (val)
-#define be16_to_cpu(val) _swapbyte16(val)
-#define be32_to_cpu(val) _swapbyte32(val)
-#define be64_to_cpu(val) _swapbyte64(val)
-
-#define cpu_to_le16(val) (val)
-#define cpu_to_le32(val) (val)
-#define cpu_to_le64(val) (val)
-#define cpu_to_be16(val) _swapbyte16(val)
-#define cpu_to_be32(val) _swapbyte32(val)
-#define cpu_to_be64(val) _swapbyte64(val)
-#endif
-#if BYTE_ORDER == BIG_ENDIAN
-#define le16_to_cpu(val) _swapbyte16(val)
-#define le32_to_cpu(val) _swapbyte32(val)
-#define le64_to_cpu(val) _swapbyte64(val)
-#define be16_to_cpu(val) (val)
-#define be32_to_cpu(val) (val)
-#define be64_to_cpu(val) (val)
-
-#define cpu_to_le16(val) _swapbyte16(val)
-#define cpu_to_le32(val) _swapbyte32(val)
-#define cpu_to_le64(val) _swapbyte64(val)
-#define cpu_to_be16(val) (val)
-#define cpu_to_be32(val) (val)
-#define cpu_to_be64(val) (val)
-#endif
 
 
 
