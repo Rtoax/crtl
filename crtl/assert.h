@@ -22,7 +22,17 @@
  * @param exp:  such as the expression of "void assert(scalar expression);"
  * @return void
  */
-#define crtl_assert_fp(fp, exp) __crtl_assert(fp, !!(exp), 1, __FILE__, __func__, __LINE__)
+#define crtl_assert_fp(fp, exp) __crtl_assert(fp, !!(exp), 1, __FILE__, __func__, __LINE__, NULL)
+
+
+/**
+ * display assert of rutinue and print some extra information
+ * @param exp:  such as the expression of "void assert(scalar expression);"
+ * @param fmt:  information format, like 'int printf(const char *format, ...);'s format
+ * @return void
+ */
+#define crtl_assert_print(exp, fmt...) __crtl_assert(stderr, !!(exp), 1, __FILE__, __func__, __LINE__, fmt)
+
 
 /**
  * display backtrace of rutinue in stderr
@@ -48,7 +58,7 @@
  * @param __line:   line number of rutinue
  * @return void
  */
-inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, const char *__func, const int __line);
+inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, const char *__func, const int __line, char *fmt, ...);
 
 
 #endif /*<__CRTL_ASSERT_H>*/

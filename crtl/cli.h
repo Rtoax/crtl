@@ -40,33 +40,6 @@
 #define CLI_MODE_EXEC        0
 #define CLI_MODE_CONFIG      1
 
-/* print */
-#define CLI_PRINT_PLAIN      0x00
-#define CLI_PRINT_FILTERED   0x01
-#define CLI_PRINT_BUFFERED   0x02
-
-
-
-
-/* cmd type */
-enum crtl_cli_command_types {
-    CLI_ANY_COMMAND,
-    CLI_REGULAR_COMMAND,
-    CLI_FILTER_COMMAND,
-    CLI_BUILDMODE_COMMAND,
-};
-
-
-/* cli struct */
-struct crtl_cli_struct;
-
-/* filter */
-struct crtl_cli_filter;
-
-struct crtl_cli_command;
-
-struct crtl_cli_comphelp;
-
 enum crtl_cli_optarg_flags {
     CLI_CMD_OPTIONAL_FLAG       = 1 << 0,
     CLI_CMD_OPTIONAL_ARGUMENT   = 1 << 1,
@@ -80,12 +53,25 @@ enum crtl_cli_optarg_flags {
     CLI_CMD_HYPHENATED_OPTION   = 1 << 9,
     CLI_CMD_SPOT_CHECK          = 1 << 10,
 };
-    
+
+
+
+/* cli struct */
+struct crtl_cli_struct;
+
+/* filter */
+struct crtl_cli_filter;
+
+struct crtl_cli_command;
+
+struct crtl_cli_comphelp;
+
 /* cmd optarg */
 struct crtl_cli_optarg;
 
 /* optarg pair */
 struct crtl_cli_optarg_pair;
+
 
 
 

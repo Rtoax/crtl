@@ -35,12 +35,25 @@
 #define CLI_MAX_LINE_LENGTH     4096
 #define CLI_MAX_LINE_WORDS      128
 
+/* print */
+#define CLI_PRINT_PLAIN      0x00
+#define CLI_PRINT_FILTERED   0x01
+#define CLI_PRINT_BUFFERED   0x02
+
 enum crtl_cli_states {
     STATE_LOGIN,
     STATE_PASSWORD,
     STATE_NORMAL,
     STATE_ENABLE_PASSWORD,
     STATE_ENABLE,
+};
+
+/* cmd type */
+enum crtl_cli_command_types {
+    CLI_ANY_COMMAND,
+    CLI_REGULAR_COMMAND,
+    CLI_FILTER_COMMAND,
+    CLI_BUILDMODE_COMMAND,
 };
     
 struct crtl_cli_comphelp {

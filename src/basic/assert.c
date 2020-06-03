@@ -1,6 +1,7 @@
 #include <malloc.h>
 #include <assert.h>
 #include <execinfo.h>
+#include <stdarg.h>
 
 #include "crtl/assert.h"
 #include "crtl/log.h"
@@ -16,7 +17,7 @@ extern void crtl_fd_unlock(int fd);
 /* crypto API */
 #define __assert_prefix     "assert."
 
-_api inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, const char *__func, const int __line)
+_api inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const char *__file, const char *__func, const int __line, char *fmt, ...)
 {
     if(!fp)
     {
@@ -30,7 +31,15 @@ _api inline void __crtl_assert(FILE *fp, int exp, int switch_on_assert, const ch
 #define __ASSERT_NOTE_PREFIX    "\033[1;31m"
 #define __ASSERT_NOTE_SUBFIX    "\033[0m"
 
-        fprintf(fp, __ASSERT_NOTE_FMT"\n", __ASSERT_NOTE_CONTEXT);
+        /* 如果fmt不为NULL， 将打印信息 */
+        if(fmt) {
+            va_list va;
+            va_start(va, fmt);
+            fprintf(fp, __ASSERT_NOTE_FMT"\n", __ASSERT_NOTE_CONTEXT);
+            vfprintf(fp, fmt, va);
+            va_end(va);
+        }
+
         fprintf(fp, "%s"__ASSERT_NOTE_FMT"%s\n",__ASSERT_NOTE_PREFIX, __ASSERT_NOTE_CONTEXT,__ASSERT_NOTE_SUBFIX);
         
         __crtl_assert_backtrace(fp);
