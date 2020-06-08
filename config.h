@@ -1,4 +1,4 @@
-/* This is LibCRTL config.h file, 2020年 05月 15日 星期五 12:59:01 CST */
+/* This is LibCRTL config.h file, 2020年 06月 08日 星期一 11:25:52 CST */
 
 
 /* LibCRTL Name */
@@ -33,6 +33,9 @@
 
 /* The curses.h header */
 #define HAVE_CURSES_H 1
+
+/* The dlfcn.h header */
+#define HAVE_DLFCN_H 1
 
 /* The dirent.h header */
 #define HAVE_DIRENT_H 1

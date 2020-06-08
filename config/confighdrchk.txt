@@ -5,12 +5,14 @@ bits/wordsize.h
 crypt.h
 ctype.h
 curses.h
+dlfcn.h
 dirent.h
 errno.h
 execinfo.h
 fcntl.h
 float.h
 grp.h
+inttypes.h
 libgen.h
 limits.h
 malloc.h

@@ -1,10 +1,12 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6) 
-PROJECT(crtl)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8) 
+
+PROJECT(crtl LANGUAGES C)
 
 #添加源文件 
 aux_source_directory(./src  DIR_SRCS)
 aux_source_directory(./src/basic  DIR_SRCS)
 aux_source_directory(./src/basic/huffmantree  DIR_SRCS)
+aux_source_directory(./src/basic/json  DIR_SRCS)
 aux_source_directory(./src/bits  DIR_SRCS)
 aux_source_directory(./src/math  DIR_SRCS)
 aux_source_directory(./src/mm  DIR_SRCS)
