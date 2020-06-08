@@ -30,6 +30,7 @@ extern "C" {
 #include "crypto/json/json_tokener.h"
 #include "crypto/json/json_object_iterator.h"
 #include "crypto/json/json_version.h"
+#include "crypto/json/json_visit.h"
 
 #ifdef __cplusplus
 }

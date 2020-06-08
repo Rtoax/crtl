@@ -53,7 +53,6 @@ extern void mc_info(const char *msg, ...);
 
 #endif
 
-#define MC_ERROR(x, ...) mc_error(x, ##__VA_ARGS__)
 
 #ifdef MC_MAINTAINER_MODE
 #define MC_GET_DEBUG() mc_get_debug()
