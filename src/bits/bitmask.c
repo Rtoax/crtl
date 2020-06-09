@@ -1,9 +1,13 @@
-// SPDX-License-Identifier: GPL-2.0
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include <crypto/attribute.h>
+#include <crypto/expect.h>
+#include <crypto/operator/compare.h>
+
 #include <crtl/bits/bitmask.h>
+#include <crtl/assert.h>
 
 /* How many bits in an unsigned long */
 #define __BITS_PER_LONG (8 * sizeof(unsigned long))
@@ -14,31 +18,29 @@
 /* How many longs in mask of n bits */
 #define __LONGS_PER_BITS(n) __HOWMANY_LONGS(n, __BITS_PER_LONG)
 
-#define __MAX(a, b) ((a) > (b) ? (a) : (b))
-
 /*
  * Allocate and free `struct bitmask *`
  */
 
 /* Allocate a new `struct bitmask` with a size of n bits */
-struct crtl_bitmask *crtl_bitmask_alloc(unsigned int n)
+_api struct crtl_bitmask *crtl_bitmask_alloc(unsigned int n)
 {
 	struct crtl_bitmask *bmp;
 
 	bmp = malloc(sizeof(*bmp));
-	if (bmp == 0)
-		return 0;
+	crtl_assert(bmp);
 	bmp->size = n;
-	bmp->maskp = calloc(__LONGS_PER_BITS(n), sizeof(unsigned long));
-	if (bmp->maskp == 0) {
+	bmp->maskp = malloc(__LONGS_PER_BITS(n)*sizeof(unsigned long));
+	if (unlikely(!bmp->maskp)) {
 		free(bmp);
+        crtl_assert(0);
 		return 0;
 	}
 	return bmp;
 }
 
 /* Free `struct bitmask` */
-void crtl_bitmask_free(struct crtl_bitmask *bmp)
+_api void crtl_bitmask_free(struct crtl_bitmask *bmp)
 {
 	if (bmp == 0)
 		return;
@@ -112,14 +114,14 @@ static const char *__crtl_bitmask_nexttoken(const char *q,  int sep)
 }
 
 /* Set a single bit i in bitmask */
-struct crtl_bitmask *crtl_bitmask_setbit(struct crtl_bitmask *bmp, unsigned int i)
+_api struct crtl_bitmask *crtl_bitmask_setbit(struct crtl_bitmask *bmp, unsigned int i)
 {
 	__crtl_bitmask_setbit(bmp, i, 1);
 	return bmp;
 }
 
 /* Set all bits in bitmask: bmp = ~0 */
-struct crtl_bitmask *crtl_bitmask_setall(struct crtl_bitmask *bmp)
+_api struct crtl_bitmask *crtl_bitmask_setall(struct crtl_bitmask *bmp)
 {
 	unsigned int i;
 	for (i = 0; i < bmp->size; i++)
@@ -128,7 +130,7 @@ struct crtl_bitmask *crtl_bitmask_setall(struct crtl_bitmask *bmp)
 }
 
 /* Clear all bits in bitmask: bmp = 0 */
-struct crtl_bitmask *crtl_bitmask_clearall(struct crtl_bitmask *bmp)
+_api struct crtl_bitmask *crtl_bitmask_clearall(struct crtl_bitmask *bmp)
 {
 	unsigned int i;
 	for (i = 0; i < bmp->size; i++)
@@ -137,7 +139,7 @@ struct crtl_bitmask *crtl_bitmask_clearall(struct crtl_bitmask *bmp)
 }
 
 /* True if all bits are clear */
-int crtl_bitmask_isallclear(const struct crtl_bitmask *bmp)
+_api int crtl_bitmask_isallclear(const struct crtl_bitmask *bmp)
 {
 	unsigned int i;
 	for (i = 0; i < bmp->size; i++)
@@ -147,19 +149,19 @@ int crtl_bitmask_isallclear(const struct crtl_bitmask *bmp)
 }
 
 /* True if specified bit i is set */
-int crtl_bitmask_isbitset(const struct crtl_bitmask *bmp, unsigned int i)
+_api int crtl_bitmask_isbitset(const struct crtl_bitmask *bmp, unsigned int i)
 {
 	return __crtl_bitmask_getbit(bmp, i);
 }
 
 /* Number of lowest set bit (min) */
-unsigned int crtl_bitmask_first(const struct crtl_bitmask *bmp)
+_api unsigned int crtl_bitmask_first(const struct crtl_bitmask *bmp)
 {
 	return crtl_bitmask_next(bmp, 0);
 }
 
-/* Number of highest set bit (__MAX) */
-unsigned int crtl_bitmask_last(const struct crtl_bitmask *bmp)
+/* Number of highest set bit (MAX) */
+_api unsigned int crtl_bitmask_last(const struct crtl_bitmask *bmp)
 {
 	unsigned int i;
 	unsigned int m = bmp->size;
@@ -170,7 +172,7 @@ unsigned int crtl_bitmask_last(const struct crtl_bitmask *bmp)
 }
 
 /* Number of next set bit at or above given bit i */
-unsigned int crtl_bitmask_next(const struct crtl_bitmask *bmp, unsigned int i)
+_api unsigned int crtl_bitmask_next(const struct crtl_bitmask *bmp, unsigned int i)
 {
 	unsigned int n;
 	for (n = i; n < bmp->size; n++)
@@ -189,7 +191,7 @@ unsigned int crtl_bitmask_next(const struct crtl_bitmask *bmp, unsigned int i)
  *	1,3,5-7		1,3,5,6,7
  *	0-3:2,8-15:4	0,2,8,12
  */
-int crtl_bitmask_parselist(const char *buf, struct crtl_bitmask *bmp)
+_api int crtl_bitmask_parselist(const char *buf, struct crtl_bitmask *bmp)
 {
 	const char *p, *q;
 
@@ -249,11 +251,11 @@ err:
 static inline int __crtl_bitmask_emit(char *buf, int buflen, int rbot, int rtop, int len)
 {
 	if (len > 0)
-		len += snprintf(buf + len, __MAX(buflen - len, 0), ",");
+		len += snprintf(buf + len, MAX(buflen - len, 0), ",");
 	if (rbot == rtop)
-		len += snprintf(buf + len, __MAX(buflen - len, 0), "%d", rbot);
+		len += snprintf(buf + len, MAX(buflen - len, 0), "%d", rbot);
 	else
-		len += snprintf(buf + len, __MAX(buflen - len, 0), "%d-%d",
+		len += snprintf(buf + len, MAX(buflen - len, 0), "%d-%d",
 				rbot, rtop);
 	return len;
 }
@@ -272,7 +274,7 @@ static inline int __crtl_bitmask_emit(char *buf, int buflen, int rbot, int rtop,
  * per ISO C99.
  */
 
-int crtl_bitmask_displaylist(char *buf, int buflen, const struct crtl_bitmask *bmp)
+_api int crtl_bitmask_displaylist(char *buf, int buflen, const struct crtl_bitmask *bmp)
 {
 	int len = 0;
 	/* current bit is 'cur', most recently seen range is [rbot, rtop] */

@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0 */
 #ifndef __CRTL_BITS_BITMASK__
 #define __CRTL_BITS_BITMASK__
 

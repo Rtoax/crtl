@@ -47,11 +47,12 @@ add_definitions(-g3 -MD -Wall -fopenmp)
 #生成动态库和静态库 
 add_library(crtl_shared_library  SHARED ${DIR_SRCS}) 
 
-#target_link_libraries(crtl_shared_library bits)
+
 
 #将动态库和静态库的名字设置 
 set_target_properties(crtl_shared_library PROPERTIES OUTPUT_NAME "crtl") 
 
+#target_link_libraries(crtl_shared_library crtl_bits)
 
 
 set(LIBRARY_OUTPUT_PATH ../lib) 

@@ -4,6 +4,6 @@ include_directories( ../../ )
 
 set(CMAKE_C_FLAGS "-fPIC")
 
-add_library(bits STATIC ${DIR_BITS_SRCS})
+add_library(crtl_bits STATIC ${DIR_BITS_SRCS})
 
 
