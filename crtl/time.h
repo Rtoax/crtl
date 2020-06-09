@@ -159,6 +159,19 @@ long long crtl_timespec_sub_nsec(struct timespec a, struct timespec b);
  */
 struct timespec crtl_timespec_add_nsec(struct timespec ts, unsigned long long ns);
 
+/*
+ * This is like mktime, but without normalization of tm_wday and tm_yday.
+ */
+time_t crtl_tm_to_time_t(const struct tm *tm);
+
+
+int crtl_is_date(int year, int month, int day, struct tm *now_tm, time_t now, struct tm *tm);
+
+/*
+ * Relative time update (eg "2 days ago").  If we haven't set the time
+ * yet, we need to set it from current time.
+ */
+time_t crtl_update_tm(struct tm *tm, struct tm *now, time_t sec);
 
 
 /**

@@ -20,6 +20,9 @@ aux_source_directory(./src/thread  DIR_SRCS)
 aux_source_directory(./src/tcp-ip  DIR_SRCS)
 aux_source_directory(./src/hpc  DIR_SRCS)
 
+#add_subdirectory(./src/bits)
+
+
 #设置编译参数 
 set(CMAKE_C_FLAGS "-g -Wall")
 
@@ -33,6 +36,8 @@ find_library(MATH m /usr/lib64)
 find_library(CRYPT crypt /usr/lib64)
 find_library(PTHREAD pthread /usr/lib64)
 
+
+
 #link库 
 link_libraries(${DL} ${RT} ${MATH} ${CRYPT} ${PTHREAD})
 
@@ -40,23 +45,23 @@ link_libraries(${DL} ${RT} ${MATH} ${CRYPT} ${PTHREAD})
 add_definitions(-g3 -MD -Wall -fopenmp)
 
 #生成动态库和静态库 
-add_library(acc_lib_shared  SHARED ${DIR_SRCS}) 
-#add_library(acc_lib_static 	STATIC ${DIR_SRCS})
+add_library(crtl_shared_library  SHARED ${DIR_SRCS}) 
 
+#target_link_libraries(crtl_shared_library bits)
 
 #将动态库和静态库的名字设置 
-set_target_properties(acc_lib_shared PROPERTIES OUTPUT_NAME "crtl") 
-#set_target_properties(acc_lib_static PROPERTIES OUTPUT_NAME "crtl")
+set_target_properties(crtl_shared_library PROPERTIES OUTPUT_NAME "crtl") 
+
 
 
 set(LIBRARY_OUTPUT_PATH ../lib) 
 
 #设置动态库版本 
-#set_target_properties(acc_lib_shared PROPERTIES VERSION 1.0 SOVERSION 1) 
+#set_target_properties(crtl_shared_library PROPERTIES VERSION 1.0 SOVERSION 1) 
 
 
 #安装库文件  PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE
-install(TARGETS acc_lib_shared DESTINATION /usr/lib64)
+install(TARGETS crtl_shared_library DESTINATION /usr/lib64)
 
 #安装头文件
 file(GLOB crtl_hdrs ./crtl/*.h)
@@ -66,7 +71,7 @@ file(GLOB crtl_hdrs_hpc ./crtl/hpc/*.h)
 file(GLOB crtl_hdrs_network ./crtl/network/*.h)
 file(GLOB crtl_hdrs_linux ./crtl/linux/*.h)
 file(GLOB crtl_hdrs_tcpip ./crtl/tcp-ip/*.h)
-file(GLOB crtl_hdrs_tcpip_bits ./crtl/tcp-ip/bits/*.h)
+
 
 install(FILES ${crtl_hdrs} DESTINATION /usr/local/include/crtl/)
 install(FILES ${crtl_hdrs_easy} DESTINATION /usr/local/include/crtl/easy)
@@ -75,7 +80,6 @@ install(FILES ${crtl_hdrs_hpc} DESTINATION /usr/local/include/crtl/hpc)
 install(FILES ${crtl_hdrs_network} DESTINATION /usr/local/include/crtl/network)
 install(FILES ${crtl_hdrs_linux} DESTINATION /usr/local/include/crtl/linux)
 install(FILES ${crtl_hdrs_tcpip} DESTINATION /usr/local/include/crtl/tcp-ip)
-install(FILES ${crtl_hdrs_tcpip_bits} DESTINATION /usr/local/include/crtl/tcp-ip/bits)
 
 # For pkg-config --libs --cflags libcrtl	FILE_PERMISSIONS "666" 
 install(FILES ${PROJECT_BINARY_DIR}/../libcrtl.pc DESTINATION /usr/lib/pkgconfig)

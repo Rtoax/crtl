@@ -14,6 +14,76 @@
 #include "crypto/attribute.h"
 
 
+static const char _unused *month_names[] = {
+	"January", "February", "March", "April", "May", "June",
+	"July", "August", "September", "October", "November", "December"
+};
+
+static const char _unused *weekday_names[] = {
+	"Sundays", "Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays"
+};
+    
+/*
+ * Check these. And note how it doesn't do the summer-time conversion.
+ *
+ * In my world, it's always summer, and things are probably a bit off
+ * in other ways too.
+ */
+static const struct {
+    const char *name;
+    int offset;
+    int dst;
+} _unused timezone_names[]  = {
+    { "IDLW", -12, 0, },    /* International Date Line West */
+    { "NT",   -11, 0, },    /* Nome */
+    { "CAT",  -10, 0, },    /* Central Alaska */
+    { "HST",  -10, 0, },    /* Hawaii Standard */
+    { "HDT",  -10, 1, },    /* Hawaii Daylight */
+    { "YST",   -9, 0, },    /* Yukon Standard */
+    { "YDT",   -9, 1, },    /* Yukon Daylight */
+    { "PST",   -8, 0, },    /* Pacific Standard */
+    { "PDT",   -8, 1, },    /* Pacific Daylight */
+    { "MST",   -7, 0, },    /* Mountain Standard */
+    { "MDT",   -7, 1, },    /* Mountain Daylight */
+    { "CST",   -6, 0, },    /* Central Standard */
+    { "CDT",   -6, 1, },    /* Central Daylight */
+    { "EST",   -5, 0, },    /* Eastern Standard */
+    { "EDT",   -5, 1, },    /* Eastern Daylight */
+    { "AST",   -3, 0, },    /* Atlantic Standard */
+    { "ADT",   -3, 1, },    /* Atlantic Daylight */
+    { "WAT",   -1, 0, },    /* West Africa */
+
+    { "GMT",    0, 0, },    /* Greenwich Mean */
+    { "UTC",    0, 0, },    /* Universal (Coordinated) */
+    { "Z",      0, 0, },    /* Zulu, alias for UTC */
+
+    { "WET",    0, 0, },    /* Western European */
+    { "BST",    0, 1, },    /* British Summer */
+    { "CET",   +1, 0, },    /* Central European */
+    { "MET",   +1, 0, },    /* Middle European */
+    { "MEWT",  +1, 0, },    /* Middle European Winter */
+    { "MEST",  +1, 1, },    /* Middle European Summer */
+    { "CEST",  +1, 1, },    /* Central European Summer */
+    { "MESZ",  +1, 1, },    /* Middle European Summer */
+    { "FWT",   +1, 0, },    /* French Winter */
+    { "FST",   +1, 1, },    /* French Summer */
+    { "EET",   +2, 0, },    /* Eastern Europe, USSR Zone 1 */
+    { "EEST",  +2, 1, },    /* Eastern European Daylight */
+    { "WAST",  +7, 0, },    /* West Australian Standard */
+    { "WADT",  +7, 1, },    /* West Australian Daylight */
+    { "CCT",   +8, 0, },    /* China Coast, USSR Zone 7 */
+    { "JST",   +9, 0, },    /* Japan Standard, USSR Zone 8 */
+    { "EAST", +10, 0, },    /* Eastern Australian Standard */
+    { "EADT", +10, 1, },    /* Eastern Australian Daylight */
+    { "GST",  +10, 0, },    /* Guam Standard, USSR Zone 9 */
+    { "NZT",  +12, 0, },    /* New Zealand */
+    { "NZST", +12, 0, },    /* New Zealand Standard */
+    { "NZDT", +12, 1, },    /* New Zealand Daylight */
+    { "IDLE", +12, 0, },    /* International Date Line East */
+};
+
+
+
 /* double second sleep */
 _api inline int crtl_dsleep (double sleep_sec)
 {
@@ -226,6 +296,99 @@ _api inline void crtl_timeval_generate(struct timeval *in, long sec, long micros
 {
     in->tv_sec    = sec + microsec/1000000;
     in->tv_usec   = microsec%1000000;
+}
+
+
+/*
+ * This is like mktime, but without normalization of tm_wday and tm_yday.
+ */
+_api time_t crtl_tm_to_time_t(const struct tm *tm)
+{
+	static const int mdays[] = {
+	    0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334
+	};
+	int year = tm->tm_year - 70;
+	int month = tm->tm_mon;
+	int day = tm->tm_mday;
+
+	if (year < 0 || year > 129) /* algo only works for 1970-2099 */
+		return -1;
+	if (month < 0 || month > 11) /* array bounds */
+		return -1;
+	if (month < 2 || (year + 2) % 4)
+		day--;
+	if (tm->tm_hour < 0 || tm->tm_min < 0 || tm->tm_sec < 0)
+		return -1;
+	return (year * 365 + (year + 1) / 4 + mdays[month] + day) * 24*60*60UL +
+		tm->tm_hour * 60*60 + tm->tm_min * 60 + tm->tm_sec;
+}
+
+
+
+_api int crtl_is_date(int year, int month, int day, struct tm *now_tm, time_t now, struct tm *tm)
+{
+	if (month > 0 && month < 13 && day > 0 && day < 32) {
+		struct tm check = *tm;
+		struct tm *r = (now_tm ? &check : tm);
+		time_t specified;
+
+		r->tm_mon = month - 1;
+		r->tm_mday = day;
+		if (year == -1) {
+			if (!now_tm)
+				return 1;
+			r->tm_year = now_tm->tm_year;
+		}
+		else if (year >= 1970 && year < 2100)
+			r->tm_year = year - 1900;
+		else if (year > 70 && year < 100)
+			r->tm_year = year;
+		else if (year < 38)
+			r->tm_year = year + 100;
+		else
+			return 0;
+		if (!now_tm)
+			return 1;
+
+		specified = crtl_tm_to_time_t(r);
+
+		/* Be it commit time or author time, it does not make
+		 * sense to specify timestamp way into the future.  Make
+		 * sure it is not later than ten days from now...
+		 */
+		if ((specified != -1) && (now + 10*24*3600 < specified))
+			return 0;
+		tm->tm_mon = r->tm_mon;
+		tm->tm_mday = r->tm_mday;
+		if (year != -1)
+			tm->tm_year = r->tm_year;
+		return 1;
+	}
+	return 0;
+}
+
+
+/*
+ * Relative time update (eg "2 days ago").  If we haven't set the time
+ * yet, we need to set it from current time.
+ */
+_api time_t crtl_update_tm(struct tm *tm, struct tm *now, time_t sec)
+{
+	time_t n;
+
+	if (tm->tm_mday < 0)
+		tm->tm_mday = now->tm_mday;
+	if (tm->tm_mon < 0)
+		tm->tm_mon = now->tm_mon;
+	if (tm->tm_year < 0) {
+		tm->tm_year = now->tm_year;
+		if (tm->tm_mon > now->tm_mon)
+			tm->tm_year--;
+	}
+
+	n = mktime(tm) - sec;
+	localtime_r(&n, tm);
+	return n;
 }
 
 

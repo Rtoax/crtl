@@ -13,9 +13,23 @@ void demo_random_int()
     printf("\n");
 }
 
+void demo_random_seed()
+{
+    int i;
+    for (i=1;i<=1000;i++)
+    {
+        printf("%8x ", crtl_get_random_seed());
+        if(i%10==0)
+            printf("\n");
+    }
+    printf("\n");
+}
+
 int main()
 {
     demo_random_int();
+
+    demo_random_seed();
 
     return 0;
 }

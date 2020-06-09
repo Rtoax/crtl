@@ -198,13 +198,10 @@ static int get_time_seed(void)
 }
 
 
-/* json_c_get_random_seed */
+/* crtl_get_random_seed */
 
-int json_c_get_random_seed(void)
+int crtl_get_random_seed(void)
 {
-#if defined HAVE_RDRAND && HAVE_RDRAND
-    if (has_rdrand()) return get_rdrand_seed();
-#endif
 #if defined HAVE_DEV_RANDOM && HAVE_DEV_RANDOM
     if (has_dev_urandom()) return get_dev_random_seed();
 #endif
