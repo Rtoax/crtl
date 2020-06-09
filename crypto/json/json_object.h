@@ -331,6 +331,8 @@ extern void json_object_set_serializer(json_object *jso,
  * @param userdata the pointer that is passed to free().
  */
 extern json_object_delete_fn json_object_free_userdata;
+//extern void json_object_free_userdata(struct json_object *jso, void *userdata);
+
 
 /**
  * Copy the jso->_userdata string over to pb as-is.
@@ -342,6 +344,9 @@ extern json_object_delete_fn json_object_free_userdata;
  * @param flags Ignored.
  */
 extern json_object_to_json_string_fn json_object_userdata_to_json_string;
+//extern int json_object_userdata_to_json_string(struct json_object *jso,
+//	            struct printbuf *pb, int level, int flags);
+
 
 #ifdef __clang__
 /* } */

@@ -20,8 +20,7 @@
 
 #include "crypto/json/arraylist.h"
 
-struct array_list*
-array_list_new(array_list_free_fn *free_fn)
+struct array_list* array_list_new(array_list_free_fn free_fn)
 {
   struct array_list *arr;
 
@@ -37,8 +36,7 @@ array_list_new(array_list_free_fn *free_fn)
   return arr;
 }
 
-extern void
-array_list_free(struct array_list *arr)
+extern void array_list_free(struct array_list *arr)
 {
   size_t i;
   for(i = 0; i < arr->length; i++)
@@ -47,8 +45,7 @@ array_list_free(struct array_list *arr)
   free(arr);
 }
 
-void*
-array_list_get_idx(struct array_list *arr, size_t i)
+void* array_list_get_idx(struct array_list *arr, size_t i)
 {
   if(i >= arr->length) return NULL;
   return arr->array[i];
@@ -77,8 +74,7 @@ static int array_list_expand_internal(struct array_list *arr, size_t max)
   return 0;
 }
 
-int
-array_list_put_idx(struct array_list *arr, size_t idx, void *data)
+int array_list_put_idx(struct array_list *arr, size_t idx, void *data)
 {
   if (idx > SIZE_T_MAX - 1 ) return -1;
   if(array_list_expand_internal(arr, idx+1)) return -1;
@@ -89,14 +85,12 @@ array_list_put_idx(struct array_list *arr, size_t idx, void *data)
   return 0;
 }
 
-int
-array_list_add(struct array_list *arr, void *data)
+int array_list_add(struct array_list *arr, void *data)
 {
   return array_list_put_idx(arr, arr->length, data);
 }
 
-void
-array_list_sort(struct array_list *arr, int(*compar)(const void *, const void *))
+void array_list_sort(struct array_list *arr, int(*compar)(const void *, const void *))
 {
   qsort(arr->array, arr->length, sizeof(arr->array[0]), compar);
 }
@@ -108,14 +102,12 @@ void* array_list_bsearch(const void **key, struct array_list *arr,
 			compar);
 }
 
-size_t
-array_list_length(struct array_list *arr)
+size_t array_list_length(struct array_list *arr)
 {
   return arr->length;
 }
 
-int
-array_list_del_idx( struct array_list *arr, size_t idx, size_t count )
+int array_list_del_idx( struct array_list *arr, size_t idx, size_t count )
 {
 	size_t i, stop;
 

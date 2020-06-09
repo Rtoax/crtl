@@ -16,7 +16,6 @@
 
 #include <assert.h>
 #include <math.h>
-#include "crypto/json/math_compat.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -26,14 +25,13 @@
 #include <limits.h>
 #include <inttypes.h>
 
-#include "crypto/json/debug.h"
+#include "crtl/log.h"
 #include "crypto/json/printbuf.h"
 #include "crypto/json/arraylist.h"
 #include "crypto/json/json_object.h"
 #include "crypto/json/json_object_private.h"
 #include "crypto/json/json_tokener.h"
 #include "crypto/json/json_util.h"
-#include "crypto/json/strdup_compat.h"
 
 #include <locale.h>
 #include <xlocale.h>
@@ -433,8 +431,8 @@ struct json_object* json_tokener_parse_ex(struct json_tokener *tok,
 	int size;
 	int size_nan;
 	printbuf_memappend_fast(tok->pb, &c, 1);
-	size = json_min(tok->st_pos+1, json_null_str_len);
-	size_nan = json_min(tok->st_pos+1, json_nan_str_len);
+	size = MIN(tok->st_pos+1, json_null_str_len);
+	size_nan = MIN(tok->st_pos+1, json_nan_str_len);
 	if((!(tok->flags & JSON_TOKENER_STRICT) &&
 	  strncasecmp(json_null_str, tok->pb->buf, size) == 0)
 	  || (strncmp(json_null_str, tok->pb->buf, size) == 0)
@@ -506,7 +504,7 @@ struct json_object* json_tokener_parse_ex(struct json_tokener *tok,
 	  }
 	}
 	printbuf_memappend_fast(tok->pb, case_start, str-case_start);
-	MC_DEBUG("json_tokener_comment: %s\n", tok->pb->buf);
+	__crtl_dbg("json_tokener_comment: %s\n", tok->pb->buf);
 	state = json_tokener_state_eatws;
       }
       break;
@@ -514,7 +512,7 @@ struct json_object* json_tokener_parse_ex(struct json_tokener *tok,
     case json_tokener_state_comment_end:
       printbuf_memappend_fast(tok->pb, &c, 1);
       if(c == '/') {
-	MC_DEBUG("json_tokener_comment: %s\n", tok->pb->buf);
+	__crtl_dbg("json_tokener_comment: %s\n", tok->pb->buf);
 	state = json_tokener_state_eatws;
       } else {
 	state = json_tokener_state_comment;
@@ -686,8 +684,8 @@ struct json_object* json_tokener_parse_ex(struct json_tokener *tok,
       {
 	int size1, size2;
 	printbuf_memappend_fast(tok->pb, &c, 1);
-	size1 = json_min(tok->st_pos+1, json_true_str_len);
-	size2 = json_min(tok->st_pos+1, json_false_str_len);
+	size1 = MIN(tok->st_pos+1, json_true_str_len);
+	size2 = MIN(tok->st_pos+1, json_false_str_len);
 	if((!(tok->flags & JSON_TOKENER_STRICT) &&
 	  strncasecmp(json_true_str, tok->pb->buf, size1) == 0)
 	  || (strncmp(json_true_str, tok->pb->buf, size1) == 0)
@@ -994,7 +992,7 @@ struct json_object* json_tokener_parse_ex(struct json_tokener *tok,
     return ret;
   }
 
-  MC_DEBUG("json_tokener_parse_ex: error %s at offset %d\n",
+  __crtl_dbg("json_tokener_parse_ex: error %s at offset %d\n",
 	   json_tokener_errors[tok->err], tok->char_offset);
   return NULL;
 }

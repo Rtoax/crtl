@@ -16,16 +16,9 @@
 #ifndef _json_util_h_
 #define _json_util_h_
 
+#include <crypto/attribute.h>
+#include <crypto/operator/compare.h>
 #include "crypto/json/json_object.h"
-
-#ifndef json_min
-#define json_min(a,b) ((a) < (b) ? (a) : (b))
-#endif
-
-#ifndef json_max
-#define json_max(a,b) ((a) > (b) ? (a) : (b))
-#endif
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -112,22 +105,12 @@ extern int json_parse_double(const char *buf, double *retval);
  */
 extern const char *json_type_to_name(enum json_type o_type);
 
-#ifndef JSON_NORETURN
-#if defined(_MSC_VER)
-#define JSON_NORETURN __declspec(noreturn)
-#else
-/* 'cold' attribute is for optimization, telling the computer this code
- * path is unlikely.
- */
-#define JSON_NORETURN __attribute__ ((noreturn, cold))
-#endif
-#endif
 /**
  * Abort and optionally print a message on standard error.
  * This should be used rather than assert() for unconditional abortion
  * (in particular for code paths which are never supposed to be run).
  * */
-JSON_NORETURN extern void json_abort(const char *message);
+_noreturn_cold extern void json_abort(const char *message);
 
 #ifdef __cplusplus
 }

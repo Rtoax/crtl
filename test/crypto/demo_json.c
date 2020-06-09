@@ -1477,8 +1477,6 @@ static void test_wrong_inputs_set()
 
 void demo_crypto_json_test12()
 {
-//	_json_c_strerror_enable = 1;
-
 	test_example_get();
 	test_recursion_get();
 	test_wrong_inputs_get();

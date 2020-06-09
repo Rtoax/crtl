@@ -21,10 +21,8 @@
 
 #include <stdarg.h>
 
-#include "crypto/json/debug.h"
+#include "crtl/log.h"
 #include "crypto/json/printbuf.h"
-#include "crypto/json/snprintf_compat.h"
-#include "crypto/json/vasprintf_compat.h"
 
 static int printbuf_extend(struct printbuf *p, int min_size);
 
@@ -65,7 +63,7 @@ static int printbuf_extend(struct printbuf *p, int min_size)
 	if (new_size < min_size + 8)
 		new_size =  min_size + 8;
 #ifdef PRINTBUF_DEBUG
-	MC_DEBUG("printbuf_memappend: realloc "
+	__crtl_dbg("printbuf_memappend: realloc "
 	  "bpos=%d min_size=%d old_size=%d new_size=%d\n",
 	  p->bpos, min_size, p->size, new_size);
 #endif /* PRINTBUF_DEBUG */

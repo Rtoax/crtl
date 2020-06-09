@@ -21,4 +21,7 @@ int crtl_random_int(int min, int max);
 float crtl_rand_gauss(void);
 
 
+int crtl_get_random_seed(void);
+
+
 #endif /*<__CRTL_RANDOM_H>*/

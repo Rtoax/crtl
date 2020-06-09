@@ -14,12 +14,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
 
-#include "crypto/json/strerror_override.h"
 
 #include "crypto/json/json_pointer.h"
-#include "crypto/json/strdup_compat.h"
-#include "crypto/json/vasprintf_compat.h"
 
 /**
  * JavaScript Object Notation (JSON) Pointer

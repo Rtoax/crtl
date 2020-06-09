@@ -8,11 +8,6 @@
  * it under the terms of the MIT license. See COPYING for details.
  *
  */
-
-#undef realloc
-
-#include "crypto/json/strerror_override.h"
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,16 +15,15 @@
 #include <limits.h>
 #include <string.h>
 #include <ctype.h>
-
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <inttypes.h>
 
-#include "crypto/json/snprintf_compat.h"
 
-#include "crypto/json/debug.h"
+#include "crtl/log.h"
 #include "crypto/json/printbuf.h"
 #include "crypto/json/json_object.h"
 #include "crypto/json/json_tokener.h"
@@ -221,16 +215,6 @@ int json_parse_uint64(const char *buf, uint64_t *retval)
 	return ((errno == 0) || (end == buf)) ? 1 : 0;
 }
 
-#ifndef HAVE_REALLOC
-void* rpl_realloc(void* p, size_t n)
-{
-	if (n == 0)
-		n = 1;
-	if (p == 0)
-		return malloc(n);
-	return realloc(p, n);
-}
-#endif
 
 #define NELEM(a)        (sizeof(a) / sizeof(a[0]))
 static const char* json_type_name[] = {

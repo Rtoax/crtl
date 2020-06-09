@@ -10,6 +10,9 @@
 #ifdef __GNUC__
 #define _packed             __attribute__((packed))
 #define _noreturn           __attribute__((noreturn))
+/* 'cold' attribute is for optimization, telling the computer this code
+ * path is unlikely. */
+#define _noreturn_cold      __attribute__ ((noreturn, cold))
 #define _unused             __attribute__((unused))
 #define _used               __attribute__((used))/*__attribute_used__*/
 #define _const              __attribute__((const))
@@ -30,7 +33,8 @@
 #else
 
 #define _packed             
-#define _noreturn           
+#define _noreturn  
+#define _noreturn_cold
 #define _unused   
 #define _used
 #define _const              

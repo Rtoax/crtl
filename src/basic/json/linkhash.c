@@ -19,7 +19,7 @@
 
 #include <endian.h>    /* attempt to define endianness */
 
-#include "crypto/json/random_seed.h"
+#include "crtl/random.h"
 #include "crypto/json/linkhash.h"
 
 /* hash functions */
@@ -443,7 +443,7 @@ static unsigned long lh_char_hash(const void *k)
 	if (random_seed == -1) {
 		int seed;
 		/* we can't use -1 as it is the unitialized sentinel */
-		while ((seed = json_c_get_random_seed()) == -1);
+		while ((seed = crtl_get_random_seed()) == -1);
 
 		(void)__sync_val_compare_and_swap(&random_seed, -1, seed);
 

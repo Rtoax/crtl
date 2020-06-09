@@ -9,10 +9,6 @@
  * it under the terms of the MIT license. See COPYING for details.
  *
  */
-
-
-#include "crypto/json/strerror_override.h"
-
 #include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -21,17 +17,15 @@
 #include <string.h>
 #include <math.h>
 #include <inttypes.h>
+#include <errno.h>
 
-#include "crypto/json/debug.h"
+#include "crtl/log.h"
 #include "crypto/json/printbuf.h"
 #include "crypto/json/linkhash.h"
 #include "crypto/json/arraylist.h"
 #include "crypto/json/json_object.h"
 #include "crypto/json/json_object_private.h"
 #include "crypto/json/json_util.h"
-#include "crypto/json/math_compat.h"
-#include "crypto/json/strdup_compat.h"
-#include "crypto/json/snprintf_compat.h"
 
 
 // Don't define this.  It's not thread-safe.
@@ -60,7 +54,7 @@ static struct lh_table *json_object_table;
 
 static void json_object_init(void) __attribute__ ((constructor));
 static void json_object_init(void) {
-	MC_DEBUG("json_object_init: creating object table\n");
+	__crtl_dbg("json_object_init: creating object table\n");
 	json_object_table = lh_kptr_table_new(128, NULL);
 }
 
@@ -72,18 +66,18 @@ static void json_object_fini(void)
 	{
 		if (json_object_table->count)
 		{
-			MC_DEBUG("json_object_fini: %d referenced objects at exit\n",
+			__crtl_dbg("json_object_fini: %d referenced objects at exit\n",
 			   json_object_table->count);
 			lh_foreach(json_object_table, ent)
 			{
 				struct json_object* obj =
 				  (struct json_object*) lh_entry_v(ent);
-				MC_DEBUG("\t%s:%p\n",
+				__crtl_dbg("\t%s:%p\n",
 					 json_type_to_name(obj->o_type), obj);
 			}
 		}
 	}
-	MC_DEBUG("json_object_fini: freeing object table\n");
+	__crtl_dbg("json_object_fini: freeing object table\n");
 	lh_table_free(json_object_table);
 }
 #endif /* REFCOUNT_DEBUG */
@@ -212,7 +206,7 @@ int json_object_put(struct json_object *jso)
 static void json_object_generic_delete(struct json_object* jso)
 {
 #ifdef REFCOUNT_DEBUG
-	MC_DEBUG("json_object_delete_%s: %p\n",
+	__crtl_dbg("json_object_delete_%s: %p\n",
 	   json_type_to_name(jso->o_type), jso);
 	lh_table_delete(json_object_table, jso);
 #endif /* REFCOUNT_DEBUG */
@@ -232,7 +226,7 @@ static struct json_object* json_object_new(enum json_type o_type)
 	jso->_delete = &json_object_generic_delete;
 #ifdef REFCOUNT_DEBUG
 	lh_table_insert(json_object_table, jso, jso);
-	MC_DEBUG("json_object_new_%s: %p\n", json_type_to_name(jso->o_type), jso);
+	__crtl_dbg("json_object_new_%s: %p\n", json_type_to_name(jso->o_type), jso);
 #endif /* REFCOUNT_DEBUG */
 	return jso;
 }

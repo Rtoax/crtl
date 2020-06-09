@@ -23,13 +23,6 @@
 #ifndef _printbuf_h_
 #define _printbuf_h_
 
-#ifndef extern
-#if defined(_MSC_VER) 
-#define extern __declspec(dllexport)
-#else
-#define extern extern
-#endif
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,8 +35,7 @@ struct printbuf {
 };
 typedef struct printbuf printbuf;
 
-extern struct printbuf*
-printbuf_new(void);
+extern struct printbuf* printbuf_new(void);
 
 /* As an optimization, printbuf_memappend_fast() is defined as a macro
  * that handles copying data if the buffer is large enough; otherwise
@@ -53,8 +45,7 @@ printbuf_new(void);
  * Your code should not use printbuf_memappend() directly unless it
  * checks the return code. Use printbuf_memappend_fast() instead.
  */
-extern int
-printbuf_memappend(struct printbuf *p, const char *buf, int size);
+extern int printbuf_memappend(struct printbuf *p, const char *buf, int size);
 
 #define printbuf_memappend_fast(p, bufptr, bufsize)          \
 do {                                                         \
@@ -97,8 +88,7 @@ do {                                                         \
  *
  * If offset is -1, this starts at the end of the current data in the buffer.
  */
-extern int
-printbuf_memset(struct printbuf *pb, int offset, int charvalue, int len);
+extern int printbuf_memset(struct printbuf *pb, int offset, int charvalue, int len);
 
 /**
  * Formatted print to printbuf.
@@ -114,14 +104,11 @@ printbuf_memset(struct printbuf *pb, int offset, int charvalue, int len);
  *   printbuf_memappend()
  *   printbuf_strappend()
  */
-extern int
-sprintbuf(struct printbuf *p, const char *msg, ...);
+extern int sprintbuf(struct printbuf *p, const char *msg, ...);
 
-extern void
-printbuf_reset(struct printbuf *p);
+extern void printbuf_reset(struct printbuf *p);
 
-extern void
-printbuf_free(struct printbuf *p);
+extern void printbuf_free(struct printbuf *p);
 
 #ifdef __cplusplus
 }
