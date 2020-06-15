@@ -92,6 +92,16 @@ inline int crtl_timeval_cmp(struct timeval *in, struct timeval *in2);
 inline void crtl_timeval_add(struct timeval *in, struct timeval *in2, struct timeval *out);
 
 /**
+ * subtract timeval
+ * @param out: time 1
+ * @param in: time 2
+ * @param out: result = out - in
+ * @return void
+ */
+inline void crtl_timeval_sub(struct timeval *out, struct timeval *in);
+
+
+/**
  * subtract timeval into absulute value
  * @param in: time 1
  * @param in2: time 2

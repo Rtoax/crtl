@@ -14,6 +14,21 @@
 #include "crypto/attribute.h"
 
 
+#define __CRTL_NSEC_PER_SEC 1000000000ULL
+
+#ifndef CLK_TCK
+#define CLK_TCK	64
+#endif
+
+/* ANSI C book says clock() units are CLK_TCK, but IBM docs say millisecs */
+/* under solaris change CLK_TCK to _SC_CLK_TCK */
+#if (_IBMR2||__hp9000s800)
+ #define CLOCK_UNIT	1000000
+#else
+ #define CLOCK_UNIT	CLK_TCK
+#endif
+
+
 static const char _unused *month_names[] = {
 	"January", "February", "March", "April", "May", "June",
 	"July", "August", "September", "October", "November", "December"
@@ -211,7 +226,6 @@ _api inline void crtl_timespec_add(struct timespec *in, struct timespec *in2, st
 	out->tv_nsec = (in->tv_nsec+in2->tv_nsec)%1000000000;
 }
 
-#define __CRTL_NSEC_PER_SEC 1000000000ULL
 
 
 
@@ -235,13 +249,6 @@ _api struct timespec crtl_timespec_add_nsec(struct timespec ts, unsigned long lo
 }
 
 
-
-_api inline void crtl_timeval_add(struct timeval *in, struct timeval *in2, struct timeval *out)
-{
-    out->tv_sec = in->tv_sec + in2->tv_sec + (in->tv_usec+in2->tv_usec)/1000000;
-	out->tv_usec = (in->tv_usec+in2->tv_usec)%1000000;
-}
-
 _api inline int crtl_timespec_subabs(struct timespec *in1, struct timespec *in2, struct timespec *out)
 {
     time_t in1Sec = in1->tv_sec;
@@ -263,6 +270,29 @@ _api inline int crtl_timespec_subabs(struct timespec *in1, struct timespec *in2,
     
     return cmp;
 }
+
+_api inline void crtl_timespec_generate(struct timespec *in, long sec, long nanosec)
+{
+    in->tv_sec    = sec + nanosec/1000000000;
+    in->tv_nsec   = nanosec%1000000000;
+}
+
+
+_api inline void crtl_timeval_add(struct timeval *in, struct timeval *in2, struct timeval *out)
+{
+    out->tv_sec = in->tv_sec + in2->tv_sec + (in->tv_usec+in2->tv_usec)/1000000;
+	out->tv_usec = (in->tv_usec+in2->tv_usec)%1000000;
+}
+
+_api inline void crtl_timeval_sub(struct timeval *out, struct timeval *in)
+{
+    if ((out->tv_usec -= in->tv_usec) < 0) { /* out -= in */
+        --out->tv_sec;
+        out->tv_usec += 1000000;
+    }
+    out->tv_sec -= in->tv_sec;
+}
+
 
 _api inline int crtl_timeval_subabs(struct timeval *in1, struct timeval *in2, struct timeval *out)
 {
@@ -287,11 +317,6 @@ _api inline int crtl_timeval_subabs(struct timeval *in1, struct timeval *in2, st
 }
 
 
-_api inline void crtl_timespec_generate(struct timespec *in, long sec, long nanosec)
-{
-    in->tv_sec    = sec + nanosec/1000000000;
-    in->tv_nsec   = nanosec%1000000000;
-}
 _api inline void crtl_timeval_generate(struct timeval *in, long sec, long microsec)
 {
     in->tv_sec    = sec + microsec/1000000;
@@ -414,18 +439,6 @@ Author:  Dave Hale, Colorado School of Mines, 04/29/89
 }
 
 
-
-#ifndef CLK_TCK
-#define CLK_TCK	64
-#endif
-
-/* ANSI C book says clock() units are CLK_TCK, but IBM docs say millisecs */
-/* under solaris change CLK_TCK to _SC_CLK_TCK */
-#if (_IBMR2||__hp9000s800)
- #define CLOCK_UNIT	1000000
-#else
- #define CLOCK_UNIT	CLK_TCK
-#endif
 
 _api float crtl_cputime()
 /*****************************************************************************
