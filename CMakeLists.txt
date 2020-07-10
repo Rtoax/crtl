@@ -4,6 +4,7 @@ PROJECT(crtl LANGUAGES C)
 
 #添加源文件 
 aux_source_directory(./src  DIR_SRCS)
+aux_source_directory(./src/init  DIR_SRCS)
 aux_source_directory(./src/basic  DIR_SRCS)
 aux_source_directory(./src/basic/huffmantree  DIR_SRCS)
 aux_source_directory(./src/basic/json  DIR_SRCS)
