@@ -1,4 +1,5 @@
 #include "crtl/init.h"
+#include "crypto/init.h"
 
 
 /**
@@ -17,4 +18,15 @@ int crtl_init(int argc, char **argv)
     return CRTL_SUCCESS;
 }
 
+
+
+/**
+ *  crtl library exit function
+ *  @param status: CRTL_SUCCESS, CRTL_ERROR
+ *  @return error number
+ */
+void crtl_exit(int status)
+{
+    //TODO
+}
 

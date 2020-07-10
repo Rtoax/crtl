@@ -14,4 +14,13 @@
 int crtl_init(int argc, char **argv);
 
 
+/**
+ *  crtl library exit function
+ *  @param status: CRTL_SUCCESS, CRTL_ERROR
+ *  @return error number
+ */
+void crtl_exit(int status);
+
+
+
 #endif /*<__CRTL_INIT_H>*/
