@@ -210,7 +210,11 @@ _api int crtl_is_exist(const char *dirname)
         crtl_print_err("dirname is NULL\n");
         return CRTL_ERROR;
     }
-    return access(dirname, F_OK);
+    int ret = access(dirname, F_OK);
+    if(ret == 0) {
+        return CRTL_SUCCESS;
+    }
+    return CRTL_ERROR;
 }
 
 /**
@@ -225,7 +229,11 @@ _api int crtl_is_readable(const char *dirname)
         crtl_print_err("dirname is NULL\n");
         return CRTL_ERROR;
     }
-    return access(dirname, R_OK);
+    int ret = access(dirname, R_OK);
+    if(ret == 0) {
+        return CRTL_SUCCESS;
+    }
+    return CRTL_ERROR;
 }
 
 /**
@@ -240,7 +248,11 @@ _api int crtl_is_writeable(const char *dirname)
         crtl_print_err("dirname is NULL\n");
         return CRTL_ERROR;
     }
-    return access(dirname, W_OK);
+    int ret = access(dirname, W_OK);
+    if(ret == 0) {
+        return CRTL_SUCCESS;
+    }
+    return CRTL_ERROR;
 }
 
 /**

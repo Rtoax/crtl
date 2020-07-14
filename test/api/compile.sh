@@ -5,7 +5,7 @@ if [ $# -lt 1 ]; then
 fi
 
 cd ..
-./install_crtl.sh > /dev/null
+./install_crtl.sh 
 cd -
 
 echo "Compile >> $*"

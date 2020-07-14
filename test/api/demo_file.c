@@ -11,7 +11,7 @@ void demo_mkdir_rmdir()
     crtl_rmdir("1/");
 
     crtl_print_info("1/2 -> %d\n", crtl_is_directory("1/2"));
-    crtl_print_info("toa -> %d\n", crtl_is_regular_file("toa"));
+    crtl_print_info("toa -> %d(%d)\n", crtl_is_regular_file("demo_crtl_init.ini"), CRTL_SUCCESS);
     crtl_print_info("/home/rongtao -> %d\n", crtl_is_directory("/home/rongtao"));
     
 }
