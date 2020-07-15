@@ -1,9 +1,11 @@
 #include <malloc.h>
 
 #include "crtl/bits/types_basic.h"
-#include "crypto/attribute.h"
-
 #include "crtl/alloc.h"
+
+#include "crypto/attribute.h"
+#include "crypto/init.h"
+
 
 
 typedef struct {
@@ -13,6 +15,8 @@ typedef struct {
   crtl_free_fn_t local_free;
 } crtl_allocator_t;
 
+
+/* 内存分配器 */
 static crtl_allocator_t _unused __crtl_allocator = {
   malloc,
   realloc,
@@ -20,7 +24,12 @@ static crtl_allocator_t _unused __crtl_allocator = {
   free,
 };
 
-  
+_hidden _initfn void crtl_allocator_init() {
+    __crtl_allocator.local_malloc = malloc;
+    __crtl_allocator.local_calloc = calloc;
+    __crtl_allocator.local_realloc = realloc;
+    __crtl_allocator.local_free = free;
+}
 
 
 

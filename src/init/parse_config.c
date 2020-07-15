@@ -9,10 +9,6 @@
 #include "crypto/init.h"
 
 
-/* 初始配置文件句柄 */
-static crtl_config_t crtl_cfg_ini = NULL;
-
-
 
 /* 检查初始配置文件是否存在，存在则打开 */
 static void parse_config_ini_file_open(char *filename, crtl_config_t *cfg_ini)
@@ -73,9 +69,21 @@ static void parse_config_ini_file_open(char *filename, crtl_config_t *cfg_ini)
 /* 初始配置文件加载 */
 static void parse_config_ini_file_load(crtl_config_t cfg_ini)
 {
-    //TODO: 加载配置文件
+    /* crtl相关配置 */
     if(crtl_config_has_section(cfg_ini, "crtl")) {
         crtl_print_debug("Has Section crtl.\n");
+    }
+    /* 定时器相关配置 */
+    if(crtl_config_has_section(cfg_ini, "timer")) {
+        crtl_print_debug("Has Section timer.\n");
+
+        /* 定时器更新间隔 */
+        unsigned int __timer_interval = 0;
+        crtl_config_read_unsignedinteger(cfg_ini, "timer", "interval_nanosec", &__timer_interval, 10000000);
+        crtl_print_debug("interval_nanosec = %d.\n", __timer_interval);
+
+        /* 更新定时器间隔 */
+        crtl_timer_set_update_interval(__timer_interval);
     }
 
     //TODO: 在此处添加
@@ -91,7 +99,7 @@ static void parse_config_ini_file_close(crtl_config_t *cfg_ini)
 
 
 /* 解析命令行参数   */
-static void parse_args(int argc, char **argv)
+static void parse_args(int argc, char **argv, crtl_config_t *cfg_ini)
 {
     crtl_print_debug("parse.\n");
     
@@ -114,7 +122,7 @@ static void parse_args(int argc, char **argv)
         {
             case CRTL_CFG_ARGV_CONFIG_INI_NAME:
                 crtl_print_debug("parse file %s.\n", optarg);
-                parse_config_ini_file_open(optarg, &crtl_cfg_ini);
+                parse_config_ini_file_open(optarg, cfg_ini);
                 break;
             case '?':
                 /* getopt_long already printed an error message. */
@@ -129,17 +137,24 @@ static void parse_args(int argc, char **argv)
 
 
 /* 解析配置文件 */
-_hidden int crtl_init_parse_config(int argc, char **argv)
+_hidden _initfn int crtl_init_parse_config(int argc, char **argv)
 {
+    /* 初始配置文件句柄 */
+    crtl_config_t crtl_cfg_ini = NULL;
+
     /* 解析参数 */
-    parse_args(argc, argv);
+    parse_args(argc, argv, &crtl_cfg_ini);
+
 
     /* 打开配置文件, 当 argv中不存在这个文件，再次试图打开默认的配置文件 */
     parse_config_ini_file_open(NULL, &crtl_cfg_ini);
 
+    /* 加载配置文件 */
     parse_config_ini_file_load(crtl_cfg_ini);
-    
+
+    /* 关闭配置文件 */
     parse_config_ini_file_close(&crtl_cfg_ini);
+
     
     //TODO
     

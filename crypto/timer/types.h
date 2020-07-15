@@ -21,9 +21,11 @@ typedef struct __rt_timer_cb_type {
 }__rt_timer_cb_t;
 
 
-
 /* update frequency */
-#define __CRTL_TIMER_REFRESH_FREQUENCY_NanoSEC     10000000 /* nanosec */
+#define __CRTL_TIMER_REFRESH_FREQUENCY_NanoSEC     crtl_timer_interval_nanosec /* nanosec */
+
+extern volatile unsigned long int crtl_timer_interval_nanosec;
+
 
 /* 定时器结构体 */
 struct crtl_timer_struct {

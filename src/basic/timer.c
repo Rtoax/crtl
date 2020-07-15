@@ -26,6 +26,18 @@ static crtl_lock_rw_t _unused __crtl_timers_list_rwlock = CRTL_LOCK_RWLOCK_INITI
 static LIST_HEAD_UNUSED(__crtl_timers_list_head);
 //static crtl_rbtree_t __crtl_timers_tree = NULL;
 
+/* 默认定时器更新间隔 */
+volatile unsigned long int crtl_timer_interval_nanosec = 10000000;
+
+/**
+ *  更新定时器更新事件间隔：单位 纳秒
+ */
+void crtl_timer_set_update_interval(long int nanosec)
+{
+    __crtl_dbg("nanosec = %ld\n", nanosec);
+    if(nanosec) crtl_timer_interval_nanosec=nanosec;
+}
+
 
 /* 定时器列表轮询线程初始化标识位 */
 static volatile long _unused __crtl_timers_list_poll_task_init_flag = 0; /* 已初始化=1 */

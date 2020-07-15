@@ -1,10 +1,12 @@
 #include <stdlib.h>
 
 #include "crtl/init.h"
+
 #include "crypto/init.h"
+#include "crypto/attribute.h"
 
 
-/* ³õÊ¼»¯±êÖ¾ */
+/* åˆå§‹åŒ–æ ‡å¿— */
 static volatile crtl_boolean crtl_init_flag = crtl_false;
 
 
@@ -15,16 +17,19 @@ static volatile crtl_boolean crtl_init_flag = crtl_false;
  *              int main(int argc, char *argv[]);
  *  @return error number
  */
-int crtl_init(int argc, char **argv)
+_api _initfn int crtl_init(int argc, char **argv)
 {
-    /* ½âÎö argv£¬²¢ÇÒÅäÖÃ¶ÔÓ¦²ÎÊı */
+    /* åˆå§‹åŒ–å†…å­˜åˆ†é…å‡½æ•° */
+    crtl_allocator_init();
+
+    /* è§£æ argvï¼Œå¹¶ä¸”é…ç½®å¯¹åº”å‚æ•° */
     crtl_init_parse_config(argc, argv);
 
-    /* ³õÊ¼»¯ */
+    /* åˆå§‹åŒ– */
     
-    //TODO: ³õÊ¼»¯Ò»Ğ©È«¾Ö±äÁ¿
+    //TODO: åˆå§‹åŒ–ä¸€äº›å…¨å±€å˜é‡
 
-    /* ³õÊ¼»¯±êÖ¾ */
+    /* åˆå§‹åŒ–æ ‡å¿— */
     crtl_init_flag = crtl_true;
 
     return CRTL_SUCCESS;
@@ -37,11 +42,11 @@ int crtl_init(int argc, char **argv)
  *  @param status: CRTL_SUCCESS, CRTL_ERROR
  *  @return error number
  */
-void crtl_exit(int status)
+_api _initfn void crtl_exit(int status)
 {
     //TODO
     
-    /* ³õÊ¼»¯±êÖ¾ */
+    /* åˆå§‹åŒ–æ ‡å¿— */
     crtl_init_flag = crtl_false;
     exit(status);
     
