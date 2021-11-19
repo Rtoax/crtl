@@ -1,0 +1,68 @@
+# Folder
+build/
+
+# File
+*.zip
+*.tar.*
+
+# Object files
+*.o
+*.obj
+*.elf
+*.out
+*.d
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Eclipse files
+.cproject
+.project
+.settings
+.metadata
+
+# Backups
+*~
+
+# Kernel module stuff
+*.ko
+*.mod.c
+*.ko.cmd
+*.o.cmd
+*.order
+*.symvers
+.tmp_versions
+.cache.mk
+*.ko.cmd
+*.o.cmd
+*.mod
+*.mod.c
+*.mod.o
+*.mod.o.cmd
+*.mod.cmd
+Module.symvers
+modules.order
+.Module.symvers.cmd
+.modules.order.cmd
+
